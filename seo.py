@@ -1,7 +1,7 @@
 """Page-specific search and social metadata, aligned with visible services."""
 import html,json,re
 PAGES={
-'/':('HVAC & Home Repairs in Delco and the Main Line','Find Middletown HVAC for heating, cooling, Boilers and hot water, plus vetted local businesses for plumbing, electrical work and home repairs.'),
+'/':('Local Home Services in Delco and the Main Line','Get to know Wazoozie and vetted local businesses for heating, cooling, plumbing, electrical work, carpentry and home repairs. Connect directly.'),
 '/about/':('About Wazoozie | Local Home Services','Why Wazoozie connects homeowners with Middletown HVAC and vetted local businesses for home comfort, plumbing, electrical work and repairs.'),
 '/contact/':('Contact Middletown HVAC | Call or Book Online','Call Middletown HVAC at 610-500-6416 or book online for heating, cooling, Boilers and hot water. Confirm your address and appointment with the office.'),
 '/businesses/middletown-hvac/':('Middletown HVAC | Heating, Cooling & Hot Water','Meet Middletown HVAC, a family-owned business in Glen Mills. Explore heating, cooling, Boiler and Water Heater services, published reviews and direct booking.'),
