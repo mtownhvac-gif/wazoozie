@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
 const PROBLEMS = JSON.parse(await readFile(new URL('../assets/problem-config.json', import.meta.url), 'utf8'));
-import {INTENTS} from '../project-config.mjs';
+import {INTENTS,BUSINESSES} from '../project-config.mjs';
 
 async function page(path) {
   const markup = await readFile(new URL(`../dist/${path}/index.html`, import.meta.url), 'utf8');
@@ -107,7 +107,7 @@ test('problem routing and page-specific sharing metadata exist without JavaScrip
   try {
     const links=[...env.document.querySelectorAll('#problemChoices a[data-problem]')];
     assert.equal(links.length,PROBLEMS.length);
-    for(const problem of PROBLEMS) assert.ok(links.some(link=>link.getAttribute('href')===`/start/?intent=${problem.intent}`));
+    for(const problem of PROBLEMS) assert.ok(links.some(link=>link.dataset.problem===problem.key && link.getAttribute('href')===`/businesses/${BUSINESSES[INTENTS[problem.intent].provider].slug}/`));
     assert.equal(env.document.querySelector('meta[name="twitter:title"]').content,'Who do I call? Local help for home problems');
     const schema=[...env.document.querySelectorAll('script[type="application/ld+json"]')].map(node=>JSON.parse(node.textContent));
     assert.ok(JSON.stringify(schema).includes('BreadcrumbList'));
