@@ -2,7 +2,7 @@
 import html,json,re
 PAGES={
 '/':('Local Home Services in Delco and the Main Line','Get to know Wazoozie and vetted local businesses for heating, cooling, plumbing, electrical work, carpentry and home repairs. Connect directly.'),
-'/about/':('About Wazoozie | Local Home Services','Why Wazoozie connects homeowners with Middletown HVAC and vetted local businesses for home comfort, plumbing, electrical work and repairs.'),
+'/about/':('About Wazoozie | Local Home Services','Why Wazoozie helps homeowners avoid poor work and find vetted local businesses for heating, cooling, plumbing, electrical work and home repairs.'),
 '/contact/':('Contact Middletown HVAC | Call or Book Online','Call Middletown HVAC at 610-500-6416 or book online for heating, cooling, Boilers and hot water. Confirm your address and appointment with the office.'),
 '/businesses/middletown-hvac/':('Middletown HVAC | Heating, Cooling & Hot Water','Meet Middletown HVAC, a family-owned business in Glen Mills. Explore heating, cooling, Boiler and Water Heater services, published reviews and direct booking.'),
 '/businesses/ryan-dugan-electric/':('Ryan Dugan Electric | Electrical Repairs & Lighting','Explore Ryan Dugan Electric for electrical repairs, lighting, outlets and panel projects. Read sourced reviews and contact this Wazoozie-vetted business.'),
@@ -24,7 +24,7 @@ PAGES={
 '/guides/plan-a-tankless-conversion/':('Planning a Tankless Water Heater Conversion','Consider hot-water demand, fuel supply, venting and installation scope before switching to tankless. Prepare for a conversation with Middletown HVAC.'),
 '/guides/prepare-for-service/':('How to Prepare for an HVAC Service Visit','Prepare equipment details, symptoms, access and questions before a service visit. Help your contractor understand the problem and explain the next steps.'),
 '/facts/':('Wazoozie Business Directory | Contact & Service Facts','Find business names, phone numbers, websites and service routing for Middletown HVAC, Ryan Dugan Electric, Liberator and Cooke Carpentry & Construction.'),
-'/our-standards/':('Our Standards | Vetted Businesses & Sourced Reviews','Learn how Wazoozie presents its vetted local businesses, sourced review excerpts, featured placements and direct homeowner-to-business connections.'),
+'/our-standards/':('Our Standards | Vetted Businesses & Sourced Reviews','Learn how Wazoozie presents its vetted local businesses, sourced review excerpts, listing standards and direct homeowner-to-business connections.'),
 '/how-it-works/':('How Wazoozie Works | Find and Contact a Local Pro','Choose a home service, meet the business and contact it directly. Learn how Wazoozie handles calling, online booking and email drafts.'),
 '/privacy/':('Privacy & Your Information','Read how Wazoozie handles information when you browse, follow booking links or prepare an email request. You choose which business receives your inquiry.'),
 '/404/':('Page Not Found','Return to Wazoozie to explore local HVAC, plumbing, electrical and home-repair services or contact Middletown HVAC.')}
