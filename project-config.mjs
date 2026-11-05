@@ -12,9 +12,9 @@ export const BUSINESSES = {
 };
 
 export const PROJECT_GROUPS = [
+  {key:'systems',label:'Systems & everyday service',intents:['comfort','water','electrical','plumbing']},
   {key:'repairs',label:'Repairs & finishing',intents:['doors','windows','painting','carpentry']},
-  {key:'projects',label:'Bigger home projects',intents:['decks','additions']},
-  {key:'systems',label:'Systems & everyday service',intents:['comfort','water','electrical','plumbing']}
+  {key:'projects',label:'Bigger home projects',intents:['decks','additions']}
 ];
 
 export const INTENTS = {
