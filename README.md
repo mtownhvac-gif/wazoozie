@@ -95,3 +95,26 @@ including idempotency, rate limits, conflicts and retention. Browser QA should
 use `npm run dev` or the managed preview; local preview storage stays local.
 `INTAKE_LOCAL_PREVIEW` is set by the dev launcher only and must not be configured
 as a production variable.
+
+## Homeowner tools and evidence
+
+`/help/` provides ten plain-language problem routes to the four listed businesses.
+Routing is explicit in `assets/problem-config.mjs`, using shared intent IDs from
+`project-config.mjs`. It is a trade guide, not a remote diagnosis. The page
+collects no contact information. `/before-you-approve/` supplies a printable,
+eight-point proposal conversation checklist; selections stay in the open page.
+
+Business profiles distinguish published business/review sources from credential
+and insurance documents not recorded in this directory. Editorial inclusion is
+not a credential check, ranking or guarantee. No operating-history claims are
+added. The evidence record date describes this profile revision only.
+
+Project planning now offers direct contact before form entry. Reviewed briefs
+can be copied, downloaded or, for Middletown HVAC, placed in a draft addressed
+to its published office email. That uses the homeowner's email app; the homeowner
+must review and send it. Wazoozie cannot verify delivery, and no draft is sent
+automatically. Saving a private brief remains a separate, optional action.
+Service-specific prompts help collect useful equipment, symptoms and scope.
+
+Frontend interaction tests use a DOM environment with synthetic details and
+mocked network requests; they do not contact businesses or open email clients.

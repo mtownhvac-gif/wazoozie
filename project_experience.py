@@ -16,23 +16,10 @@ def upgrade(out, public, pages, booking):
     for name in ('project.js', 'established.css'):
         shutil.copy(root / 'assets' / name, out / 'assets' / name)
     shutil.copy(root / 'project-config.mjs', out / 'assets/project-config.mjs')
-    template = (out / 'about/index.html').read_text()
+    from editorial import write_editorial_page
 
     def page(path, title, description, body):
-        rendered = re.sub(r'<main id="main">.*?</main>', lambda _: '<main id="main">' + body + '</main>', template, count=1, flags=re.S)
-        rendered = re.sub(r'<title>.*?</title>', lambda _: '<title>' + html.escape(title) + ' | Wazoozie</title>', rendered, count=1)
-        # Page-specific metadata must describe this page, rather than the template.
-        rendered = re.sub(r'<meta (?:name="description"|property="og:(?:title|description|url)")[^>]*>', '', rendered)
-        rendered = re.sub(r'<link rel="canonical"[^>]*>', '', rendered)
-        rendered = re.sub(r'<script type="application/ld\+json">.*?</script>', '', rendered, flags=re.S)
-        url = (public or 'http://localhost:8123') + path
-        metadata = f'<meta name="description" content="{html.escape(description, quote=True)}"><meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{url}"><link rel="canonical" href="{url}">'
-        schema = {'@context': 'https://schema.org', '@type': 'WebPage', 'name': title, 'description': description, 'url': url}
-        rendered = rendered.replace('</head>', metadata + '<script type="application/ld+json">' + json.dumps(schema) + '</script></head>')
-        target = out / path.strip('/') / 'index.html'
-        target.parent.mkdir(exist_ok=True)
-        target.write_text(rendered)
-        pages.append(path)
+        write_editorial_page(out, public, pages, path, title, description, body)
 
     page('/start/', 'Plan a home project with a named local business', 'Choose a service, meet the business and prepare a private project brief. Contact your chosen business directly to confirm service.', (root / 'templates/project-start.html').read_text())
     cards = ''
