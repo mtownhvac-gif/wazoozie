@@ -32,7 +32,7 @@ for f in ROOT.rglob('*.html'):
     assert p.title==1, f'{f}: expected one title'
     assert len(p.ids)==len(set(p.ids)), f'{f}: duplicate IDs'
     assert p.meta.get('description'), f'{f}: missing description'
-    assert p.meta.get('robots') in ('index,follow','noindex,nofollow'), f'{f}: indexing not declared'
+    assert p.meta.get('robots') in ('index,follow','index,follow,max-image-preview:large','noindex,nofollow'), f'{f}: indexing not declared'
 
 for f,p in pages.items():
     for value in p.links:
@@ -46,7 +46,7 @@ for f,p in pages.items():
             assert unquote(url.fragment) in pages[dest].ids, f'{f}: missing fragment {value}'
 
 home=pages[ROOT/'index.html']
-if home.meta['robots']=='index,follow':
+if home.meta['robots'].startswith('index,follow'):
     assert all(p.canonical for p in pages.values()), 'Production canonical missing'
     assert (ROOT/'sitemap.xml').is_file(), 'Production sitemap missing'
     assert 'Sitemap:' in (ROOT/'robots.txt').read_text(), 'Sitemap not advertised'
