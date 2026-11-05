@@ -1,0 +1,112 @@
+[
+  {
+    "key": "no-heat",
+    "label": "The heat or AC stopped working",
+    "intent": "comfort",
+    "reason": "Heating and cooling equipment belongs with an HVAC technician.",
+    "prepare": [
+      "What stopped working, and when?",
+      "Equipment type: Furnace, Heat Pump or ductless?",
+      "Any message on the thermostat or equipment?"
+    ]
+  },
+  {
+    "key": "cold-room",
+    "label": "One room is never comfortable",
+    "intent": "comfort",
+    "reason": "Start with an HVAC assessment of the room and existing system before assuming you need new equipment.",
+    "prepare": [
+      "Which room, and which season is worse?",
+      "Does the rest of the home feel comfortable?",
+      "Has this always happened, or is it new?"
+    ]
+  },
+  {
+    "key": "hot-water",
+    "label": "There’s no hot water",
+    "intent": "water",
+    "reason": "Middletown HVAC handles tank and tankless Water Heaters. Choose Water Heater service rather than a general drain request.",
+    "prepare": [
+      "Tank or tankless, if you know?",
+      "Gas, electric or another fuel?",
+      "Any visible leak or displayed error?"
+    ]
+  },
+  {
+    "key": "radiators",
+    "label": "The radiators or baseboards aren’t heating",
+    "intent": "boiler",
+    "reason": "A Boiler specialist is the appropriate starting point for hot-water heating systems.",
+    "prepare": [
+      "Gas or oil, if you know?",
+      "All rooms affected, or only some?",
+      "Any visible leak, noise or error message?"
+    ]
+  },
+  {
+    "key": "big-estimate",
+    "label": "I got an expensive replacement recommendation",
+    "intent": "secondopinion",
+    "reason": "A second opinion gives you another assessment before deciding on a major repair or replacement.",
+    "prepare": [
+      "The written recommendation and quoted scope.",
+      "Equipment make, model and age, if available.",
+      "What symptoms led to the first visit?"
+    ]
+  },
+  {
+    "key": "new-system",
+    "label": "I’m planning a new system or ductless",
+    "intent": "replacement",
+    "reason": "An HVAC installation estimate should address the home, existing equipment and the comfort you want to improve.",
+    "prepare": [
+      "Your current system and fuel.",
+      "Rooms or floors you want to improve.",
+      "Your preferred timing and any existing proposal."
+    ]
+  },
+  {
+    "key": "seasonal",
+    "label": "I want seasonal care for my equipment",
+    "intent": "maintenance",
+    "reason": "Ask about a maintenance visit and Get Comfortable Plans with Middletown HVAC.",
+    "prepare": [
+      "Equipment type and number of systems.",
+      "When was the last maintenance visit?",
+      "Any current issue that needs a diagnostic visit?"
+    ]
+  },
+  {
+    "key": "outlet",
+    "label": "An outlet, light or electrical circuit needs attention",
+    "intent": "electrical",
+    "reason": "An electrician handles household electrical repairs and installation inquiries.",
+    "prepare": [
+      "What is affected, and where?",
+      "Is this a repair or a planned improvement?",
+      "Any earlier electrician’s findings?"
+    ]
+  },
+  {
+    "key": "drain",
+    "label": "A drain, pipe or fixture needs attention",
+    "intent": "plumbing",
+    "reason": "General plumbing, drain and fixture inquiries belong with the plumbing listing.",
+    "prepare": [
+      "Which fixture or area is affected?",
+      "A leak, blockage or planned replacement?",
+      "How long has it been happening?"
+    ]
+  },
+  {
+    "key": "home-repair",
+    "label": "I need carpentry or help with a home repair",
+    "intent": "carpentry",
+    "reason": "Cooke Carpentry & Construction is listed for carpentry and handyman project inquiries.",
+    "prepare": [
+      "What would you like repaired or built?",
+      "Approximate size and material, if known.",
+      "A couple of photos to share directly with the business."
+    ]
+  }
+]

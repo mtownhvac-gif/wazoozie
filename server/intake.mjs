@@ -1,5 +1,6 @@
 import {BUSINESSES} from '../project-config.mjs';
 import {validateBrief} from './brief-validation.mjs';
+import {validateActivity} from '../activity-config.mjs';
 
 function respond(data, status = 200) {
   return Response.json(data, {status, headers: {'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'X-Content-Type-Options': 'nosniff'}});
@@ -10,8 +11,7 @@ async function hash(value) {
   return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
-async function readJSON(request) {
-  const limit = 16384;
+async function readJSON(request, limit = 16384) {
   if (Number(request.headers.get('content-length')) > limit) throw new RangeError();
   const reader = request.body?.getReader();
   if (!reader) throw new SyntaxError();
@@ -35,7 +35,8 @@ export async function handleIntake(request, env) {
   if (url.pathname === '/api/project-capabilities') {
     return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX)}) : respond({error: 'Method not allowed.'}, 405);
   }
-  if (url.pathname !== '/api/project-briefs') return respond({error: 'Not found.'}, 404);
+  const activity = url.pathname === '/api/contact-activity';
+  if (url.pathname !== '/api/project-briefs' && !activity) return respond({error: 'Not found.'}, 404);
   if (request.method !== 'POST') return respond({error: 'Method not allowed.'}, 405);
   const origins = new Set(['https://wazoozie.com', 'https://www.wazoozie.com']);
   if (env.INTAKE_LOCAL_PREVIEW === '1' || ['localhost', '127.0.0.1'].includes(url.hostname)) origins.add(url.origin);
@@ -44,8 +45,20 @@ export async function handleIntake(request, env) {
   if (!env.PROJECT_INBOX) return respond({error: 'Saving is unavailable. Please call the business directly.'}, 503);
 
   let input;
-  try { input = await readJSON(request); }
+  try { input = await readJSON(request, activity ? 512 : 16384); }
   catch (error) { return respond({error: error instanceof RangeError ? 'Request too large.' : 'Invalid JSON.'}, error instanceof RangeError ? 413 : 400); }
+  if (activity) {
+    const event = validateActivity(input);
+    if (!event) return respond({error: 'Invalid contact action.'}, 400);
+    const now = Date.now();
+    const date = new Date(now).toISOString();
+    const client = await hash(date.slice(0, 10) + '|' + (request.headers.get('cf-connecting-ip') || 'unknown'));
+    try {
+      const inbox = env.PROJECT_INBOX.getByName(`activity:${date.slice(0, 7)}`);
+      const {status} = await inbox.recordActivity(event, client, now);
+      return respond(status === 429 ? {error:'Action limit reached.'} : {counted:true}, status);
+    } catch { return respond({error:'Counting is unavailable.'}, 503); }
+  }
   const {brief, error} = validateBrief(input);
   if (error) return respond({error}, 400);
 

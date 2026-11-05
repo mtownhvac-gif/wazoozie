@@ -9,9 +9,13 @@ from editorial import write_editorial_page
 def strengthen(out, origin, pages, providers):
     root = out.parent
     escape = html.escape
-    for name in ('problem-config.mjs', 'problem-guide.js', 'decisions.js'):
+    for name in ('problem-guide.js', 'decisions.js'):
         shutil.copy(root / 'assets' / name, out / 'assets' / name)
-    write_editorial_page(out, origin, pages, '/help/', 'Who do I call? Local help for home problems', 'Find the right trade for no heat, no hot water, Boiler trouble, plumbing, electrical work and home repairs. No contact details required.', (root / 'templates/problem-guide.html').read_text())
+    problems = json.loads((root / 'assets/problem-config.json').read_text())
+    (out / 'assets/problem-config.mjs').write_text('export const PROBLEMS = ' + json.dumps(problems) + ';\n')
+    fallback = ''.join('<a href="/start/?intent=' + escape(problem['intent'], quote=True) + '" data-problem="' + escape(problem['key'], quote=True) + '">' + escape(problem['label']) + ' →</a>' for problem in problems)
+    guide = (root / 'templates/problem-guide.html').read_text().replace('<div id="problemChoices" class="problem-choices"></div>', '<div id="problemChoices" class="problem-choices">' + fallback + '</div>')
+    write_editorial_page(out, origin, pages, '/help/', 'Who do I call? Local help for home problems', 'Find the right trade for no heat, no hot water, Boiler trouble, plumbing, electrical work and home repairs. No contact details required.', guide)
 
     points = [
         ('The problem and the proposed work', 'Ask what was found, what the work includes and which parts of the problem it is intended to resolve.'),

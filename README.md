@@ -118,3 +118,42 @@ Service-specific prompts help collect useful equipment, symptoms and scope.
 
 Frontend interaction tests use a DOM environment with synthetic details and
 mocked network requests; they do not contact businesses or open email clients.
+
+## Private contact measurement
+
+Contact-link clicks are counted by action (`call_click`, `booking_click`,
+`email_draft_click`, `website_click`), business and page category. The public
+`POST /api/contact-activity` endpoint accepts exactly those three enumerated
+fields. It rejects extra fields, full URLs, names, email bodies and project text.
+There are no visitor IDs, analytics cookies or public reporting endpoints.
+Clicks indicate intent only; they do not establish connected calls, delivered
+emails, booked appointments or completed jobs.
+
+In authenticated Cloudflare Data Studio, open `activity:YYYY-MM` in the existing
+ProjectInbox namespace. Review private counts with:
+
+```sql
+SELECT day, provider, context, action, count
+FROM contact_counts ORDER BY day DESC, provider, action;
+```
+
+Saved-brief counts are recorded transactionally in the relevant provider/month
+object (`middletown:YYYY-MM`, etc.) as `brief_saved`, once per newly stored brief.
+Retries do not increase the count. Read those counts in the corresponding object;
+they are not copied into the activity object. This keeps capture authoritative
+without making a successful save depend on an analytics call.
+
+Contact counting is best effort. A blocking browser or network failure can
+prevent a count; form saving and direct contact keep working independently.
+The endpoint caps each daily IP hash at 100 counted clicks and each monthly
+activity object at 20,000 counts per day. Raw IP addresses are never stored in
+the tables. Daily cleanup removes old abuse keys and counts after their retention
+periods; aggregate counts follow the existing approximately 90-day policy.
+No new Cloudflare binding, external analytics provider or paid email feature is
+required. Deployment uses the existing private SQLite namespace.
+
+The problem guide now builds its first usable links from
+`assets/problem-config.json`; JavaScript enhances that content rather than
+creating the only route choices. The build generates the matching browser
+module from this same source. New editorial pages include consistent title,
+Open Graph, Twitter, organization and breadcrumb metadata.

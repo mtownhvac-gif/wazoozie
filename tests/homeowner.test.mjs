@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
-import {PROBLEMS} from '../assets/problem-config.mjs';
+const PROBLEMS = JSON.parse(await readFile(new URL('../assets/problem-config.json', import.meta.url), 'utf8'));
 import {INTENTS} from '../project-config.mjs';
 
 async function page(path) {
@@ -99,5 +99,36 @@ test('saving outage preserves direct contact and offers an availability retry',a
     assert.ok(env.document.querySelector('#captureStatus').textContent.includes('have not been sent'));
     assert.ok(env.document.querySelector('#projectQuickConnect a[href="tel:+16105006416"]'));
     assert.equal(env.document.querySelector('#projectReceipt').hidden,true);
+  }finally{env.close();}
+});
+
+test('problem routing and page-specific sharing metadata exist without JavaScript',async()=>{
+  const env=await page('help');
+  try {
+    const links=[...env.document.querySelectorAll('#problemChoices a[data-problem]')];
+    assert.equal(links.length,PROBLEMS.length);
+    for(const problem of PROBLEMS) assert.ok(links.some(link=>link.getAttribute('href')===`/start/?intent=${problem.intent}`));
+    assert.equal(env.document.querySelector('meta[name="twitter:title"]').content,'Who do I call? Local help for home problems');
+    const schema=[...env.document.querySelectorAll('script[type="application/ld+json"]')].map(node=>JSON.parse(node.textContent));
+    assert.ok(JSON.stringify(schema).includes('BreadcrumbList'));
+    assert.ok(!env.document.querySelector('meta[name="twitter:description"]').content.includes('Why Wazoozie'));
+  }finally{env.close();}
+});
+
+test('contact counting cannot send project text or email draft bodies',async()=>{
+  const env=await page('start');
+  try{
+    await import(`../dist/assets/contact-activity.js?test=${Date.now()}`);
+    const link=env.document.createElement('a');link.href='mailto:service@mtownhvac.com?body=PRIVATE-PROJECT-TEXT';link.textContent='Email';
+    // Avoid opening the test environment's navigation while allowing its click listener.
+    env.document.body.append(link);
+    link.dispatchEvent(new env.document.defaultView.MouseEvent('click',{bubbles:true,cancelable:true,button:0}));
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(env.requests.length,1);
+    assert.equal(env.requests[0].url,'/api/contact-activity');
+    const payload=JSON.parse(env.requests[0].options.body);
+    assert.deepEqual(payload,{action:'email_draft_click',provider:'middletown',context:'planner'});
+    assert.equal(env.requests[0].options.referrerPolicy,'no-referrer');
+    assert.ok(!env.requests[0].options.body.includes('PRIVATE'));
   }finally{env.close();}
 });

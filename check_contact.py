@@ -35,7 +35,8 @@ home=(ROOT/'index.html').read_text();profile=(ROOT/'businesses/middletown-hvac/i
 assert home.count('<blockquote>')==0 and profile.count('<blockquote>')==3
 assert 'founding' not in home.lower()
 assert 'sample testimonial' not in home.lower()
-assert 'family-at-home.jpg' in profile and 'Illustrative family' in profile
+assert 'middletown-conversion-project.jpg' in profile and 'PUBLISHED MIDDLETOWN HVAC WORK' in profile
+assert 'family-at-home.jpg' not in profile
 assert 'noindex,nofollow' in (ROOT/'404/index.html').read_text()
 assert '/contact/' in (ROOT/'sitemap.xml').read_text() if (ROOT/'sitemap.xml').exists() else True
 print('Contact paths, attribution privacy, review sources, image disclosure and 404 indexing passed.')
