@@ -1,13 +1,15 @@
 """Crawlable directory content and consistent public search identities."""
 import html,json,re
+from emblems import ICONS
 
 def improve(out,origin,providers):
     e=html.escape
+    keys={p['slug']:k for k,p in providers.items()}
     home=out/'index.html';s=home.read_text()
     cards=[];items=[]
     for position,p in enumerate(sorted(providers.values(),key=lambda p:(p['slug']!='middletown-hvac',p['name'])),1):
         url='/businesses/'+p['slug']+'/'
-        cards.append('<article class="procard"><div class="procover"><span class="procover-tag">'+e(p['trade'])+'</span><div class="procover-text">'+e(p['name'])+'</div></div><span class="badge green">Vetted by Wazoozie</span><div class="protop"><h3><a href="'+url+'">'+e(p['name'])+'</a></h3></div><p>'+e(p['intro'])+'</p><div class="proactions"><a class="btn primary" href="'+url+'">Meet the business →</a><a class="btn outline" href="tel:'+p['tel']+'">Call '+p['phone']+'</a></div></article>')
+        cards.append('<article class="procard"><div class="procover">'+ICONS[keys[p['slug']]]+'<span class="procover-tag">'+e(p['trade'])+'</span><div class="procover-text">'+e(p['name'])+'</div></div><span class="badge green">Vetted by Wazoozie</span><div class="protop"><h3><a href="'+url+'">'+e(p['name'])+'</a></h3></div><p>'+e(p['intro'])+'</p><div class="proactions"><a class="btn primary" href="'+url+'">Meet the business →</a><a class="btn outline" href="tel:'+p['tel']+'">Call '+p['phone']+'</a></div></article>')
         items.append({'@type':'ListItem','position':position,'url':origin+url,'name':p['name']})
     s=s.replace('<div class="progrid" id="providerResults"></div>','<div class="progrid all-providers" id="providerResults">'+''.join(cards)+'</div>')
     if origin:
