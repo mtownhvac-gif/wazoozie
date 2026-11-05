@@ -237,6 +237,8 @@ write_page('/facts/','Business and service directory facts','Factual Wazoozie bu
 from conversion import enhance
 shutil.copy(ROOT/'assets/contact.css', OUT/'assets/contact.css')
 enhance(OUT, PUBLIC, PAGES, BOOKING)
+from service_photos import place
+place(OUT)
 from estimator import add
 add(OUT)
 from seo import optimize
