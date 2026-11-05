@@ -71,7 +71,6 @@ def enhance(out, public, pages, booking):
             text=text.replace('</main>','<div class="wrap">'+reviews+'</div></main>')
             text=text.replace('Not yet collected or verified by Wazoozie.','Published review excerpts are linked below. Wazoozie has not independently verified the underlying work. Images are illustrative.')
         galleries = {
-            '/businesses/middletown-hvac/': [('evergreen-installed', 'Illustrative installed Weil-McLain Evergreen gas Boiler'), ('tankless', 'Illustrative Navien tankless Water Heater'), ('tempstar-ion-angled', 'Illustrative Tempstar Ion heat pump on six-inch risers above a square gray equipment pad')],
             '/businesses/ryan-dugan-electric/': [('outdoor-lighting', 'Illustrative outdoor lighting at a stone home'), ('electrical-outlet', 'Illustrative residential electrical outlet')],
             '/businesses/liberator-service-company/': [('sink', 'Illustrative kitchen sink and faucet'), ('garden-fountain', 'Illustrative garden fountain')],
             '/businesses/cooke-carpentry-construction/': [('carpentry', 'Illustrative timber structure under construction'), ('window-framing', 'Illustrative window framing renovation')],

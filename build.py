@@ -253,6 +253,8 @@ from contractors import add as add_contractor_applications
 add_contractor_applications(OUT, PUBLIC, PAGES)
 from contact_measurement import improve as measure_contacts
 measure_contacts(OUT)
+from water_heater_presentation import improve as improve_water_heater_photos
+improve_water_heater_photos(OUT)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:

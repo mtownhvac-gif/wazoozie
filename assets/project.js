@@ -65,7 +65,7 @@ function showBusiness() {
   aside.replaceChildren();
   const image = make('img');
   image.src = `/assets/${provider.image}.jpg`;
-  image.alt = INTENTS[selected].provider === 'middletown' ? 'Published Middletown HVAC outdoor ductless installation' : 'Illustrative home-service scene';
+  image.alt = INTENTS[selected].provider === 'middletown' ? 'Conventional tank Water Heater and Heil Furnace installation published by Middletown HVAC' : 'Illustrative home-service scene';
   image.width = 600; image.height = 500;
   const copy = make('div', '', 'project-business-copy');
   copy.append(make('div', intent.scopeCheck ? 'DISCUSS YOUR PROJECT WITH' : 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Confirm your address, project fit and availability directly before scheduling.'));

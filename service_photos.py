@@ -6,6 +6,7 @@ from pathlib import Path
 def place(out):
     root=out.parent/'assets'
     actual={
+      'middletown-conventional-project':'Conventional Bradford White tank Water Heater beside a Heil Furnace, published by Middletown HVAC',
       'middletown-conversion-project':'Middletown HVAC technician working at a Bosch outdoor heat pump on its published conversion project',
       'middletown-tankless-project':'Navien tankless water heater and copper piping from Middletown HVAC’s published conversion project',
       'middletown-ductless-project':'Fujitsu ductless indoor unit installed above a bedroom doorway by Middletown HVAC',
@@ -17,7 +18,7 @@ def place(out):
       'services/heating-cooling':'middletown-outdoor-project',
       'services/water-heaters':'middletown-tankless-project',
       'services/replacement-estimates':'middletown-conversion-project',
-      'businesses/middletown-hvac':'middletown-outdoor-project',
+      'businesses/middletown-hvac':'middletown-conventional-project',
       'businesses/ryan-dugan-electric':'outdoor-lighting',
       'services/electrical':'outdoor-lighting',
       'businesses/liberator-service-company':'sink',
@@ -26,7 +27,7 @@ def place(out):
       'services/handyman':'carpentry'}
     illustrations={'outdoor-lighting':'Illustrative outdoor lighting at a stone home','sink':'Illustrative kitchen sink and faucet','window-framing':'Illustrative window framing renovation','carpentry':'Illustrative timber structure under construction'}
     for path,name in photos.items():
-      f=out/path/'index.html';s=f.read_text();w,h=(1200,1600) if name in ('middletown-conversion-project','middletown-tankless-project') else (1024,768) if name=='middletown-ductless-project' else (1200,800)
+      f=out/path/'index.html';s=f.read_text();w,h=(1100,973) if name=='middletown-conventional-project' else (1200,1600) if name in ('middletown-conversion-project','middletown-tankless-project') else (1024,768) if name=='middletown-ductless-project' else (1200,800)
       img='<img src="/assets/'+name+'.jpg" alt="'+actual.get(name,illustrations.get(name,''))+'" width="'+str(w)+'" height="'+str(h)+'" fetchpriority="high" decoding="async">'
       s=re.sub(r'(<div class="page-art">)<img[^>]+>',lambda m:m[1]+img,s,count=1)
       label='Middletown HVAC project photo.' if name in actual else 'Illustrative service image.'
