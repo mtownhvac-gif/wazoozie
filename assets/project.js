@@ -1,4 +1,4 @@
-import {BUSINESSES, INTENTS, CONSENT_VERSION} from './project-config.mjs';
+import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS} from './project-config.mjs';
 
 const $ = selector => document.querySelector(selector);
 const form = $('#projectForm');
@@ -54,9 +54,17 @@ function showBusiness() {
   image.width = 600; image.height = 500;
   const copy = make('div', '', 'project-business-copy');
   copy.append(make('div', 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Confirm your address, project fit and availability directly before scheduling.'));
+  if (provider.booking) copy.append(businessLink('Book with Middletown ↗', provider.booking, 'btn primary'));
   copy.append(businessLink('Get to know this business →', `/businesses/${provider.slug}/`), businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`));
   copy.append(make('p', INTENTS[selected].provider === 'middletown' ? 'Actual work · Published by Middletown HVAC' : 'Illustrative imagery · Not a customer project', 'project-photo-label'));
   aside.append(image, copy);
+  const prompts = $('#projectPrompts');
+  const list = make('ul', '', 'guide-checklist');
+  for (const question of PROJECT_QUESTIONS[selected]) list.append(make('li', question));
+  prompts.replaceChildren(make('h3', 'A few useful things to include.'), list);
+  form.elements.details.placeholder = PROJECT_QUESTIONS[selected][0] + ' Tell us what you know; it’s fine to be unsure.';
+  const quick = $('#projectQuickConnect');
+  quick.replaceChildren(make('h3', 'Ready to speak with someone?'), make('p', `Contact ${provider.name} directly. Project planning below is optional.`), directActions(provider));
 }
 for (const [key, intent] of Object.entries(INTENTS)) {
   const label = make('label', '', 'project-choice');
@@ -85,6 +93,8 @@ function review(data) {
   const fields = [['Selected business', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town}, ${data.state} ${data.zip} · ${data.timing}`], ['About the property', `${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified'], ['Your contact details', `${data.name}\n${data.phone}${data.email ? '\n' + data.email : ''}`]];
   for (const [label, value] of fields) list.append(make('dt', label), make('dd', value));
   $('#projectReview').replaceChildren(list);
+  const connection = $('#reviewConnections');
+  connection.replaceChildren(make('h3', 'Put your plan to work.'), directActions(BUSINESSES[data.provider]), shareActions(data, false), make('p', 'Calling and booking connect directly to the business. An email link opens a draft in your own email app; review and send it yourself. Saving below is optional.'));
 }
 $('#projectNext2').addEventListener('click', () => {
   for (const input of $('#projectStep2').querySelectorAll('input,select,textarea')) {
@@ -101,11 +111,13 @@ async function checkAvailability() {
     captureReady = response.ok && (await response.json()).captureReady === true;
   } catch { captureReady = false; }
   $('#projectSave').disabled = !captureReady;
+  $('#retryCapture').hidden = captureReady;
   $('#captureStatus').textContent = captureReady ? 'Project saving is available. Your selected business is not automatically notified.' : 'Project saving is currently unavailable. Your details have not been sent. Use the direct contact link for your selected business.';
 }
 checkAvailability();
-function briefText(data) {
-  return ['WAZOOZIE · YOUR PROJECT BRIEF', `Reference: WZ-${id.slice(0, 8).toUpperCase()}`, '', `Business: ${BUSINESSES[data.provider].name}`, `Phone: ${BUSINESSES[data.provider].phone}`, `Service: ${INTENTS[data.intent].label}`, `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, `Equipment / project type: ${data.equipment || 'Not specified'}`, '', data.details, '', `Name: ${data.name}`, `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`, '', 'Saved with Wazoozie. The business has not been notified. No appointment has been booked. Contact the business directly to arrange service.'].join('\n');
+$('#retryCapture').addEventListener('click', checkAvailability);
+function briefText(data, saved = true) {
+  return ['WAZOOZIE · YOUR PROJECT BRIEF', `Reference: WZ-${id.slice(0, 8).toUpperCase()}`, '', `Business: ${BUSINESSES[data.provider].name}`, `Phone: ${BUSINESSES[data.provider].phone}`, `Service: ${INTENTS[data.intent].label}`, `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, `Equipment / project type: ${data.equipment || 'Not specified'}`, '', data.details, '', `Name: ${data.name}`, `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`, '', saved ? 'Saved with Wazoozie. The business has not been automatically notified. No appointment has been booked.' : 'Prepared in the homeowner’s browser. No appointment has been booked. Please confirm coverage, timing and any diagnostic charge.'].join('\n');
 }
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -125,14 +137,57 @@ form.addEventListener('submit', async event => {
     const provider = BUSINESSES[data.provider];
     $('#receiptActions').append(businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`, 'btn primary'));
     if (provider.booking) $('#receiptActions').append(businessLink('Book with Middletown ↗', provider.booking, 'btn outline'));
+    $('#projectQuickConnect').hidden = true;
+    $('#receiptShare').replaceChildren(shareActions(data, true));
     $('#projectReceipt').focus();
   } catch (failure) { error(failure.message || 'We could not confirm the save. Your next step is to retry or call directly.'); }
   finally { saving = false; $('#projectSave').disabled = !captureReady; $('#projectSave').textContent = 'Save my project brief →'; }
 });
-$('#downloadBrief').addEventListener('click', () => {
-  if (!submitted) return;
-  const url = URL.createObjectURL(new Blob([briefText(submitted)], {type: 'text/plain;charset=utf-8'}));
+function directActions(provider) {
+  const actions = make('div', '', 'project-actions');
+  actions.append(businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`, 'btn primary'));
+  if (provider.booking) actions.append(businessLink('Book with Middletown ↗', provider.booking, 'btn outline'));
+  return actions;
+}
+function download(data, saved) {
+  const url = URL.createObjectURL(new Blob([briefText(data, saved)], {type: 'text/plain;charset=utf-8'}));
   const link = businessLink('', url); link.download = `wazoozie-project-${id.slice(0, 8)}.txt`;
   document.body.append(link); link.click(); link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-});
+}
+function shareActions(data, saved) {
+  const provider = BUSINESSES[data.provider];
+  const container = make('div');
+  const actions = make('div', '', 'project-actions');
+  if (provider.email) {
+    const subject = `Wazoozie project inquiry · ${INTENTS[data.intent].label}`;
+    actions.append(businessLink(`Email my brief to ${provider.name} ↗`, `mailto:${provider.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText(data, saved))}`, 'btn primary'));
+    container.append(make('p', `Your email draft is addressed only to ${provider.email}. You must send it yourself. If your email app does not open, copy or download your brief.`, 'project-muted'));
+  }
+  const copy = make('button', 'Copy my brief', 'btn outline');
+  copy.type = 'button';
+  const status = make('p', '', 'project-copy-status');
+  status.setAttribute('role', 'status');
+  copy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(briefText(data, saved));
+      status.textContent = 'Copied. Paste your brief into a message to your selected business.';
+    } catch {
+      status.textContent = 'Select and copy your brief below.';
+      const fallback = make('textarea', '', 'project-copy-fallback');
+      fallback.value = briefText(data, saved); fallback.readOnly = true;
+      fallback.setAttribute('aria-label', 'Your project brief to copy');
+      container.append(fallback); fallback.focus(); fallback.select();
+      copy.disabled = true;
+    }
+  });
+  actions.append(copy);
+  if (!saved) {
+    const button = make('button', 'Download my brief ↓', 'btn outline');
+    button.type = 'button'; button.addEventListener('click', () => download(data, false));
+    actions.append(button);
+  }
+  container.append(actions, status);
+  return container;
+}
+$('#downloadBrief').addEventListener('click', () => { if (submitted) download(submitted, true); });
