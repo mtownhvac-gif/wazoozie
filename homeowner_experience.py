@@ -3,15 +3,29 @@ import html
 import json
 import re
 import shutil
+import subprocess
 from editorial import write_editorial_page
 
 
 def strengthen(out, origin, pages, providers):
     root = out.parent
+    # Share category labels and routing with the browser and intake validator.
+    catalog = json.loads(subprocess.check_output([
+        'node', '--input-type=module', '-e',
+        "import {INTENTS,PROJECT_GROUPS} from './project-config.mjs'; process.stdout.write(JSON.stringify({intents:INTENTS,groups:PROJECT_GROUPS}));"
+    ], cwd=root, text=True))
     escape = html.escape
-    for name in ('problem-config.mjs', 'problem-guide.js', 'decisions.js'):
+    for name in ('problem-guide.js', 'decisions.js'):
         shutil.copy(root / 'assets' / name, out / 'assets' / name)
-    write_editorial_page(out, origin, pages, '/help/', 'Who do I call? Local help for home problems', 'Find the right trade for no heat, no hot water, Boiler trouble, plumbing, electrical work and home repairs. No contact details required.', (root / 'templates/problem-guide.html').read_text())
+    problems = json.loads((root / 'assets/problem-config.json').read_text())
+    (out / 'assets/problem-config.mjs').write_text('export const PROBLEMS = ' + json.dumps(problems) + ';\n')
+    fallback = ''
+    for problem in problems:
+        key = catalog['intents'][problem['intent']]['provider']
+        profile = '/businesses/' + providers[key]['slug'] + '/'
+        fallback += '<a href="' + profile + '" data-problem="' + escape(problem['key'], quote=True) + '">' + escape(problem['label']) + ' →</a>'
+    guide = (root / 'templates/problem-guide.html').read_text().replace('<div id="problemChoices" class="problem-choices"></div>', '<div id="problemChoices" class="problem-choices">' + fallback + '</div>')
+    write_editorial_page(out, origin, pages, '/help/', 'Who do I call? Local help for home problems', 'Find the right trade for no heat, no hot water, Boiler trouble, plumbing, electrical work and home repairs. No contact details required.', guide)
 
     points = [
         ('The problem and the proposed work', 'Ask what was found, what the work includes and which parts of the problem it is intended to resolve.'),
@@ -26,6 +40,13 @@ def strengthen(out, origin, pages, providers):
     checks = ''.join(f'<label><input type="checkbox" data-decision-check><span><strong>{escape(title)}</strong><small>{escape(description)}</small></span></label>' for title, description in points)
     checklist = '<div class="wrap project-page"><div class="breadcrumb"><a href="/">Home</a><span>/</span>Before you approve</div><section class="project-intro"><div class="eyebrow">A BETTER CONVERSATION. A CLEARER DECISION.</div><h1>Good questions.<br><em>Before good work.</em></h1><p class="lede">A useful proposal should make the next step clearer. Keep these questions beside you when you talk through a repair or installation.</p></section><section class="project-panel" aria-label="Proposal conversation checklist"><h2>Before you say yes.</h2><p id="decisionStatus" role="status"></p><div class="decision-list">' + checks + '</div><button id="printChecklist" class="btn primary" type="button">Print my checklist ↓</button><p class="project-muted">Your checks stay in this open page only. Refreshing clears them. This is a conversation guide, not a technical inspection or a promise about any business.</p></section><section class="project-invite"><div><div class="eyebrow">STILL HAVE QUESTIONS?</div><h2>Take another look.</h2><p>If a heating, cooling, Boiler or Water Heater recommendation leaves you unsure, ask Middletown HVAC about a second-opinion visit.</p><a class="btn primary" href="/start/?intent=secondopinion">Plan a second opinion →</a></div><div><h3>Keep the original recommendation handy.</h3><p>A written scope, equipment information and the symptoms that prompted the first visit help make the conversation useful. An onsite diagnosis may be necessary.</p><a href="/services/second-opinion/">What a second opinion involves →</a></div></section></div><script src="/assets/decisions.js" defer></script>'
     write_editorial_page(out, origin, pages, '/before-you-approve/', 'Questions to ask before approving home-service work', 'An eight-point homeowner checklist for written estimates, repair options, equipment, warranties, scheduling and approval of additional work.', checklist)
+
+    project_cards = ''
+    for group in catalog['groups']:
+        for key in group['intents']:
+            intent = catalog['intents'][key]
+            project_cards += '<a class="home-project-card" href="/start/?intent=' + key + '"><span class="eyebrow">' + escape(group['label']) + '</span><strong>' + escape(intent['label']) + '</strong><span>' + escape(intent['description']) + '</span><b aria-hidden="true">↗</b></a>'
+    category_section = '<section class="section" aria-labelledby="categories-title"><div class="sectionhead"><h2 id="categories-title">What’s on your home’s list?</h2><p>From the door that sticks<br>to the room you’re ready to change.</p></div><div class="home-project-grid">' + project_cards + '</div><p class="project-muted">Project categories help you describe the work. Confirm services, scope and coverage with the business before arranging a visit.</p></section>'
 
     reviews = json.loads((root / 'trade_reviews.json').read_text())
     for key, business in providers.items():
@@ -72,6 +93,7 @@ def strengthen(out, origin, pages, providers):
         content = target.read_text()
         content = re.sub(r'<section class="origin-story".*?</section>', lambda _: story, content, count=1, flags=re.S)
         if target == out / 'index.html':
+            content = re.sub(r'<section class="section" aria-labelledby="categories-title">.*?</section>', lambda _: category_section, content, count=1, flags=re.S)
             content = content.replace('<h2 class="browse-label">', promo + '<h2 class="browse-label">', 1)
             content = content.replace('<option value="roofing">Roofing · joining soon</option>', '')
         content = content.replace('<strong>The useful details</strong>', '<strong>The useful details</strong><a href="/help/">Who do I call?</a><a href="/before-you-approve/">Before you approve</a><a href="/projects/">Real local work</a>')

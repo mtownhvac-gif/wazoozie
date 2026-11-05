@@ -19,8 +19,15 @@ test('private store is durable, idempotent, rate limited and expires old records
     assert.equal((await store.saveBrief({...brief,id:crypto.randomUUID()},'new','client',now)).status,429);
     const sql=await mf.unsafeGetDurableObjectStorage(undefined,'TestInbox',{name:'synthetic-test'});
     assert.equal((await sql.exec('SELECT count(*) AS n FROM project_briefs'))[0].n,5);
+    assert.equal((await sql.exec("SELECT count FROM contact_counts WHERE action='brief_saved'"))[0].count,5);
+    const event={action:'call_click',provider:'middletown',context:'help'};
+    for(let i=0;i<100;i++) assert.equal((await store.recordActivity(event,'metrics-client',now)).status,200);
+    assert.equal((await store.recordActivity(event,'metrics-client',now)).status,429);
+    assert.equal((await sql.exec("SELECT count FROM contact_counts WHERE action='call_click'"))[0].count,100);
+    await sql.exec("UPDATE contact_counts SET day='2020-01-01'");
     await sql.exec('UPDATE project_briefs SET created_at=?',now-91*86400000);
     await store.runExpiry();
     assert.equal((await sql.exec('SELECT count(*) AS n FROM project_briefs'))[0].n,0);
+    assert.equal((await sql.exec('SELECT count(*) AS n FROM contact_counts'))[0].n,0);
   } finally {await mf.dispose();}
 });

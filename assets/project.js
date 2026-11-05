@@ -1,10 +1,10 @@
-import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS} from './project-config.mjs';
+import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS, PROJECT_GROUPS} from './project-config.mjs';
 
 const $ = selector => document.querySelector(selector);
 const form = $('#projectForm');
 const params = new URLSearchParams(location.search);
 const requestedIntent = params.get('intent');
-let selected = Object.hasOwn(INTENTS, requestedIntent) ? requestedIntent : Object.keys(INTENTS).find(key => INTENTS[key].provider === params.get('provider')) || 'comfort';
+let selected = Object.hasOwn(INTENTS, requestedIntent) ? requestedIntent : (BUSINESSES[params.get('provider')]?.defaultIntent || null);
 function newReference() {
   if (crypto.randomUUID) return crypto.randomUUID();
   // Secure UUID fallback for local HTTP previews.
@@ -45,6 +45,21 @@ function showStep(number) {
   $(`#projectStep${number} h2`).focus();
 }
 function showBusiness() {
+  const quick = $('#projectQuickConnect');
+  $('#projectNext1').disabled = !selected;
+  quick.hidden = !selected;
+  if (!selected) {
+    const copy = make('div', '', 'project-business-copy');
+    copy.append(make('div','YOUR HOME. YOUR NEXT PROJECT.','eyebrow'),make('h2','Start with what needs doing.'),make('p','Choose a project to see the business to contact and the details worth having ready.'),make('p','Browse freely. Contact details are only needed if you choose to prepare and save a project brief.'));
+    $('#projectBusiness').replaceChildren(copy);
+    return;
+  }
+  const intent = INTENTS[selected];
+  const detail = $('#projectServiceDetail');
+  const hasDetail = selected === 'comfort' || intent.parent === 'comfort';
+  $('#projectServiceDetailLabel').hidden = !hasDetail;
+  if (hasDetail) detail.value = selected;
+  for (const radio of document.querySelectorAll('#projectChoices input')) radio.checked = radio.value === selected || radio.value === intent.parent;
   const provider = BUSINESSES[INTENTS[selected].provider];
   const aside = $('#projectBusiness');
   aside.replaceChildren();
@@ -53,7 +68,8 @@ function showBusiness() {
   image.alt = INTENTS[selected].provider === 'middletown' ? 'Published Middletown HVAC outdoor ductless installation' : 'Illustrative home-service scene';
   image.width = 600; image.height = 500;
   const copy = make('div', '', 'project-business-copy');
-  copy.append(make('div', 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Confirm your address, project fit and availability directly before scheduling.'));
+  copy.append(make('div', intent.scopeCheck ? 'DISCUSS YOUR PROJECT WITH' : 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Confirm your address, project fit and availability directly before scheduling.'));
+  if (intent.scopeCheck) copy.append(make('p', intent.scopeCheck, 'project-fit-note'));
   if (provider.booking) copy.append(businessLink('Book with Middletown ↗', provider.booking, 'btn primary'));
   copy.append(businessLink('Get to know this business →', `/businesses/${provider.slug}/`), businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`));
   copy.append(make('p', INTENTS[selected].provider === 'middletown' ? 'Actual work · Published by Middletown HVAC' : 'Illustrative imagery · Not a customer project', 'project-photo-label'));
@@ -63,19 +79,41 @@ function showBusiness() {
   for (const question of PROJECT_QUESTIONS[selected]) list.append(make('li', question));
   prompts.replaceChildren(make('h3', 'A few useful things to include.'), list);
   form.elements.details.placeholder = PROJECT_QUESTIONS[selected][0] + ' Tell us what you know; it’s fine to be unsure.';
-  const quick = $('#projectQuickConnect');
   quick.replaceChildren(make('h3', 'Ready to speak with someone?'), make('p', `Contact ${provider.name} directly. Project planning below is optional.`), directActions(provider));
 }
-for (const [key, intent] of Object.entries(INTENTS)) {
-  const label = make('label', '', 'project-choice');
-  const radio = make('input');
-  radio.type = 'radio'; radio.name = 'intent'; radio.value = key; radio.checked = key === selected;
-  radio.addEventListener('change', () => { selected = key; showBusiness(); });
-  label.append(radio, make('strong', intent.label), make('small', intent.description));
-  $('#projectChoices').append(label);
+for (const group of PROJECT_GROUPS) {
+  const fieldset = make('fieldset', '', 'project-choice-group');
+  fieldset.append(make('legend', group.label));
+  const grid = make('div', '', 'project-choice-grid');
+  for (const key of group.intents) {
+    const intent = INTENTS[key];
+    const label = make('label', '', 'project-choice');
+    const radio = make('input');
+    radio.type = 'radio'; radio.name = 'intent'; radio.value = key;
+    radio.addEventListener('change', () => {
+      selected = key;
+      form.elements.consent.checked = false;
+      showBusiness();
+    });
+    label.append(radio, make('strong', intent.label), make('small', intent.description));
+    grid.append(label);
+  }
+  fieldset.append(grid);
+  $('#projectChoices').append(fieldset);
 }
+for (const key of ['comfort','boiler','replacement','maintenance','secondopinion']) {
+  const option = make('option', key === 'comfort' ? 'Repair or a comfort problem' : INTENTS[key].label);
+  option.value = key;
+  $('#projectServiceDetail').append(option);
+}
+$('#projectServiceDetail').addEventListener('change', event => {
+  selected = event.target.value;
+  form.elements.consent.checked = false;
+  showBusiness();
+});
+
 showBusiness();
-$('#projectNext1').addEventListener('click', () => showStep(2));
+$('#projectNext1').addEventListener('click', () => { if (selected) showStep(2); });
 for (const button of document.querySelectorAll('[data-back]')) button.addEventListener('click', () => showStep(Number(button.dataset.back)));
 function updateNotices() {
   const state = form.elements.state.value;
@@ -90,7 +128,8 @@ function values() {
 }
 function review(data) {
   const list = make('dl');
-  const fields = [['Selected business', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town}, ${data.state} ${data.zip} · ${data.timing}`], ['About the property', `${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified'], ['Your contact details', `${data.name}\n${data.phone}${data.email ? '\n' + data.email : ''}`]];
+  const fields = [['Business to contact', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town}, ${data.state} ${data.zip} · ${data.timing}`], ['About the property', `${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified'], ['Your contact details', `${data.name}\n${data.phone}${data.email ? '\n' + data.email : ''}`]];
+  if (INTENTS[data.intent].scopeCheck) fields.push(['Project fit to confirm', INTENTS[data.intent].scopeCheck]);
   for (const [label, value] of fields) list.append(make('dt', label), make('dd', value));
   $('#projectReview').replaceChildren(list);
   const connection = $('#reviewConnections');

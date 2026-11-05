@@ -15,6 +15,7 @@ export class ProjectInbox extends DurableObject {
     )`);
     ctx.storage.sql.exec('CREATE INDEX IF NOT EXISTS briefs_created ON project_briefs(created_at)');
     ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS submission_limits(client_hash TEXT PRIMARY KEY, day TEXT NOT NULL, count INTEGER NOT NULL)');
+    ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS contact_counts(day TEXT NOT NULL, action TEXT NOT NULL, provider TEXT NOT NULL, context TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(day,action,provider,context))');
   }
 
   async saveBrief(brief, fingerprint, client, now) {
@@ -32,8 +33,28 @@ export class ProjectInbox extends DurableObject {
         b.id, now, b.provider, b.intent, b.name, b.phone, b.email, b.town, b.zip,
         b.state, b.details, b.timing, b.role, b.property, b.equipment, b.source, b.consentVersion, fingerprint);
       this.ctx.storage.sql.exec('INSERT INTO submission_limits(client_hash,day,count) VALUES (?,?,1) ON CONFLICT(client_hash) DO UPDATE SET count=count+1', client, new Date(now).toISOString().slice(0, 10));
+      this.incrementContact({action:'brief_saved',provider:b.provider,context:'planner'}, now);
     });
     if (status === 201 && !await this.ctx.storage.getAlarm()) await this.ctx.storage.setAlarm(now + 86400000);
+    return {status};
+  }
+
+  incrementContact(event, now) {
+    this.ctx.storage.sql.exec('INSERT INTO contact_counts(day,action,provider,context,count) VALUES (?,?,?,?,1) ON CONFLICT(day,action,provider,context) DO UPDATE SET count=count+1', new Date(now).toISOString().slice(0, 10), event.action, event.provider, event.context);
+  }
+
+  async recordActivity(event, client, now) {
+    let status = 200;
+    this.ctx.storage.transactionSync(() => {
+      const key = 'activity:' + client;
+      const count = this.ctx.storage.sql.exec('SELECT count FROM submission_limits WHERE client_hash=?', key).toArray()[0]?.count || 0;
+      const day = new Date(now).toISOString().slice(0, 10);
+      const total = this.ctx.storage.sql.exec('SELECT COALESCE(sum(count),0) AS n FROM contact_counts WHERE day=?', day).toArray()[0].n;
+      if (count >= 100 || total >= 20000) { status = 429; return; }
+      this.incrementContact(event, now);
+      this.ctx.storage.sql.exec('INSERT INTO submission_limits(client_hash,day,count) VALUES (?,?,1) ON CONFLICT(client_hash) DO UPDATE SET count=count+1', key, day);
+    });
+    if (status === 200 && !await this.ctx.storage.getAlarm()) await this.ctx.storage.setAlarm(now + 86400000);
     return {status};
   }
 
@@ -41,6 +62,7 @@ export class ProjectInbox extends DurableObject {
     const now = Date.now();
     this.ctx.storage.sql.exec('DELETE FROM project_briefs WHERE created_at<?', now - 90 * 86400000);
     this.ctx.storage.sql.exec('DELETE FROM submission_limits WHERE day<?', new Date(now - 2 * 86400000).toISOString().slice(0, 10));
-    if (this.ctx.storage.sql.exec('SELECT count(*) AS n FROM project_briefs').toArray()[0].n) await this.ctx.storage.setAlarm(now + 86400000);
+    this.ctx.storage.sql.exec('DELETE FROM contact_counts WHERE day<?', new Date(now - 90 * 86400000).toISOString().slice(0,10));
+    if (this.ctx.storage.sql.exec('SELECT (SELECT count(*) FROM project_briefs) + (SELECT count(*) FROM contact_counts) AS n').toArray()[0].n) await this.ctx.storage.setAlarm(now + 86400000);
   }
 }

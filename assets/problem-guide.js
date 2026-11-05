@@ -32,6 +32,7 @@ function select(problem) {
     result.scrollIntoView({block:'start',behavior:view.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
   }
 }
+choices.replaceChildren();
 for (const problem of PROBLEMS) {
   const button = make('button', problem.label + ' →');
   button.type = 'button'; button.dataset.problem = problem.key;

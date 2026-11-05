@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
-import {PROBLEMS} from '../assets/problem-config.mjs';
-import {INTENTS} from '../project-config.mjs';
+const PROBLEMS = JSON.parse(await readFile(new URL('../assets/problem-config.json', import.meta.url), 'utf8'));
+import {INTENTS,BUSINESSES} from '../project-config.mjs';
 
-async function page(path) {
+async function page(path, query = '') {
   const markup = await readFile(new URL(`../dist/${path}/index.html`, import.meta.url), 'utf8');
-  const dom = new JSDOM(markup, {url: `https://wazoozie.com/${path}/`});
+  const dom = new JSDOM(markup, {url: `https://wazoozie.com/${path}/${query}`});
   const previous = new Map();
   for (const name of ['document','location','history','navigator','FormData']) {
     previous.set(name,Object.getOwnPropertyDescriptor(globalThis,name));
@@ -44,7 +44,7 @@ test('plain-language problems choose the intended business without collecting co
 });
 
 test('direct contact is offered before form entry and an unsaved brief can be emailed explicitly',async()=>{
-  const env=await page('start');
+  const env=await page('start','?intent=comfort');
   try {
     await import(`../dist/assets/project.js?test=${Date.now()}`);
     await new Promise(resolve=>setImmediate(resolve));
@@ -89,7 +89,7 @@ test('business evidence is explicit and does not claim a recorded credential ins
 });
 
 test('saving outage preserves direct contact and offers an availability retry',async()=>{
-  const env=await page('start');
+  const env=await page('start','?intent=comfort');
   try{
     globalThis.fetch=async()=>{throw new Error('synthetic outage');};
     await import(`../dist/assets/project.js?outage=${Date.now()}`);
@@ -100,4 +100,86 @@ test('saving outage preserves direct contact and offers an availability retry',a
     assert.ok(env.document.querySelector('#projectQuickConnect a[href="tel:+16105006416"]'));
     assert.equal(env.document.querySelector('#projectReceipt').hidden,true);
   }finally{env.close();}
+});
+
+test('problem routing and page-specific sharing metadata exist without JavaScript',async()=>{
+  const env=await page('help');
+  try {
+    const links=[...env.document.querySelectorAll('#problemChoices a[data-problem]')];
+    assert.equal(links.length,PROBLEMS.length);
+    for(const problem of PROBLEMS) assert.ok(links.some(link=>link.dataset.problem===problem.key && link.getAttribute('href')===`/businesses/${BUSINESSES[INTENTS[problem.intent].provider].slug}/`));
+    assert.equal(env.document.querySelector('meta[name="twitter:title"]').content,'Who do I call? Local help for home problems');
+    const schema=[...env.document.querySelectorAll('script[type="application/ld+json"]')].map(node=>JSON.parse(node.textContent));
+    assert.ok(JSON.stringify(schema).includes('BreadcrumbList'));
+    assert.ok(!env.document.querySelector('meta[name="twitter:description"]').content.includes('Why Wazoozie'));
+  }finally{env.close();}
+});
+
+test('contact counting cannot send project text or email draft bodies',async()=>{
+  const env=await page('start','?intent=comfort');
+  try{
+    await import(`../dist/assets/contact-activity.js?test=${Date.now()}`);
+    const link=env.document.createElement('a');link.href='mailto:service@mtownhvac.com?body=PRIVATE-PROJECT-TEXT';link.textContent='Email';
+    // Avoid opening the test environment's navigation while allowing its click listener.
+    env.document.body.append(link);
+    link.dispatchEvent(new env.document.defaultView.MouseEvent('click',{bubbles:true,cancelable:true,button:0}));
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(env.requests.length,1);
+    assert.equal(env.requests[0].url,'/api/contact-activity');
+    const payload=JSON.parse(env.requests[0].options.body);
+    assert.deepEqual(payload,{action:'email_draft_click',provider:'middletown',context:'planner'});
+    assert.equal(env.requests[0].options.referrerPolicy,'no-referrer');
+    assert.ok(!env.requests[0].options.body.includes('PRIVATE'));
+  }finally{env.close();}
+});
+
+test('whole-home categories start neutral and route doors and painting with relevant scope prompts',async()=>{
+  const env=await page('start');
+  try{
+    await import(`../dist/assets/project.js?balanced=${Date.now()}`);
+    assert.equal(env.document.querySelectorAll('#projectChoices input').length,10);
+    assert.equal(env.document.querySelectorAll('#projectChoices input:checked').length,0);
+    assert.equal(env.document.querySelector('#projectNext1').disabled,true);
+    assert.equal(env.document.querySelector('#projectQuickConnect').hidden,true);
+    assert.ok(!env.document.querySelector('#projectBusiness').textContent.includes('Middletown'));
+    for(const key of ['doors','windows','decks','additions','painting']){
+      const radio=env.document.querySelector(`#projectChoices input[value="${key}"]`);
+      radio.checked=true;radio.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
+      assert.equal(env.document.querySelector('#projectNext1').disabled,false);
+      assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Cooke'));
+      assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,true);
+      assert.equal(env.document.querySelectorAll('#projectPrompts li').length,3);
+      assert.ok(!env.document.querySelector('#projectPrompts').textContent.includes('Furnace'));
+    }
+    assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Painting and drywall services are not confirmed'));
+    const heating=env.document.querySelector('#projectChoices input[value="comfort"]');
+    heating.checked=true;heating.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
+    assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,false);
+    env.document.querySelector('[name="consent"]').checked=true;
+    const detail=env.document.querySelector('#projectServiceDetail');detail.value='boiler';detail.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
+    assert.equal(env.document.querySelector('[name="consent"]').checked,false);
+    assert.ok(env.document.querySelector('#projectPrompts').textContent.includes('Gas or oil'));
+    assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Middletown'));
+  }finally{env.close();}
+});
+
+test('homepage has direct whole-home project entries rather than an HVAC-heavy category bar',async()=>{
+  const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+  const dom=new JSDOM(markup);
+  try{
+    const entries=[...dom.window.document.querySelectorAll('.home-project-card')];
+    assert.equal(entries.length,10);
+    for(const key of ['doors','windows','decks','additions','painting'])assert.ok(entries.some(link=>link.getAttribute('href')===`/start/?intent=${key}`));
+  }finally{dom.window.close();}
+});
+
+test('homepage directory still initializes after category navigation is replaced',async()=>{
+  const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+  const script=await readFile(new URL('../dist/assets/home.js',import.meta.url),'utf8');
+  const dom=new JSDOM(markup,{url:'https://wazoozie.com/',runScripts:'outside-only'});
+  try{
+    dom.window.eval(script);
+    assert.equal(dom.window.document.querySelectorAll('.home-project-card').length,10);
+    assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,4);
+  }finally{dom.window.close();}
 });

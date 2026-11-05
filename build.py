@@ -249,6 +249,8 @@ from project_experience import upgrade
 upgrade(OUT, PUBLIC, PAGES, BOOKING)
 from homeowner_experience import strengthen
 strengthen(OUT, PUBLIC, PAGES, PROVIDERS)
+from contact_measurement import improve as measure_contacts
+measure_contacts(OUT)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
