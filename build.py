@@ -139,7 +139,10 @@ region='''<section class="valley" id="areas"><div class="valley-intro"><div><div
 home=re.sub(r'<section class="area" id="areas">.*?</section>',region,home,count=1,flags=re.S)
 home=re.sub(r'<footer>.*?</footer>',FOOTER,home,count=1,flags=re.S)
 home=re.sub(r'<dialog id="profileDialog".*?</dialog>','',home,count=1,flags=re.S)
+from emblems import ICONS
 script=SCRIPT
+script=script.replace('function providerCard(key){', 'const businessEmblems='+json.dumps(ICONS)+';\nfunction providerCard(key){')
+script=script.replace('<span class="procover-tag">\'+p.trade', '\'+businessEmblems[key]+\'<span class="procover-tag">\'+p.trade')
 script=script.replace("let selectedProvider='middletown';",'''providers.cooke={name:'Cooke Carpentry & Construction, LLC',short:'CC',trade:'Handyman & carpentry',location:'Confirm service coverage for your address',phone:'484-948-3201',tel:'+14849483201',email:'mark@cookecustomcarpentry.com',web:'/businesses/cooke-carpentry-construction/',websiteConfirmed:false,hours:'Contact the business for availability',bio:'Discuss handyman, carpentry, and home-project needs. Confirm the scope and availability directly.',tags:['Carpentry inquiries','Home projects','Confirm job scope'],cover:'The finishing touches.<br>The bigger picture.',color:'#70634f',featured:false};
 let selectedProvider='middletown';''')
 script=re.sub(r"const towns=\[.*?\];",'const regions='+json.dumps(REGIONS,ensure_ascii=False)+';\nconst towns=["All neighborhoods",...Object.values(regions).flatMap(r=>r.towns)];',script,count=1)

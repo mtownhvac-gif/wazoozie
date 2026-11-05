@@ -9,3 +9,5 @@
 
 /* Keep trust information compact and the service galleries easy to scan. */
 .rating-proof{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin:20px 0;padding:14px 18px;border:1px solid #d6dece;border-radius:14px;background:#eef2e8;font-size:13px}.rating-proof strong{font-size:16px;color:#30472e}.rating-proof a{color:#49325f;text-underline-offset:3px}.trade-review-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.evidence-panel dl>div:has(dt:first-child){min-width:0}.service-gallery{margin-top:20px}.real-reviews:has(+*){scroll-margin-top:100px}@media(max-width:760px){.trade-review-grid{grid-template-columns:1fr}.rating-proof{gap:7px 12px}.real-reviews{padding:34px 0}.review-grid figure{padding:24px}.review-grid blockquote{font-size:23px}}
+
+.procover{position:relative}.procover svg.business-emblem{z-index:2;position:absolute;right:20px;top:16px;width:58px;height:58px;color:#fff5d6;opacity:.95}.procover-tag{max-width:70%;display:block}
