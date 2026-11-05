@@ -33,7 +33,7 @@ for f in ROOT.rglob('*.html'):
 home=(ROOT/'index.html').read_text();profile=(ROOT/'businesses/middletown-hvac/index.html').read_text()
 assert home.count('<blockquote>')==3 and profile.count('<blockquote>')==3
 assert 'sample testimonial' not in home.lower()
-assert 'family-at-home.jpg' in profile and 'not a customer photograph' in profile
+assert 'family-at-home.jpg' in profile and 'Illustrative family' in profile
 assert 'noindex,nofollow' in (ROOT/'404/index.html').read_text()
 assert '/contact/' in (ROOT/'sitemap.xml').read_text() if (ROOT/'sitemap.xml').exists() else True
 print('Contact paths, attribution privacy, review sources, image disclosure and 404 indexing passed.')
