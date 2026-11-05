@@ -42,3 +42,56 @@ Preserve the existing wazoozie.com site and coordinate its public launch with th
 Before labeling a provider verified, record current business identity, applicable registration/licensing, insurance, participation, and agreed coverage. Publish reviews only with evidence and permission. Automatic lead delivery requires a configured delivery service, private storage, spam protection, delivery monitoring, updated privacy text, and an end-to-end test using an operator-controlled recipient.
 
 Use branches and pull requests. Never commit credentials, customer information, or internal costing.
+
+## Private project briefs
+
+`/start/` is the guided project form. `project-config.mjs` defines the permitted
+service-to-business routing once, for both browser and server. `/projects/`
+contains sourced photos of actual published Middletown HVAC work.
+
+The production Worker entry is `entry.mjs`; its `PROJECT_INBOX` SQLite Durable
+Object stores validated, consented briefs. The initial migration is
+`project-inbox-v1`. Existing public assets, Markdown negotiation and domains are
+preserved. Deploy with `npm run deploy` from an authenticated Cloudflare session.
+The deploy command builds and runs the checks before changing production.
+
+**Delivery is not automatic.** Saving does not notify a contractor, reserve a
+visit or create a Housecall Pro customer. The confirmation says this explicitly
+and offers the selected business's phone and, where available, booking link.
+Do not change the receipt to “sent” until a delivery service is configured and
+its acceptance is verified. Project-saving failure leaves direct contact usable.
+
+Office review uses authenticated Cloudflare Data Studio: Durable Objects →
+ProjectInbox namespace → Data Studio. Enter the object name
+`middletown:YYYY-MM`, `ryan:YYYY-MM`, `liberator:YYYY-MM` or `cooke:YYYY-MM` for
+the current UTC month. Review new requests with:
+
+```sql
+SELECT id, created_at, intent, name, phone, email, town, zip, state, details,
+       timing, role, property, equipment, source
+FROM project_briefs WHERE status = 'new' ORDER BY created_at DESC;
+```
+
+After reviewing a specific reference, update its status using an exact ID:
+
+```sql
+UPDATE project_briefs SET status = 'reviewed' WHERE id = 'exact-project-uuid';
+```
+
+There is no public endpoint to list or retrieve briefs. Records expire after
+90 days through daily alarms. Daily salted hashes enforce a five-new-brief
+limit per client per provider/month partition, plus a 200-new-brief daily cap
+per partition. Honeypot, origin checks, strict validation and a 16 KiB body
+limit provide basic abuse controls; they do not prevent all automated spam.
+If abuse grows, add a verified challenge before relaxing these limits.
+
+For an access/deletion request, locate the relevant records in Data Studio,
+verify the requester, and remove only their matching records. Do not copy
+customer information into source control, build assets, screenshots or logs.
+
+Run `npm run build:production && npm run check`. Backend tests exercise actual
+Cloudflare SQLite storage locally through Miniflare with synthetic data only,
+including idempotency, rate limits, conflicts and retention. Browser QA should
+use `npm run dev` or the managed preview; local preview storage stays local.
+`INTAKE_LOCAL_PREVIEW` is set by the dev launcher only and must not be configured
+as a production variable.

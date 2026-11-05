@@ -1,0 +1,16 @@
+{
+  "name": "wazoozie",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "python3 build.py",
+    "build:production": "PUBLIC_SITE_URL=https://wazoozie.com python3 build.py",
+    "check": "python3 check_site.py && python3 check_contact.py && node check_agent.mjs && node --test tests/*.test.mjs",
+    "dev": "node scripts/dev.mjs",
+    "deploy": "npm run build:production && npm run check && wrangler deploy --keep-vars"
+  },
+  "devDependencies": {
+    "wrangler": "4.157.0",
+    "miniflare": "5.20261103.0-beta"
+  }
+}
