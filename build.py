@@ -151,7 +151,7 @@ script=re.sub(r"const towns=\[.*?\];",'const regions='+json.dumps(REGIONS,ensure
 script=script.replace("let selectedProvider='middletown';", "let selectedProvider='middletown';\nconst profilePaths={middletown:'middletown-hvac',ryan:'ryan-dugan-electric',liberator:'liberator-service-company'};\nconst bookingURL="+json.dumps(BOOKING)+";")
 script=script.replace("liberator:'liberator-service-company'","liberator:'liberator-service-company',cooke:'cooke-carpentry-construction'")
 script=script.replace("s==='plumbing'?'liberator':s==='electrical'?'ryan':'middletown'", "s==='plumbing'?'liberator':s==='electrical'?'ryan':s==='handyman'?'cooke':'middletown'")
-script=script.replace("['liberator','middletown','ryan']", "['middletown','cooke','liberator','ryan']")
+script=script.replace("['liberator','middletown','ryan']", "['middletown','ryan','liberator','cooke']")
 script=script.replace("['hvac','water','boilers','plumbing','electrical']", "['hvac','water','boilers','plumbing','electrical','handyman']")
 script=script.replace("const issues=key==='ryan'?", "const issues=key==='cooke'?['Handyman / home repair inquiry','Carpentry project','Other home project']:key==='ryan'?")
 script=script.replace("<h3>'+p.name+'</h3>","<h3><a href=\"/businesses/'+profilePaths[key]+'/\">'+p.name+'</a></h3>")
