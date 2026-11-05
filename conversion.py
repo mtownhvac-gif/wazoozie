@@ -58,7 +58,7 @@ def enhance(out, public, pages, booking):
             text=re.sub(r'(<p class="lede">).*?</p>',r'\1Heating, cooling and hot water help from Middletown HVAC. Based in Glen Mills. Book directly, ask about your address, or get a second opinion.</p>',text,count=1,flags=re.S)
             hero=f'<div class="hero-intents"><a class="btn primary" href="{e(booking, quote=True)}">Book with Middletown ↗</a><a class="btn outline" href="tel:+16105006416">Call 610-500-6416</a></div><div class="quick-paths"><a href="/contact/">Help me choose →</a><a href="/services/second-opinion/">Get a second opinion →</a></div><p class="contact-note">Direct contact. Confirm your address and appointment with the office.</p><h2 class="browse-label">Looking for another home service?</h2>'
             text=re.sub(r'<div class="hero-intents">.*?</div>',lambda _:hero,text,count=1,flags=re.S)
-            text=text.replace('<div class="region-strip"><span>Pennsylvania</span><span>New Jersey</span><span>Delaware</span></div>','<p class="region-disclosure">Exploring the Delco, Chester County and the Main Line. Each business confirms coverage; NJ and DE availability is not confirmed.</p>')
+            text=text.replace('<div class="region-strip"><span>Pennsylvania</span><span>New Jersey</span><span>Delaware</span></div>','<p class="region-disclosure">Exploring Delco, Chester County and the Main Line. Each business confirms coverage; NJ and DE availability is not confirmed.</p>')
         if path=='/businesses/middletown-hvac/':
             text=text.replace('<article class="prose">','<article class="prose">'+family,1)
             text=text.replace('</main>','<div class="wrap">'+reviews+'</div></main>')
