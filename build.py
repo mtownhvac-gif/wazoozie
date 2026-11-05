@@ -65,6 +65,8 @@ SERVICES['handyman']=dict(label='Handyman & carpentry',key='handyman',provider='
 
 from service_expansion import expand
 expand(SERVICES, PROVIDERS)
+from local_partners import expand as expand_local_partners, extend_home_script
+expand_local_partners(SERVICES, PROVIDERS)
 source=(ROOT/'src/home.html').read_text()
 CSS=re.search(r'<style>(.*?)</style>',source,re.S).group(1)
 # All font imports must precede style rules. The original second import was ignored by browsers.
@@ -192,6 +194,7 @@ home=re.sub(r'<script>.*?</script>','<script src="/assets/home.js" defer></scrip
 home=home.replace('</head>','<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin></head>',1)
 home=home.replace('<div class="progrid" id="providerResults"></div>', '<div class="progrid" id="providerResults"></div><noscript><p>Explore <a href="/services/">home services</a>, <a href="/businesses/middletown-hvac/">Middletown HVAC</a>, <a href="/businesses/ryan-dugan-electric/">Ryan Dugan Electric</a>, or <a href="/businesses/liberator-service-company/">Liberator Service Company</a>. Call Middletown HVAC at <a href="tel:+16105006416">610-500-6416</a>.</p></noscript>')
 (OUT/'index.html').write_text(home)
+script=extend_home_script(script, PROVIDERS)
 (OUT/'assets/home.js').write_text(script)
 PAGES.append('/')
 
@@ -210,7 +213,7 @@ for key,p in PROVIDERS.items():
     if p.get('official_web') is False:
         body=body.replace(f'<a href="{esc(p["web"])}" target="_blank" rel="noopener">Official business website ↗</a>','Business-provided contact details. Current website not confirmed.')
         body=re.sub(r'<p><a href="[^"]+" target="_blank" rel="noopener">Visit Cooke.*?</a></p>','',body)
-    schema={'@context':'https://schema.org','@type':'ProfilePage','name':p['name']+' | Wazoozie','mainEntity':{'@type':{'middletown':'HVACBusiness','ryan':'Electrician','liberator':'Plumber','cooke':'GeneralContractor'}[key],'@id':p['web']+'#business','name':p['name'],'url':p['web'],'telephone':p['tel'],'description':p['intro'],'knowsAbout':p['trade']}}
+    schema={'@context':'https://schema.org','@type':'ProfilePage','name':p['name']+' | Wazoozie','mainEntity':{'@type':{'middletown':'HVACBusiness','ryan':'Electrician','liberator':'Plumber','cooke':'GeneralContractor','hart':'GeneralContractor','rolledright':'HousePainter'}[key],'@id':p['web']+'#business','name':p['name'],'url':p['web'],'telephone':p['tel'],'description':p['intro'],'knowsAbout':p['trade']}}
     write_page('/businesses/'+p['slug']+'/',p['name'],p['intro'],inner('Local businesses / '+p['name'],p['name']+'.',p['intro'],body,p,p['trade']),schema)
 
 for slug,(title,intro,body) in GUIDES.items():
@@ -255,6 +258,8 @@ from contact_measurement import improve as measure_contacts
 measure_contacts(OUT)
 from water_heater_presentation import improve as improve_water_heater_photos
 improve_water_heater_photos(OUT)
+from local_partners import finish as finish_local_partners
+finish_local_partners(OUT)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
