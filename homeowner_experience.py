@@ -93,6 +93,7 @@ def strengthen(out, origin, pages, providers):
         content = target.read_text()
         content = re.sub(r'<section class="origin-story".*?</section>', lambda _: story, content, count=1, flags=re.S)
         if target == out / 'index.html':
+            content = content.replace('<a class="btn outline" href="/about/">Meet Wazoozie</a>', '<a class="btn outline" href="/contact/">Heating &amp; AC help →</a>')
             content = re.sub(r'<section class="section" aria-labelledby="categories-title">.*?</section>', lambda _: category_section, content, count=1, flags=re.S)
             content = content.replace('<h2 class="browse-label">', promo + '<h2 class="browse-label">', 1)
             content = content.replace('<option value="roofing">Roofing · joining soon</option>', '')
