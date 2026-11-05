@@ -57,7 +57,7 @@ def enhance(out, public, pages, booking):
             text=text.replace(bar, '<aside class="contact-dock" aria-label="Explore Wazoozie"><span>Wazoozie</span><a class="btn outline" href="/about/">About us</a><a class="btn primary" href="#find">Find a local pro</a></aside>')
             text=text.replace('<div class="wrap"><section class="feature"', '<div class="wrap">'+reviews+'<section class="feature"',1)
             text=text.replace('<section class="trust-section wrap"', '<div class="wrap">'+story+'</div><section class="trust-section wrap"',1)
-            text=re.sub(r'(<h1 id="hero-title">).*?</h1>',r'\1Your home.<br><em>In good hands.</em></h1>',text,count=1,flags=re.S)
+            text=re.sub(r'(<h1 id="hero-title">).*?</h1>',r'\1Your home. <br><em>In good hands.</em></h1>',text,count=1,flags=re.S)
             text=re.sub(r'(<p class="lede">).*?</p>',r'\1Wazoozie helps you find local people to look after your home. Heating and cooling, plumbing, electrical work, carpentry and the repairs you’ve been meaning to get to. Get to know the businesses, then reach out directly.</p>',text,count=1,flags=re.S)
             hero='<div class="hero-intents"><a class="btn primary" href="#find">Find help for your home →</a><a class="btn outline" href="/about/">Meet Wazoozie</a></div><p class="contact-note">Rooted in Delco, Chester County and the Main Line.</p><h2 class="browse-label">What needs doing?</h2>'
             text=re.sub(r'<div class="hero-intents">.*?</div>',lambda _:hero,text,count=1,flags=re.S)
