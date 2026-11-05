@@ -1,4 +1,5 @@
-// Serve identical public information as HTML or Markdown. No private data or agent actions.
+import {handleIntake} from './server/intake.mjs';
+// Serve public content consistently; keep project submissions in a separate handler.
 function prefersMarkdown(accept = '') {
   const types = accept.toLowerCase().split(',').map(part => {
     const [type, ...params] = part.trim().split(';');
@@ -13,6 +14,7 @@ export { prefersMarkdown };
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith('/api/')) return handleIntake(request, env);
     if (url.hostname === 'www.wazoozie.com' || /\/index\.html$/.test(url.pathname)) {
       url.hostname = url.hostname === 'www.wazoozie.com' ? 'wazoozie.com' : url.hostname;
       url.pathname = url.pathname.replace(/index\.html$/, '');

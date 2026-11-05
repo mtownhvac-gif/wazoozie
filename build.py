@@ -245,6 +245,8 @@ from seo import optimize
 optimize(OUT, PUBLIC)
 from search_foundations import improve
 improve(OUT, PUBLIC, PROVIDERS)
+from project_experience import upgrade
+upgrade(OUT, PUBLIC, PAGES, BOOKING)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
