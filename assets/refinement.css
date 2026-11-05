@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 :root{--paper:#fffdf8;--plum:#342d3d}
 .notebook-title{font:400 46px/1.1 'DM Serif Display',Georgia;letter-spacing:-.035em;margin:0}
+.evidence-panel{background:#ede8de;border:1px solid #dcd4c5;border-radius:17px;padding:27px;margin:0 0 35px}.evidence-panel .eyebrow{font-size:9px}.evidence-panel h2{font-size:32px;margin:0 0 24px}.evidence-panel dl{margin:0}.evidence-panel dl>div{display:grid;grid-template-columns:140px 1fr;gap:18px;border-top:1px solid #d9d0c0;padding:14px 0}.evidence-panel dt{font-size:11px;font-weight:700}.evidence-panel dd{margin:0;font-size:12px;color:var(--muted);line-height:1.7}@media(max-width:760px){.evidence-panel{padding:23px}.evidence-panel dl>div{grid-template-columns:1fr;gap:5px}}
 ::selection{background:#e0c9a8;color:#342d3d}
 .nav nav a{position:relative}.nav nav a:not(.btn):after{content:'';position:absolute;left:0;right:100%;bottom:-6px;height:1px;background:var(--orange);transition:right .2s}.nav nav a:hover:after{right:0}
 .hero .lede{max-width:430px}.hero h1{font-size:clamp(64px,6.15vw,84px)}
