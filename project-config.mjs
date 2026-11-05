@@ -3,7 +3,7 @@ export const CONSENT_VERSION = 'project-brief-2026-11-05';
 export const BUSINESSES = {
   middletown: {
     defaultIntent:'comfort', email: 'service@mtownhvac.com', name: 'Middletown HVAC', phone: '610-500-6416', tel: '+16105006416',
-    slug: 'middletown-hvac', image: 'middletown-outdoor-project',
+    slug: 'middletown-hvac', image: 'middletown-conventional-project',
     booking: 'https://book.housecallpro.com/book/Middletown-HVAC-LLC/fee90a1b38e64428a9ebf1cf37e04197?v2=true&utm_source=wazoozie&utm_medium=referral&utm_campaign=project-brief&utm_content=start'
   },
   ryan: {defaultIntent:'electrical',name: 'Ryan Dugan Electric LLC', phone: '445-258-9962', tel: '+14452589962', slug: 'ryan-dugan-electric', image: 'outdoor-lighting'},

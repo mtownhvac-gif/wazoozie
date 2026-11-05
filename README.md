@@ -209,3 +209,18 @@ a 50-per-day monthly-object cap and approximately 90-day cleanup. The table's
 `application_saved` count records new applications only. No application details
 are written into public assets or returned in receipts. Retention/abuse-key
 behavior follows the same private storage lifecycle as homeowner briefs.
+
+### Water Heater photo sources
+
+The Water Heater service page and Middletown profile pair two actual, publicly
+published Middletown installation photographs. No generated installation image
+is used as evidence of its work.
+
+- `assets/middletown-tankless-project.jpg`: Navien installation, published at
+  https://www.mtownhvac.com/conversion/.
+- `assets/middletown-conventional-project.jpg`: Bradford White tank Water Heater
+  beside a Heil Furnace, published at https://www.mtownhvac.com/services/tankless/
+  (`/assets/img/services__tankless/furnace-water-heater-branded-plenum.jpg`).
+
+`water_heater_presentation.py` supplies source-linked captions and direct project
+planning links. Full equipment remains visible in responsive photo panels.
