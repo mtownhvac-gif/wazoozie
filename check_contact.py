@@ -19,9 +19,10 @@ class Inspect(HTMLParser):
 for f in ROOT.rglob('*.html'):
     text=f.read_text();p=Inspect();p.feed(text)
     assert p.docks==1,f'{f}: one mobile contact dock required'
-    assert 'tel:+16105006416' in p.links,f'{f}: missing phone'
+    hvac='/services/' in str(f) and any(x in str(f) for x in ('heating-cooling','boilers','water-heaters','maintenance','replacement-estimates','second-opinion')) or '/businesses/middletown-hvac/' in str(f) or '/contact/' in str(f)
+    if hvac:assert 'tel:+16105006416' in p.links,f'{f}: missing HVAC phone'
     booking=[x for x in p.links if urlsplit(x).netloc=='book.housecallpro.com']
-    assert booking,f'{f}: missing booking path'
+    if hvac:assert booking,f'{f}: missing booking path'
     for url in booking:
         q=parse_qs(urlsplit(url).query)
         assert q['utm_source']==['wazoozie']
@@ -31,7 +32,8 @@ for f in ROOT.rglob('*.html'):
         serialized=json.dumps(item)
         assert '"aggregateRating"' not in serialized and '"@type": "Review"' not in serialized
 home=(ROOT/'index.html').read_text();profile=(ROOT/'businesses/middletown-hvac/index.html').read_text()
-assert home.count('<blockquote>')==3 and profile.count('<blockquote>')==3
+assert home.count('<blockquote>')==0 and profile.count('<blockquote>')==3
+assert 'founding' not in home.lower()
 assert 'sample testimonial' not in home.lower()
 assert 'family-at-home.jpg' in profile and 'Illustrative family' in profile
 assert 'noindex,nofollow' in (ROOT/'404/index.html').read_text()
