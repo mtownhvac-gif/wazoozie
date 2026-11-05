@@ -8,7 +8,7 @@ from urllib.parse import urlsplit, parse_qsl, urlencode, urlunsplit
 DISCLOSURE = 'Wazoozie promotes Middletown HVAC, its founding home-comfort business. Featured placement is a referral relationship, not an independent ranking.'
 
 def enhance(out, public, pages, booking):
-    for name in ("valley-stone-home.jpg", "valley-colonial-home.jpg", "porch-homeowners.jpg", "family-at-home.jpg"):
+    for name in ("valley-stone-home.jpg", "valley-colonial-home.jpg", "porch-homeowners.jpg", "family-at-home.jpg", "weil-mclain-evergreen.jpg", "outdoor-lighting.jpg", "sink.jpg", "tankless.jpg", "carpentry.jpg", "tempstar-ion-risers.jpg", "garden-fountain.jpg", "window-framing.jpg", "electrical-outlet.jpg"):
         shutil.copy(out.parent/"assets"/name, out/"assets"/name)
     e = html.escape
     phone = '<a href="tel:+16105006416">610-500-6416</a>'
@@ -38,7 +38,7 @@ def enhance(out, public, pages, booking):
     pages.append('/contact/')
     for f in out.rglob('*.html'):
         text=f.read_text()
-        path='/' if f==out/'index.html' else '/'+str(f.parent.relative_to(out))+'/'
+        path='/404/' if f==out/'404.html' else '/' if f==out/'index.html' else '/'+str(f.parent.relative_to(out))+'/'
         text=text.replace('</head>','<link rel="stylesheet" href="/assets/contact.css"></head>')
         text=text.replace('</nav></div></header>','</nav>'+menu+'</div></header>',1)
         text=re.sub(r'<div class="mobilebar">.*?</div><a.*?</a></div>','',text,flags=re.S)
@@ -60,6 +60,15 @@ def enhance(out, public, pages, booking):
             text=text.replace('<article class="prose">','<article class="prose">'+family,1)
             text=text.replace('</main>','<div class="wrap">'+reviews+'</div></main>')
             text=text.replace('Not yet collected or verified by Wazoozie.','Published review excerpts are linked below. Wazoozie has not independently verified the underlying work. Images are illustrative.')
+        galleries = {
+            '/businesses/middletown-hvac/': [('weil-mclain-evergreen', 'Weil-McLain Evergreen gas Boiler manufacturer product photograph'), ('tankless', 'Illustrative Navien tankless Water Heater'), ('tempstar-ion-risers', 'Illustrative Tempstar Ion heat pump on six-inch risers above a square gray equipment pad')],
+            '/businesses/ryan-dugan-electric/': [('outdoor-lighting', 'Illustrative outdoor lighting at a stone home'), ('electrical-outlet', 'Illustrative residential electrical outlet')],
+            '/businesses/liberator-service-company/': [('sink', 'Illustrative kitchen sink and faucet'), ('garden-fountain', 'Illustrative garden fountain')],
+            '/businesses/cooke-carpentry-construction/': [('carpentry', 'Illustrative timber structure under construction'), ('window-framing', 'Illustrative window framing renovation')],
+        }
+        if path in galleries:
+            photos = ''.join('<img class="'+('product-image' if name in ('weil-mclain-evergreen','tempstar-ion') else '')+'" src="/assets/'+name+('.png' if name=='tempstar-ion' else '.jpg')+'" alt="'+alt+'" width="'+('659' if name=='weil-mclain-evergreen' else '1200')+'" height="'+('500' if name=='weil-mclain-evergreen' else '800')+'" loading="lazy">' for name,alt in galleries[path])
+            text=text.replace('</main>', '<div class="wrap"><div class="service-gallery" aria-label="Service illustrations">'+photos+'</div></div></main>')
         if path=='/about/':
             text=text.replace('</main>','<div class="wrap">'+porch+'</div></main>')
             text=text.replace('</main>','<div class="wrap">'+story+'</div></main>')
@@ -86,6 +95,8 @@ def enhance(out, public, pages, booking):
             text=text.replace('</head>','<script type="application/ld+json">'+encoded+'</script></head>')
         if path=='/404/':
             text=text.replace('content="index,follow"','content="noindex,nofollow"')
+        # Service illustrations are not represented as completed projects or customers.
+        text=re.sub(r'<figcaption>(?:AI-generated home imagery|Illustrative family scene|A little more time to enjoy home).*?</figcaption>', '', text, flags=re.S)
         f.write_text(text)
     facts=out/'llms.txt'
     facts.write_text(facts.read_text()+f'\n## Relationship and contact\n\n{DISCLOSURE}\n\n- [Contact Middletown HVAC]({public}/contact/): Direct calling, online booking, service choices and address-coverage guidance.\n')
