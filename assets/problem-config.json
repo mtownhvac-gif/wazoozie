@@ -1,5 +1,60 @@
 [
   {
+    "key": "door",
+    "label": "I need a door hung or repaired",
+    "intent": "doors",
+    "reason": "Cooke is listed for carpentry and home repairs. Describe the door, frame and hardware to discuss the right scope.",
+    "prepare": [
+      "Interior or exterior, and how many doors?",
+      "New installation, replacement or repair?",
+      "Any frame, hardware or trim work needed?"
+    ]
+  },
+  {
+    "key": "windows",
+    "label": "I want to replace or repair windows",
+    "intent": "windows",
+    "reason": "Start by discussing the window scope with Cooke. Confirm installation services, products and coverage directly.",
+    "prepare": [
+      "How many windows and what type?",
+      "Repair, replacement or surrounding trim work?",
+      "Any product selection or photos to share directly?"
+    ]
+  },
+  {
+    "key": "deck",
+    "label": "I\u2019m thinking about a deck or porch",
+    "intent": "decks",
+    "reason": "Discuss your deck or porch project with Cooke. Confirm the scope, design and permit responsibilities before arranging work.",
+    "prepare": [
+      "New construction or an existing deck repair?",
+      "Approximate size, height and materials?",
+      "Any plans, stairs or railings to consider?"
+    ]
+  },
+  {
+    "key": "addition",
+    "label": "I want to remodel or build an addition",
+    "intent": "additions",
+    "reason": "Discuss whether the project is a fit with Cooke. Confirm scope, design, engineering, permits and scheduling directly.",
+    "prepare": [
+      "Which space and what would you like to change?",
+      "Approximate size and intended use?",
+      "Do you have drawings or a proposed timeline?"
+    ]
+  },
+  {
+    "key": "painting",
+    "label": "A room needs painting or drywall work",
+    "intent": "painting",
+    "reason": "Painting and drywall services are not confirmed in this directory. Ask Cooke whether the project is a fit before arranging work.",
+    "prepare": [
+      "Interior or exterior, and which surfaces?",
+      "Any patching, drywall repair or preparation?",
+      "Approximate size and your preferred timing?"
+    ]
+  },
+  {
     "key": "no-heat",
     "label": "The heat or AC stopped working",
     "intent": "comfort",
@@ -23,7 +78,7 @@
   },
   {
     "key": "hot-water",
-    "label": "There’s no hot water",
+    "label": "There\u2019s no hot water",
     "intent": "water",
     "reason": "Middletown HVAC handles tank and tankless Water Heaters. Choose Water Heater service rather than a general drain request.",
     "prepare": [
@@ -34,7 +89,7 @@
   },
   {
     "key": "radiators",
-    "label": "The radiators or baseboards aren’t heating",
+    "label": "The radiators or baseboards aren\u2019t heating",
     "intent": "boiler",
     "reason": "A Boiler specialist is the appropriate starting point for hot-water heating systems.",
     "prepare": [
@@ -56,7 +111,7 @@
   },
   {
     "key": "new-system",
-    "label": "I’m planning a new system or ductless",
+    "label": "I\u2019m planning a new system or ductless",
     "intent": "replacement",
     "reason": "An HVAC installation estimate should address the home, existing equipment and the comfort you want to improve.",
     "prepare": [
@@ -84,7 +139,7 @@
     "prepare": [
       "What is affected, and where?",
       "Is this a repair or a planned improvement?",
-      "Any earlier electrician’s findings?"
+      "Any earlier electrician\u2019s findings?"
     ]
   },
   {

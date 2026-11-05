@@ -5,9 +5,9 @@ import {JSDOM} from 'jsdom';
 const PROBLEMS = JSON.parse(await readFile(new URL('../assets/problem-config.json', import.meta.url), 'utf8'));
 import {INTENTS,BUSINESSES} from '../project-config.mjs';
 
-async function page(path) {
+async function page(path, query = '') {
   const markup = await readFile(new URL(`../dist/${path}/index.html`, import.meta.url), 'utf8');
-  const dom = new JSDOM(markup, {url: `https://wazoozie.com/${path}/`});
+  const dom = new JSDOM(markup, {url: `https://wazoozie.com/${path}/${query}`});
   const previous = new Map();
   for (const name of ['document','location','history','navigator','FormData']) {
     previous.set(name,Object.getOwnPropertyDescriptor(globalThis,name));
@@ -44,7 +44,7 @@ test('plain-language problems choose the intended business without collecting co
 });
 
 test('direct contact is offered before form entry and an unsaved brief can be emailed explicitly',async()=>{
-  const env=await page('start');
+  const env=await page('start','?intent=comfort');
   try {
     await import(`../dist/assets/project.js?test=${Date.now()}`);
     await new Promise(resolve=>setImmediate(resolve));
@@ -89,7 +89,7 @@ test('business evidence is explicit and does not claim a recorded credential ins
 });
 
 test('saving outage preserves direct contact and offers an availability retry',async()=>{
-  const env=await page('start');
+  const env=await page('start','?intent=comfort');
   try{
     globalThis.fetch=async()=>{throw new Error('synthetic outage');};
     await import(`../dist/assets/project.js?outage=${Date.now()}`);
@@ -116,7 +116,7 @@ test('problem routing and page-specific sharing metadata exist without JavaScrip
 });
 
 test('contact counting cannot send project text or email draft bodies',async()=>{
-  const env=await page('start');
+  const env=await page('start','?intent=comfort');
   try{
     await import(`../dist/assets/contact-activity.js?test=${Date.now()}`);
     const link=env.document.createElement('a');link.href='mailto:service@mtownhvac.com?body=PRIVATE-PROJECT-TEXT';link.textContent='Email';
@@ -131,4 +131,55 @@ test('contact counting cannot send project text or email draft bodies',async()=>
     assert.equal(env.requests[0].options.referrerPolicy,'no-referrer');
     assert.ok(!env.requests[0].options.body.includes('PRIVATE'));
   }finally{env.close();}
+});
+
+test('whole-home categories start neutral and route doors and painting with relevant scope prompts',async()=>{
+  const env=await page('start');
+  try{
+    await import(`../dist/assets/project.js?balanced=${Date.now()}`);
+    assert.equal(env.document.querySelectorAll('#projectChoices input').length,10);
+    assert.equal(env.document.querySelectorAll('#projectChoices input:checked').length,0);
+    assert.equal(env.document.querySelector('#projectNext1').disabled,true);
+    assert.equal(env.document.querySelector('#projectQuickConnect').hidden,true);
+    assert.ok(!env.document.querySelector('#projectBusiness').textContent.includes('Middletown'));
+    for(const key of ['doors','windows','decks','additions','painting']){
+      const radio=env.document.querySelector(`#projectChoices input[value="${key}"]`);
+      radio.checked=true;radio.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
+      assert.equal(env.document.querySelector('#projectNext1').disabled,false);
+      assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Cooke'));
+      assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,true);
+      assert.equal(env.document.querySelectorAll('#projectPrompts li').length,3);
+      assert.ok(!env.document.querySelector('#projectPrompts').textContent.includes('Furnace'));
+    }
+    assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Painting and drywall services are not confirmed'));
+    const heating=env.document.querySelector('#projectChoices input[value="comfort"]');
+    heating.checked=true;heating.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
+    assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,false);
+    env.document.querySelector('[name="consent"]').checked=true;
+    const detail=env.document.querySelector('#projectServiceDetail');detail.value='boiler';detail.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
+    assert.equal(env.document.querySelector('[name="consent"]').checked,false);
+    assert.ok(env.document.querySelector('#projectPrompts').textContent.includes('Gas or oil'));
+    assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Middletown'));
+  }finally{env.close();}
+});
+
+test('homepage has direct whole-home project entries rather than an HVAC-heavy category bar',async()=>{
+  const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+  const dom=new JSDOM(markup);
+  try{
+    const entries=[...dom.window.document.querySelectorAll('.home-project-card')];
+    assert.equal(entries.length,10);
+    for(const key of ['doors','windows','decks','additions','painting'])assert.ok(entries.some(link=>link.getAttribute('href')===`/start/?intent=${key}`));
+  }finally{dom.window.close();}
+});
+
+test('homepage directory still initializes after category navigation is replaced',async()=>{
+  const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+  const script=await readFile(new URL('../dist/assets/home.js',import.meta.url),'utf8');
+  const dom=new JSDOM(markup,{url:'https://wazoozie.com/',runScripts:'outside-only'});
+  try{
+    dom.window.eval(script);
+    assert.equal(dom.window.document.querySelectorAll('.home-project-card').length,10);
+    assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,4);
+  }finally{dom.window.close();}
 });

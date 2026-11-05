@@ -157,3 +157,21 @@ The problem guide now builds its first usable links from
 creating the only route choices. The build generates the matching browser
 module from this same source. New editorial pages include consistent title,
 Open Graph, Twitter, organization and breadcrumb metadata.
+
+## Whole-home project categories
+
+The planner starts with ten unselected projects across repairs/finishing,
+bigger home projects, and household systems. Doors, windows, painting/drywall,
+carpentry, decks and remodeling/additions appear alongside HVAC, hot water,
+electrical and plumbing work. Specialist HVAC options sit under one heating and
+cooling choice; existing Boiler, maintenance, replacement and second-opinion links
+still select the correct detail. Changing a project clears its previous consent.
+
+Shared `PROJECT_GROUPS` and `INTENTS` drive the planner, homepage project links,
+problem-guide fallback routing and intake validation. The builder reads this
+configuration through Node rather than duplicating labels or routing in Python.
+Cooke is a contact for discussing construction project scope; window, deck,
+remodeling/addition and painting/drywall services require direct scope confirmation.
+Painting/drywall capability is explicitly unconfirmed. These project categories
+do not represent new verified credentials, additional contractors or guaranteed
+availability. Existing four-business profiles are preserved.
