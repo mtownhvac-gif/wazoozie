@@ -1,6 +1,7 @@
 import {BUSINESSES} from '../project-config.mjs';
 import {validateBrief} from './brief-validation.mjs';
 import {validateActivity} from '../activity-config.mjs';
+import {validateNeighbor} from './neighbor-validation.mjs';
 import {validateApplication} from './application-validation.mjs';
 
 function respond(data, status = 200) {
@@ -36,9 +37,10 @@ export async function handleIntake(request, env) {
   if (url.pathname === '/api/project-capabilities') {
     return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX)}) : respond({error: 'Method not allowed.'}, 405);
   }
+  const neighbor = url.pathname === '/api/neighbor-referrals';
   const activity = url.pathname === '/api/contact-activity';
   const businessApplication = url.pathname === '/api/contractor-applications';
-  if (url.pathname !== '/api/project-briefs' && !activity && !businessApplication) return respond({error: 'Not found.'}, 404);
+  if (url.pathname !== '/api/project-briefs' && !activity && !businessApplication && !neighbor) return respond({error: 'Not found.'}, 404);
   if (request.method !== 'POST') return respond({error: 'Method not allowed.'}, 405);
   const origins = new Set(['https://wazoozie.com', 'https://www.wazoozie.com']);
   if (env.INTAKE_LOCAL_PREVIEW === '1' || ['localhost', '127.0.0.1'].includes(url.hostname)) origins.add(url.origin);
@@ -49,6 +51,21 @@ export async function handleIntake(request, env) {
   let input;
   try { input = await readJSON(request, activity ? 512 : 16384); }
   catch (error) { return respond({error: error instanceof RangeError ? 'Request too large.' : 'Invalid JSON.'}, error instanceof RangeError ? 413 : 400); }
+  if (neighbor) {
+    const {referral,error}=validateNeighbor(input);
+    if(error)return respond({error},400);
+    const now=Date.now();
+    const date=new Date(now).toISOString();
+    const fingerprint=await hash(JSON.stringify(referral));
+    const client=await hash(date.slice(0,10)+'|'+(request.headers.get('cf-connecting-ip')||'unknown'));
+    try{
+      const {status,code}=await env.PROJECT_INBOX.getByName('neighbors:v1').saveNeighbor(referral,fingerprint,client,now);
+      if(status===429)return respond({error:'Link limit reached. You can still share wazoozie.com directly.'},429);
+      if(status===409)return respond({error:'This reference already has different details. Reopen the page for a new link.'},409);
+      if(![200,201].includes(status)||!code)throw Error('Save not confirmed');
+      return respond({code,status:'created',expiresInDays:90},status);
+    }catch{return respond({error:'We could not confirm your link. Retry the same details.'},503);}
+  }
   if (businessApplication) {
     const {application,error} = validateApplication(input);
     if (error) return respond({error},400);
@@ -86,11 +103,13 @@ export async function handleIntake(request, env) {
   // Rotate the pseudonymous abuse key daily; never store raw IP addresses.
   const client = await hash(date.slice(0, 10) + '|' + (request.headers.get('cf-connecting-ip') || 'unknown'));
   try {
+    if(brief.neighborCode && !await env.PROJECT_INBOX.getByName('neighbors:v1').hasNeighbor(brief.neighborCode,now)) delete brief.neighborCode;
     const inbox = env.PROJECT_INBOX.getByName(`${brief.provider}:${date.slice(0, 7)}`);
-    const {status} = await inbox.saveBrief(brief, fingerprint, client, now);
+    const {status,referralAttributed} = await inbox.saveBrief(brief, fingerprint, client, now);
     if (status === 429) return respond({error: 'Request limit reached. Please call the business directly.'}, 429);
     if (status === 409) return respond({error: 'This reference already has different details. Start a new brief.'}, 409);
-    return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery: 'not_sent'}, status);
+    if(![200,201].includes(status)) throw Error('Save not confirmed');
+    return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery: 'not_sent', referralAttributed: referralAttributed ?? Boolean(brief.neighborCode)}, status);
   } catch {
     return respond({error: 'We could not confirm a save. Retry this same brief or call the business directly.'}, 503);
   }

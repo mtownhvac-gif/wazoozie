@@ -49,3 +49,25 @@ test('contractor applications remain private, idempotent, rate limited and expir
     assert.equal((await sql.exec('SELECT count(*) AS n FROM contractor_applications'))[0].n,0);
   }finally{await mf.dispose();}
 });
+
+test('neighbor attribution persists privately, retries safely, and expires after 90 days',async()=>{
+ const source=await readFile(new URL('../server/project-store.mjs',import.meta.url),'utf8');
+ const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:source+'\nexport class TestInbox extends ProjectInbox { async runExpiry(){return this.alarm();} }\nexport default {fetch(){return new Response("test");}};',compatibilityDate:'2026-11-04',durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}}}));
+ try{
+  const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');const store=ns.get(ns.idFromName('neighbor-test'));const now=Date.now();
+  const data={id:crypto.randomUUID(),name:'Synthetic Referrer',email:'referrer@example.invalid',phone:'',consentVersion:'test'};
+  const first=await store.saveNeighbor(data,'same','client',now);assert.equal(first.status,201);assert.match(first.code,/^[0-9a-f]{32}$/);
+  const repeated=await store.saveNeighbor(data,'same','client',now);assert.equal(repeated.status,200);assert.equal(repeated.code,first.code);
+  assert.equal((await store.saveNeighbor(data,'changed','client',now)).status,409);
+  assert.equal(await store.hasNeighbor(first.code,now),true);assert.equal(await store.hasNeighbor(first.code,now+91*86400000),false);
+  for(let i=0;i<2;i++)assert.equal((await store.saveNeighbor({...data,id:crypto.randomUUID()},'new','client',now)).status,201);
+  assert.equal((await store.saveNeighbor({...data,id:crypto.randomUUID()},'new','client',now)).status,429);
+  const brief={id:crypto.randomUUID(),provider:'hart',intent:'doors',name:'Synthetic Homeowner',phone:'202-555-0100',email:'',town:'Media',zip:'19063',state:'PA',details:'Synthetic only: door project',timing:'Planning ahead',role:'Homeowner',property:'House',equipment:'',source:'neighbor',consentVersion:'test',neighborCode:first.code};
+  assert.equal((await store.saveBrief(brief,'brief','lead-client',now)).status,201);
+  const sql=await mf.unsafeGetDurableObjectStorage(undefined,'TestInbox',{name:'neighbor-test'});
+  assert.equal((await sql.exec('SELECT neighbor_code FROM project_briefs'))[0].neighbor_code,first.code);
+  assert.equal((await sql.exec('SELECT name FROM neighbor_referrals WHERE code=?',first.code))[0].name,data.name);
+  await sql.exec('UPDATE neighbor_referrals SET created_at=?',now-91*86400000);await store.runExpiry();
+  assert.equal((await sql.exec('SELECT count(*) AS n FROM neighbor_referrals'))[0].n,0);
+ }finally{await mf.dispose();}
+});

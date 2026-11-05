@@ -146,7 +146,9 @@ test('whole-home categories start neutral and route doors and painting with rele
       const radio=env.document.querySelector(`#projectChoices input[value="${key}"]`);
       radio.checked=true;radio.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
       assert.equal(env.document.querySelector('#projectNext1').disabled,false);
-      assert.ok(env.document.querySelector('#projectBusiness').textContent.includes(BUSINESSES[INTENTS[key].provider].name));
+      const expectedBusiness = key === 'painting' ? 'Rolled Right Painting' : 'Hart Builders';
+      assert.ok(env.document.querySelector('#projectBusiness').textContent.includes(expectedBusiness));
+      assert.ok(env.document.querySelector('#projectQuickConnect a[href="' + (key === 'painting' ? 'tel:+16102919552' : 'tel:+12153505502') + '"]'));
       assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,true);
       assert.equal(env.document.querySelectorAll('#projectPrompts li').length,3);
       assert.ok(!env.document.querySelector('#projectPrompts').textContent.includes('Furnace'));

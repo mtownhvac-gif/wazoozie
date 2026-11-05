@@ -1,8 +1,11 @@
+import {neighborCode} from './neighbor-config.mjs';
 import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS, PROJECT_GROUPS} from './project-config.mjs';
 
 const $ = selector => document.querySelector(selector);
 const form = $('#projectForm');
 const params = new URLSearchParams(location.search);
+const incomingNeighbor=neighborCode(params.get('neighbor'));
+if (incomingNeighbor) document.querySelector('#neighborCredit').hidden=false;
 const requestedIntent = params.get('intent');
 let selected = Object.hasOwn(INTENTS, requestedIntent) ? requestedIntent : (BUSINESSES[params.get('provider')]?.defaultIntent || null);
 function newReference() {
@@ -124,11 +127,12 @@ form.elements.state.addEventListener('change', updateNotices);
 form.elements.timing.addEventListener('change', updateNotices);
 function values() {
   const data = Object.fromEntries(new FormData(form));
-  return {...data, provider: INTENTS[selected].provider, intent: selected, consent: form.elements.consent.checked, consentVersion: CONSENT_VERSION, id, startedAt, source: ['partner-ryan', 'partner-liberator', 'partner-cooke', 'neighbor'].includes(params.get('ref')) ? params.get('ref') : 'start-page'};
+  return {...data, ...(incomingNeighbor && document.querySelector('#keepNeighborCredit').checked ? {neighborCode:incomingNeighbor} : {}), provider: INTENTS[selected].provider, intent: selected, consent: form.elements.consent.checked, consentVersion: CONSENT_VERSION, id, startedAt, source: ['partner-ryan', 'partner-liberator', 'partner-cooke', 'neighbor'].includes(params.get('ref')) ? params.get('ref') : 'start-page'};
 }
 function review(data) {
   const list = make('dl');
   const fields = [['Business to contact', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town}, ${data.state} ${data.zip} · ${data.timing}`], ['About the property', `${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified'], ['Your contact details', `${data.name}\n${data.phone}${data.email ? '\n' + data.email : ''}`]];
+  if (data.neighborCode) fields.push(['Neighbor introduction', 'Attach this neighbor’s referral credit when saving. No referrer contact details are shared.']);
   if (INTENTS[data.intent].scopeCheck) fields.push(['Project fit to confirm', INTENTS[data.intent].scopeCheck]);
   for (const [label, value] of fields) list.append(make('dt', label), make('dd', value));
   $('#projectReview').replaceChildren(list);
@@ -170,6 +174,8 @@ form.addEventListener('submit', async event => {
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || 'We could not confirm that your brief was saved. Retry or call the business directly.');
     submitted = data;
+    document.querySelector('#neighborCredit').hidden=true;
+    if(data.neighborCode) document.querySelector('#receiptNeighborStatus').textContent=result.referralAttributed ? 'Your neighbor introduction was credited with this saved brief.' : 'Your project was saved, but this neighbor link could not be credited. It may have expired.';
     form.hidden = true;
     $('#projectReceipt').hidden = false;
     $('#receiptMessage').textContent = `WZ-${id.slice(0, 8).toUpperCase()} · ${INTENTS[data.intent].label} with ${BUSINESSES[data.provider].name}.`;

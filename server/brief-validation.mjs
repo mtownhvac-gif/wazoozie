@@ -1,3 +1,4 @@
+import {neighborCode} from '../neighbor-config.mjs';
 import {BUSINESSES, INTENTS, CONSENT_VERSION} from '../project-config.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -25,6 +26,8 @@ export function validateBrief(data, now = Date.now()) {
     property: text(data.property, 30), equipment: text(data.equipment, 120),
     source: ['partner-ryan','partner-liberator','partner-cooke','neighbor'].includes(data.source) ? data.source : 'start-page', consentVersion: CONSENT_VERSION
   };
+  if (data.neighborCode !== undefined && !neighborCode(data.neighborCode)) return {error:'Invalid neighbor link. Remove the referral credit or start a fresh project.'};
+  if (data.neighborCode) brief.neighborCode = data.neighborCode;
   const digits = brief.phone.replace(/\D/g, '');
   if (brief.name.length < 2 || digits.length < 10 || digits.length > 15) return {error: 'Enter your name and a valid phone number.'};
   if (brief.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(brief.email)) return {error: 'Enter a valid email address or leave it blank.'};

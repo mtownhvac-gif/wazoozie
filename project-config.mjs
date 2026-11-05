@@ -20,11 +20,11 @@ export const PROJECT_GROUPS = [
 ];
 
 export const INTENTS = {
-  doors: {label:'Hang or repair a door',description:'Interior doors, sticking doors, hardware and trim.',provider:'cooke',service:'handyman',group:'repairs'},
-  windows: {label:'Replace or repair windows',description:'Window replacement, frames and surrounding trim.',provider:'cooke',service:'handyman',group:'repairs',scopeCheck:'Confirm window installation, product selection and project coverage directly with Cooke before arranging work.'},
+  doors: {label:'Hang or repair a door',description:'Interior doors, sticking doors, hardware and trim.',provider:'hart',service:'construction-remodeling',group:'repairs',scopeCheck:'Discuss door hanging, frame or hardware work and current availability directly with Hart Builders.'},
+  windows: {label:'Replace or repair windows',description:'Window replacement, frames and surrounding trim.',provider:'hart',service:'construction-remodeling',group:'repairs',scopeCheck:'Discuss window replacement, product selection, surrounding repairs and project coverage directly with Hart Builders.'},
   painting: {label:'Painting & drywall',description:'A room to repaint. Walls, ceilings or drywall to finish.',provider:'rolledright',service:'painting',group:'repairs',scopeCheck:'Discuss the surfaces, preparation, finishes and current coverage directly with Rolled Right Painting.'},
-  carpentry: {label:'Carpentry & home repairs',description:'Trim, shelving, wood repairs and the unfinished details.',provider:'cooke',service:'handyman',group:'repairs'},
-  decks: {label:'Build or repair a deck',description:'Decks, porches, stairs, railings and outdoor projects.',provider:'cooke',service:'handyman',group:'projects',scopeCheck:'Discuss the deck or porch scope, design, permits and current availability directly with Cooke.'},
+  carpentry: {label:'Carpentry & home repairs',description:'Smaller trim, shelving, wood repairs and finishing details.',provider:'cooke',service:'handyman',group:'repairs'},
+  decks: {label:'Build or repair a deck',description:'Decks, porches, stairs, railings and outdoor projects.',provider:'hart',service:'construction-remodeling',group:'projects',scopeCheck:'Discuss the deck or porch scope, design, permits and current availability directly with Hart Builders.'},
   additions: {label:'Remodel or build an addition',description:'More space, a new layout or a room ready for a change.',provider:'hart',service:'construction-remodeling',group:'projects',scopeCheck:'Confirm that Hart Builders accepts your remodeling or addition scope. Design, engineering, permits and trade coordination must be agreed directly.'},
   comfort: {label:'Heating & cooling',description:'Repairs, Boilers, maintenance and new systems.',provider:'middletown',service:'heating-cooling',group:'systems'},
   water: {label:'Water Heaters & hot water',description:'Tank, tankless, repairs and replacements.',provider:'middletown',service:'water-heaters',group:'systems'},
