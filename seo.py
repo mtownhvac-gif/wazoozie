@@ -1,6 +1,8 @@
 """Page-specific search and social metadata, aligned with visible services."""
 import html,json,re
 PAGES={
+'/services/oil-to-gas-conversion/':('Oil-to-Gas & Heating Conversions | Middletown HVAC','Compare oil-to-gas conversions, heat pumps, propane and dual-fuel options with Middletown HVAC. Plan the full scope for your Delco or Main Line home.'),
+'/services/ductless-mini-splits/':('Ductless Mini-Split Installation & Service | Middletown','Find ductless mini-split installation, repair and maintenance with Middletown HVAC. Explore single-room and multi-zone comfort for local homes.'),
 '/':('Local Home Services in Delco and the Main Line','Get to know Wazoozie and vetted local businesses for heating, cooling, plumbing, electrical work, carpentry and home repairs. Connect directly.'),
 '/about/':('About Wazoozie | Local Home Services','Why Wazoozie helps homeowners avoid poor work and find vetted local businesses for heating, cooling, plumbing, electrical work and home repairs.'),
 '/contact/':('Contact Middletown HVAC | Call or Book Online','Call Middletown HVAC at 610-500-6416 or book online for heating, cooling, Boilers and hot water. Confirm your address and appointment with the office.'),

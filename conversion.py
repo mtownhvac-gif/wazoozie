@@ -44,7 +44,7 @@ def enhance(out, public, pages, booking):
         text=re.sub(r'<div class="mobilebar">.*?</div><a.*?</a></div>','',text,flags=re.S)
         # The original homepage dock has nested markup; remove it through its known outer tail.
         text=re.sub(r'<div class="mobilebar">.*?</a></div>','',text,flags=re.S)
-        hvac_page=path in ('/contact/','/businesses/middletown-hvac/') or any(path=='/services/'+slug+'/' for slug in ('heating-cooling','boilers','water-heaters','maintenance','replacement-estimates','second-opinion'))
+        hvac_page=path in ('/contact/','/businesses/middletown-hvac/') or any(path=='/services/'+slug+'/' for slug in ('heating-cooling','boilers','water-heaters','maintenance','replacement-estimates','second-opinion','oil-to-gas-conversion','ductless-mini-splits'))
         page_bar=bar if hvac_page else '<aside class="contact-dock" aria-label="Explore Wazoozie"><span>Wazoozie</span><a class="btn outline" href="/about/">About us</a><a class="btn primary" href="/#find">Find a local pro</a></aside>'
         text=text.replace('</body>',page_bar+'</body>')
         if not hvac_page:
