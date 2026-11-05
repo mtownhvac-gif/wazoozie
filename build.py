@@ -260,6 +260,8 @@ from water_heater_presentation import improve as improve_water_heater_photos
 improve_water_heater_photos(OUT)
 from local_partners import finish as finish_local_partners
 finish_local_partners(OUT)
+from neighbors import add as add_neighbors
+add_neighbors(OUT, PUBLIC, PAGES)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:

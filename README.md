@@ -242,3 +242,27 @@ address coverage, availability and documents must be confirmed directly.
 These listings do not assert a credential inspection, customer review or
 exclusive partnership. Saved project briefs retain the existing private,
 not-automatically-delivered behavior.
+
+### Neighbor introductions
+
+`/neighbors/` lets a referrer create and personally share a link containing only
+an opaque 32-character code. Their name and email or phone are stored privately,
+with explicit consent, for about 90 days in `neighbors:v1` using the existing
+`PROJECT_INBOX` binding. No account, invitation, marketing subscription, payout,
+referrer dashboard, completed-job claim or automatic provider delivery is created.
+
+The project planner lets the visitor remove referral credit. When a consenting
+visitor saves a brief, the server checks the code against unexpired private
+records and stores `project_briefs.neighbor_code`. The operator can join this
+code to `neighbor_referrals.code` for manual attribution. Attribution is
+self-reported, not proof of a verified customer relationship. Referrers cannot
+read the neighbor's brief or contact details. Expired/unknown codes do not stop a
+project from being saved, and the receipt says whether credit was attached.
+Calls, email drafts and HCP bookings are not automatically linked to referrers.
+
+`POST /api/neighbor-referrals` requires same-origin JSON, bounded data, explicit
+consent, request-age and honeypot checks. Limits are 3 new links per daily client
+hash and 1,000 per day overall; duplicate request IDs with identical details
+return the same code. There is no public referral lookup/list API. Daily cleanup
+expires records; validity also checks age directly. Existing brief databases
+receive an additive nullable `neighbor_code` column, preserving prior records.
