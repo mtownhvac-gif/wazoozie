@@ -36,3 +36,5 @@ Nine service images illustrate categories on the four business profiles; they ar
 Correct manufacturer product photographs: https://www.weil-mclain.com/products/evergreen-pro-gas-boiler/ (Evergreen-110-155-FrontLeft-WM2012v2.jpg) and https://www.tempstar.com/en/us/products/heat-pumps/ion-23-variable-speed-heat-pump-b5h3v (product cutout media_112c82c9aaa5ff56a623ae4e656342a1efbcb5a42.png). The latter represents the B5H3V series; no capacity-specific claim is made.
 
 Final outdoor image: tempstar-ion-risers.jpg is a built-in imagegen composite using the official Tempstar product cutout as reference. Prompt preserves cabinet/grille/branding and requests six-inch riser rails on a square gray level equipment pad, stone home, daylight, clear equipment access, no people or captions. This is an illustrative installation, not a documented job.
+
+Final refinement uses an ordinary vinyl-sided home, overcast light, black polymer six-inch riser rails and square gray prefabricated pad for a natural contractor-photo feel.
