@@ -66,6 +66,14 @@ def enhance(out, public, pages, booking):
             '/businesses/liberator-service-company/': [('sink', 'Illustrative kitchen sink and faucet'), ('garden-fountain', 'Illustrative garden fountain')],
             '/businesses/cooke-carpentry-construction/': [('carpentry', 'Illustrative timber structure under construction'), ('window-framing', 'Illustrative window framing renovation')],
         }
+        trade_reviews=json.loads((out.parent/'trade_reviews.json').read_text())
+        slug=path.strip('/').split('/')[-1]
+        if slug in trade_reviews:
+            entry=trade_reviews[slug]
+            cards=''.join('<figure><blockquote>“'+e(quote)+'”</blockquote><figcaption>'+e(author)+' · '+e(date)+'<br><a href="'+e(entry['source'],quote=True)+'" target="_blank" rel="noopener">'+e(entry['label'])+' ↗</a></figcaption></figure>' for quote,author,date in entry['reviews'])
+            section='<div class="wrap"><section class="real-reviews" aria-labelledby="trade-reviews-title"><div class="eyebrow">PUBLISHED CUSTOMER FEEDBACK</div><h2 id="trade-reviews-title">In their own words.</h2><p>Short excerpts from published reviews. Follow the source links for the full accounts.</p><div class="review-grid">'+cards+'</div></section></div>'
+            text=text.replace('</main>',section+'</main>')
+            text=text.replace('Not yet collected or verified by Wazoozie.', 'Published review excerpts are linked below. Wazoozie has not independently verified the underlying work.')
         if path in galleries:
             photos = ''.join('<img class="'+('product-image' if name in ('weil-mclain-evergreen','tempstar-ion') else '')+'" src="/assets/'+name+('.png' if name=='tempstar-ion' else '.jpg')+'" alt="'+alt+'" width="'+('659' if name=='weil-mclain-evergreen' else '1200')+'" height="'+('500' if name=='weil-mclain-evergreen' else '800')+'" loading="lazy">' for name,alt in galleries[path])
             text=text.replace('</main>', '<div class="wrap"><div class="service-gallery" aria-label="Service illustrations">'+photos+'</div></div></main>')

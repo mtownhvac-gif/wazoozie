@@ -38,3 +38,6 @@ Correct manufacturer product photographs: https://www.weil-mclain.com/products/e
 Final outdoor image: tempstar-ion-risers.jpg is a built-in imagegen composite using the official Tempstar product cutout as reference. Prompt preserves cabinet/grille/branding and requests six-inch riser rails on a square gray level equipment pad, stone home, daylight, clear equipment access, no people or captions. This is an illustrative installation, not a documented job.
 
 Final refinement uses an ordinary vinyl-sided home, overcast light, black polymer six-inch riser rails and square gray prefabricated pad for a natural contractor-photo feel.
+
+## Other business review excerpts — November 4, 2026
+Added two short sourced excerpts per trade profile using trade_reviews.json. Ryan Dugan and Liberator excerpts come from their official websites; Cooke comes from the matching ChamberofCommerce.com listing (phone 484-948-3201). Reviewer names and available dates preserved; missing Liberator dates explicitly noted. No star totals or review schema added. Each source contributes no more than 25 quoted words across both excerpts. Ryan official-site review data identifies Isaiah John Abraham (2026-10-05) and Dave Zhu (2026-08-15).
