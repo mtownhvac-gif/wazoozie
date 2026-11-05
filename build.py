@@ -264,6 +264,8 @@ from neighbors import add as add_neighbors
 add_neighbors(OUT, PUBLIC, PAGES)
 from launch_finish import finish as finish_launch
 finish_launch(OUT, PUBLIC)
+from neighborhood_feed import add as add_neighborhood_feed
+add_neighborhood_feed(OUT)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
