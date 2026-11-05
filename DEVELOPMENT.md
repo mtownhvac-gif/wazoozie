@@ -47,3 +47,8 @@ Owner confirmation, November 4, 2026: Bryan explicitly confirmed all four compan
 Equipment image refinements: built-in imagegen used the official Evergreen photograph as reference for an installed basement scene (evergreen-installed.jpg), preserving the cabinet, neutral utility-room setting and no captions. The Tempstar illustration was edited to square the unit and pad with the house while retaining black six-inch risers (tempstar-ion-square.jpg). Originals remain in the workspace generated_images directory.
 
 Local voice: removed “the Valley” branding in favor of Delco, Chester County and the Main Line; existing URLs retained. Final heat pump illustration rotated 45 degrees to show front and right side, retaining risers and gray pad (tempstar-ion-angled.jpg).
+
+## Wazoozie introduction and agent readiness (2026-11-05)
+Home now introduces Wazoozie and all home services before the founding HVAC business; all four directory entries show by default. Original contact destinations remain unchanged. No automated lead delivery is represented as enabled.
+
+Cloudflare Agent Readiness reported valid robots and sitemap, AI crawler rules, missing Markdown negotiation and missing Link headers. `agent_content.py` generates Markdown from the same public HTML main content on every build; `worker.mjs` negotiates explicit Accept: text/markdown, retains browser HTML, and adds sitemap/llms discovery headers. This runs on the existing Worker without a Pro subscription, new credentials or invented APIs. No authentication, commerce, MCP or autonomous booking capabilities are advertised. Run `node check_agent.mjs` alongside the existing site/contact checks. Workers request limits apply to the Worker-first route.
