@@ -41,3 +41,9 @@ Final refinement uses an ordinary vinyl-sided home, overcast light, black polyme
 
 ## Other business review excerpts — November 4, 2026
 Added two short sourced excerpts per trade profile using trade_reviews.json. Ryan Dugan and Liberator excerpts come from their official websites; Cooke comes from the matching ChamberofCommerce.com listing (phone 484-948-3201). Reviewer names and available dates preserved; missing Liberator dates explicitly noted. No star totals or review schema added. Each source contributes no more than 25 quoted words across both excerpts. Ryan official-site review data identifies Isaiah John Abraham (2026-10-05) and Dave Zhu (2026-08-15).
+
+Owner confirmation, November 4, 2026: Bryan explicitly confirmed all four companies have been vetted. Updated public vetting status across profiles, standards, facts and dialog copy. No specific licensing/insurance documents or vetting methodology are invented. Middletown rating copy reads 5.0 on Google, the highest possible rating, based on the official published reviews page and owner confirmation; no exclusive local #1 claim.
+
+Equipment image refinements: built-in imagegen used the official Evergreen photograph as reference for an installed basement scene (evergreen-installed.jpg), preserving the cabinet, neutral utility-room setting and no captions. The Tempstar illustration was edited to square the unit and pad with the house while retaining black six-inch risers (tempstar-ion-square.jpg). Originals remain in the workspace generated_images directory.
+
+Local voice: removed “the Valley” branding in favor of Delco, Chester County and the Main Line; existing URLs retained. Final heat pump illustration rotated 45 degrees to show front and right side, retaining risers and gray pad (tempstar-ion-angled.jpg).
