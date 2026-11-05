@@ -1,0 +1,50 @@
+{
+  "ryan-dugan-electric": {
+    "source": "https://duganelectric.com/",
+    "label": "Review published on Ryan Dugan’s website",
+    "reviews": [
+      [
+        "Both technicians communicated well, were patient and professional with all my questions.",
+        "Isaiah John Abraham",
+        "October 5, 2026"
+      ],
+      [
+        "Ryan and Roger were prompt and professional.",
+        "Dave Zhu",
+        "August 15, 2026"
+      ]
+    ]
+  },
+  "liberator-service-company": {
+    "source": "https://www.liberatorco.us/",
+    "label": "Review published on Liberator’s website",
+    "reviews": [
+      [
+        "Installed new kitchen faucet and water filter.",
+        "Christine",
+        "Date not listed"
+      ],
+      [
+        "Communication was excellent and timely",
+        "Albert",
+        "Date not listed"
+      ]
+    ]
+  },
+  "cooke-carpentry-construction": {
+    "source": "https://www.chamberofcommerce.com/business-directory/pennsylvania/douglassville/custom-home-builder/44988228-cooke-carpentry-construction-llc",
+    "label": "Review published on ChamberofCommerce.com",
+    "reviews": [
+      [
+        "Mark kept us informed throughout the process and they cleaned up at the end of each day.",
+        "Mary Jane DiChiacchio",
+        "January 12, 2021"
+      ],
+      [
+        "His communication skills were superb",
+        "Heather Burris",
+        "August 3, 2018"
+      ]
+    ]
+  }
+}
