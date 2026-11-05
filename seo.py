@@ -30,6 +30,12 @@ PAGES={
 '/how-it-works/':('How Wazoozie Works | Find and Contact a Local Pro','Choose a home service, meet the business and contact it directly. Learn how Wazoozie handles calling, online booking and email drafts.'),
 '/privacy/':('Privacy & Your Information','Read how Wazoozie handles information when you browse, follow booking links or prepare an email request. You choose which business receives your inquiry.'),
 '/404/':('Page Not Found','Return to Wazoozie to explore local HVAC, plumbing, electrical and home-repair services or contact Middletown HVAC.')}
+PAGES.update({
+ '/businesses/hart-builders/': ('Hart Builders | Construction & Remodeling in Media', 'Contact Hart Builders, Inc. at 215-350-5502. Published address: 77 West Baltimore Pike, Media, PA 19063. Discuss construction and remodeling scope directly.'),
+ '/businesses/rolled-right-painting/': ('Rolled Right Painting | Interior & Exterior Painting', 'Contact Rolled Right Painting at 610-291-9552 for interior and exterior painting, drywall repairs and cabinet refinishing. Confirm project coverage directly.'),
+ '/services/painting/': ('Painting & Drywall Repairs | Rolled Right Painting', 'Explore painting, surface preparation, drywall repairs and cabinet refinishing with Rolled Right Painting in the Delaware Valley.'),
+ '/services/construction-remodeling/': ('Construction & Remodeling | Hart Builders in Media', 'Plan a construction, remodeling or addition inquiry with Hart Builders in Media. Confirm project scope, coverage, design and permit responsibilities directly.')
+})
 def optimize(out,public):
  for f in out.rglob('*.html'):
   path='/' if f==out/'index.html' else '/404/' if f==out/'404.html' else '/'+str(f.parent.relative_to(out))+'/'

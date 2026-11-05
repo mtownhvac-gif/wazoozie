@@ -224,3 +224,21 @@ is used as evidence of its work.
 
 `water_heater_presentation.py` supplies source-linked captions and direct project
 planning links. Full equipment remains visible in responsive photo panels.
+
+### Additional local business listings
+
+`local_partners.py` adds Hart Builders, Inc. (77 West Baltimore Pike, Media;
+215-350-5502; quality@hartbuildersinc.com) from its published contact page at
+https://www.hartbuildersinc.com/html/contact.html, and Rolled Right Painting, LLC
+(610-291-9552; louislitwin618@gmail.com) from
+https://rolledrightpainting.com/services/ and https://rolledrightpainting.com/contact/.
+Rolled Right's site lists different street addresses in its contact body and
+footer; this directory uses the business name, phone, email and service
+information without selecting an unconfirmed street address.
+
+Painting requests select Rolled Right; remodeling/addition inquiries select
+Hart. Both have source-linked profiles and service pages. Current scope,
+address coverage, availability and documents must be confirmed directly.
+These listings do not assert a credential inspection, customer review or
+exclusive partnership. Saved project briefs retain the existing private,
+not-automatically-delivered behavior.

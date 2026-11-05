@@ -8,3 +8,6 @@ PATHS={
 def icon(key):
  return '<svg class="business-emblem" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+PATHS[key]+'</svg>'
 ICONS={k:icon(k) for k in PATHS}
+
+ICONS['hart']=ICONS['cooke']
+ICONS['rolledright']=ICONS['cooke']

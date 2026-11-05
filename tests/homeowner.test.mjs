@@ -79,7 +79,7 @@ test('direct contact is offered before form entry and an unsaved brief can be em
 });
 
 test('business evidence is explicit and does not claim a recorded credential inspection',async()=>{
-  for(const slug of ['middletown-hvac','ryan-dugan-electric','liberator-service-company','cooke-carpentry-construction']){
+  for(const slug of ['middletown-hvac','ryan-dugan-electric','liberator-service-company','cooke-carpentry-construction','hart-builders','rolled-right-painting']){
     const content=await readFile(new URL(`../dist/businesses/${slug}/index.html`,import.meta.url),'utf8');
     assert.ok(content.includes('Documents to request'));
     assert.ok(content.includes('documents are not recorded'));
@@ -146,12 +146,13 @@ test('whole-home categories start neutral and route doors and painting with rele
       const radio=env.document.querySelector(`#projectChoices input[value="${key}"]`);
       radio.checked=true;radio.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
       assert.equal(env.document.querySelector('#projectNext1').disabled,false);
-      assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Cooke'));
+      assert.ok(env.document.querySelector('#projectBusiness').textContent.includes(BUSINESSES[INTENTS[key].provider].name));
       assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,true);
       assert.equal(env.document.querySelectorAll('#projectPrompts li').length,3);
       assert.ok(!env.document.querySelector('#projectPrompts').textContent.includes('Furnace'));
     }
-    assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Painting and drywall services are not confirmed'));
+    assert.ok(env.document.querySelector('#projectBusiness').textContent.includes('Rolled Right Painting'));
+    assert.ok(env.document.querySelector('#projectQuickConnect a[href="tel:+16102919552"]'));
     const heating=env.document.querySelector('#projectChoices input[value="comfort"]');
     heating.checked=true;heating.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
     assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,false);
@@ -178,9 +179,20 @@ test('homepage directory still initializes after category navigation is replaced
   const script=await readFile(new URL('../dist/assets/home.js',import.meta.url),'utf8');
   const dom=new JSDOM(markup,{url:'https://wazoozie.com/',runScripts:'outside-only'});
   try{
+    dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
     dom.window.eval(script);
     assert.equal(dom.window.document.querySelectorAll('.home-project-card').length,10);
-    assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,4);
+    assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,6);
+    assert.ok(dom.window.document.querySelector('#resultCount').textContent.includes('6'));
+    for (const [service,name,tel] of [['painting','Rolled Right Painting','+16102919552'],['construction-remodeling','Hart Builders','+12153505502']]) {
+      dom.window.document.querySelector('#serviceSearch').value=service;
+      dom.window.document.querySelector('#searchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
+      const results=dom.window.document.querySelector('#providerResults');
+      assert.equal(results.querySelectorAll('.procard').length,1);
+      assert.ok(results.textContent.includes(name));
+      assert.ok(results.querySelector(`a[href="tel:${tel}"]`));
+      assert.ok(!results.innerHTML.includes('undefined'));
+    }
   }finally{dom.window.close();}
 });
 
