@@ -17,11 +17,11 @@ Open http://localhost:8000. Serve **dist/**, not the repository root. Builds are
 
 ## Current experience
 
-- 23 generated pages covering home services, business profiles, homeowner guides, the Delaware Valley, and trust/privacy information.
+- 26 generated pages covering home services, business profiles, homeowner guides, the Delaware Valley, and trust/privacy information.
 - Heating and cooling is the initial directory selection. HVAC, Boiler, Water Heater, maintenance, and replacement paths connect to Middletown HVAC.
 - Direct phone links and Middletown's existing Housecall Pro booking link. Outbound web/booking links include referral parameters, without form entries.
 - Pennsylvania, New Jersey, and Delaware browsing. Coverage is confirmed per address; NJ and DE provider coverage is not confirmed.
-- Ryan Dugan Electric LLC and Liberator Service Company are public directory listings. Participation still needs confirmation. No fabricated reviews or verification badges.
+- Ryan Dugan Electric LLC, Liberator Service Company, and Cooke Carpentry & Construction, LLC are directory listings. Participation still needs confirmation. No fabricated reviews or verification badges.
 - Email requests remain **email drafts**, not automatic delivery. No Wazoozie lead database or lead tracking is configured. Never send test requests to real businesses.
 
 ## Search indexing and launch
