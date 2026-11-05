@@ -21,3 +21,6 @@ assert.match(html.headers.get('content-type'),/text\/html/);
 const missing=await worker.fetch(new Request('https://wazoozie.com/missing/',{headers:{accept:'text/markdown'}}),env);
 assert.equal(missing.status,404);
 console.log('Markdown negotiation, browser HTML, discovery headers and missing-page status passed.');
+const redirect=await worker.fetch(new Request('https://www.wazoozie.com/about/index.html?ref=test'),env);
+assert.equal(redirect.status,301);
+assert.equal(redirect.headers.get('location'),'https://wazoozie.com/about/?ref=test');
