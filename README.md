@@ -175,3 +175,37 @@ remodeling/addition and painting/drywall services require direct scope confirmat
 Painting/drywall capability is explicitly unconfirmed. These project categories
 do not represent new verified credentials, additional contractors or guaranteed
 availability. Existing four-business profiles are preserved.
+
+## Contractor applications and future monetization
+
+`/for-contractors/` accepts applications for listing consideration, sponsored
+visibility interest and additional-area coverage interest. Application is free.
+No checkout, subscription, automatic listing, lead guarantee or charge is created.
+Any future paid placement must be labeled Sponsored and separately agreed in
+writing; fees and billing remain unconfigured. Document checks and actual project
+fit remain separate from paid promotion. Do not publish self-reported credentials
+as verified, and obtain permission for submitted photos and review sources.
+
+`POST /api/contractor-applications` validates consent and business information,
+then stores it privately using the existing ProjectInbox namespace. There is no
+public read/list endpoint. Data Studio object names are `applications:YYYY-MM`.
+Office review is manual; automatic alerts are not configured. Review with:
+
+```sql
+SELECT id, created_at, status, business_name, contact_name, email, phone, website,
+       town, state, coverage, services, registration, insurance, interest, notes
+FROM contractor_applications WHERE status = 'awaiting_review'
+ORDER BY created_at DESC;
+```
+
+Record review progress against exact IDs, without implying publication:
+
+```sql
+UPDATE contractor_applications SET status = 'reviewed' WHERE id = 'exact-uuid';
+```
+
+Application capture has idempotency, a three-new-applications daily client limit,
+a 50-per-day monthly-object cap and approximately 90-day cleanup. The table's
+`application_saved` count records new applications only. No application details
+are written into public assets or returned in receipts. Retention/abuse-key
+behavior follows the same private storage lifecycle as homeowner briefs.

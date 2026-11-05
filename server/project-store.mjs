@@ -16,6 +16,7 @@ export class ProjectInbox extends DurableObject {
     ctx.storage.sql.exec('CREATE INDEX IF NOT EXISTS briefs_created ON project_briefs(created_at)');
     ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS submission_limits(client_hash TEXT PRIMARY KEY, day TEXT NOT NULL, count INTEGER NOT NULL)');
     ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS contact_counts(day TEXT NOT NULL, action TEXT NOT NULL, provider TEXT NOT NULL, context TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(day,action,provider,context))');
+    ctx.storage.sql.exec("CREATE TABLE IF NOT EXISTS contractor_applications(id TEXT PRIMARY KEY, created_at INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'awaiting_review', business_name TEXT NOT NULL, contact_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, website TEXT, town TEXT NOT NULL, state TEXT NOT NULL, coverage TEXT NOT NULL, registration TEXT, insurance TEXT NOT NULL, services TEXT NOT NULL, interest TEXT NOT NULL, notes TEXT, consent_version TEXT NOT NULL, fingerprint TEXT NOT NULL)");
   }
 
   async saveBrief(brief, fingerprint, client, now) {
@@ -36,6 +37,24 @@ export class ProjectInbox extends DurableObject {
       this.incrementContact({action:'brief_saved',provider:b.provider,context:'planner'}, now);
     });
     if (status === 201 && !await this.ctx.storage.getAlarm()) await this.ctx.storage.setAlarm(now + 86400000);
+    return {status};
+  }
+
+  async saveApplication(application,fingerprint,client,now) {
+    let status=201;
+    this.ctx.storage.transactionSync(()=>{
+      const existing=this.ctx.storage.sql.exec('SELECT fingerprint FROM contractor_applications WHERE id=?',application.id).toArray()[0];
+      if(existing){status=existing.fingerprint===fingerprint?200:409;return;}
+      const key='application:'+client;
+      const count=this.ctx.storage.sql.exec('SELECT count FROM submission_limits WHERE client_hash=?',key).toArray()[0]?.count||0;
+      const total=this.ctx.storage.sql.exec('SELECT count(*) AS n FROM contractor_applications WHERE created_at>=?',now-86400000).toArray()[0].n;
+      if(count>=3||total>=50){status=429;return;}
+      const a=application;
+      this.ctx.storage.sql.exec('INSERT INTO contractor_applications(id,created_at,business_name,contact_name,email,phone,website,town,state,coverage,registration,insurance,services,interest,notes,consent_version,fingerprint) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',a.id,now,a.businessName,a.contactName,a.email,a.phone,a.website,a.town,a.state,a.coverage,a.registration,a.insurance,JSON.stringify(a.services),a.interest,a.notes,a.consentVersion,fingerprint);
+      this.ctx.storage.sql.exec('INSERT INTO submission_limits(client_hash,day,count) VALUES (?,?,1) ON CONFLICT(client_hash) DO UPDATE SET count=count+1',key,new Date(now).toISOString().slice(0,10));
+      this.incrementContact({action:'application_saved',provider:'contractor',context:'contractors'},now);
+    });
+    if(status===201&&!await this.ctx.storage.getAlarm())await this.ctx.storage.setAlarm(now+86400000);
     return {status};
   }
 
@@ -61,8 +80,9 @@ export class ProjectInbox extends DurableObject {
   async alarm() {
     const now = Date.now();
     this.ctx.storage.sql.exec('DELETE FROM project_briefs WHERE created_at<?', now - 90 * 86400000);
+    this.ctx.storage.sql.exec('DELETE FROM contractor_applications WHERE created_at<?', now - 90 * 86400000);
     this.ctx.storage.sql.exec('DELETE FROM submission_limits WHERE day<?', new Date(now - 2 * 86400000).toISOString().slice(0, 10));
     this.ctx.storage.sql.exec('DELETE FROM contact_counts WHERE day<?', new Date(now - 90 * 86400000).toISOString().slice(0,10));
-    if (this.ctx.storage.sql.exec('SELECT (SELECT count(*) FROM project_briefs) + (SELECT count(*) FROM contact_counts) AS n').toArray()[0].n) await this.ctx.storage.setAlarm(now + 86400000);
+    if (this.ctx.storage.sql.exec('SELECT (SELECT count(*) FROM project_briefs) + (SELECT count(*) FROM contact_counts) + (SELECT count(*) FROM contractor_applications) AS n').toArray()[0].n) await this.ctx.storage.setAlarm(now + 86400000);
   }
 }

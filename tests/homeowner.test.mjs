@@ -183,3 +183,28 @@ test('homepage directory still initializes after category navigation is replaced
     assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,4);
   }finally{dom.window.close();}
 });
+
+test('contractor signup preserves homeowner choice and submits a reviewed-interest application without billing',async()=>{
+  const env=await page('for-contractors');
+  try{
+    globalThis.fetch=async(url,options)=>{
+      env.requests.push({url,options});
+      if(url.includes('capabilities'))return Response.json({captureReady:true});
+      const payload=JSON.parse(options.body);
+      return Response.json({reference:payload.id,status:'awaiting_review',published:false,charged:false});
+    };
+    await import(`../dist/assets/contractors.js?test=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
+    const form=env.document.querySelector('#contractorForm');
+    const fields={businessName:'Synthetic Contractor',contactName:'Synthetic Test',phone:'202-555-0100',email:'test@example.invalid',town:'Media',coverage:'Media and nearby Delaware County towns',insurance:'yes',interest:'sponsored'};
+    for(const [name,value] of Object.entries(fields))form.elements[name].value=value;
+    form.querySelector('input[value="carpentry"]').checked=true;
+    const submit=()=>form.dispatchEvent(new env.document.defaultView.Event('submit',{bubbles:true,cancelable:true}));
+    submit();assert.equal(env.requests.filter(r=>r.options?.method==='POST').length,0);
+    form.elements.consent.checked=true;submit();await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(env.requests.filter(r=>r.options?.method==='POST').length,1);
+    assert.equal(env.document.querySelector('#applicationReceipt').hidden,false);
+    assert.ok(env.document.querySelector('#applicationReceipt').textContent.includes('no payment has been taken'));
+    assert.equal(env.document.querySelector('input[name="cardNumber"]'),null);
+    const posted=JSON.parse(env.requests.find(r=>r.options?.method==='POST').options.body);assert.equal(posted.interest,'sponsored');assert.deepEqual(posted.services,['carpentry']);
+  }finally{env.close();}
+});

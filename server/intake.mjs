@@ -1,6 +1,7 @@
 import {BUSINESSES} from '../project-config.mjs';
 import {validateBrief} from './brief-validation.mjs';
 import {validateActivity} from '../activity-config.mjs';
+import {validateApplication} from './application-validation.mjs';
 
 function respond(data, status = 200) {
   return Response.json(data, {status, headers: {'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex', 'X-Content-Type-Options': 'nosniff'}});
@@ -36,17 +37,34 @@ export async function handleIntake(request, env) {
     return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX)}) : respond({error: 'Method not allowed.'}, 405);
   }
   const activity = url.pathname === '/api/contact-activity';
-  if (url.pathname !== '/api/project-briefs' && !activity) return respond({error: 'Not found.'}, 404);
+  const businessApplication = url.pathname === '/api/contractor-applications';
+  if (url.pathname !== '/api/project-briefs' && !activity && !businessApplication) return respond({error: 'Not found.'}, 404);
   if (request.method !== 'POST') return respond({error: 'Method not allowed.'}, 405);
   const origins = new Set(['https://wazoozie.com', 'https://www.wazoozie.com']);
   if (env.INTAKE_LOCAL_PREVIEW === '1' || ['localhost', '127.0.0.1'].includes(url.hostname)) origins.add(url.origin);
   if (!origins.has(request.headers.get('origin'))) return respond({error: 'Request origin not allowed.'}, 403);
   if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) return respond({error: 'Use JSON.'}, 415);
-  if (!env.PROJECT_INBOX) return respond({error: 'Saving is unavailable. Please call the business directly.'}, 503);
+  if (!env.PROJECT_INBOX) return respond({error: businessApplication ? 'Applications are unavailable. Please try again later.' : 'Saving is unavailable. Please call the business directly.'}, 503);
 
   let input;
   try { input = await readJSON(request, activity ? 512 : 16384); }
   catch (error) { return respond({error: error instanceof RangeError ? 'Request too large.' : 'Invalid JSON.'}, error instanceof RangeError ? 413 : 400); }
+  if (businessApplication) {
+    const {application,error} = validateApplication(input);
+    if (error) return respond({error},400);
+    const now=Date.now();
+    const date=new Date(now).toISOString();
+    const fingerprint=await hash(JSON.stringify(application));
+    const client=await hash(date.slice(0,10)+'|'+(request.headers.get('cf-connecting-ip')||'unknown'));
+    try {
+      const inbox=env.PROJECT_INBOX.getByName(`applications:${date.slice(0,7)}`);
+      const {status}=await inbox.saveApplication(application,fingerprint,client,now);
+      if(status===429)return respond({error:'Application limit reached. Please try again another day.'},429);
+      if(status===409)return respond({error:'This reference has different details. Reopen the application for a new reference.'},409);
+      if(![200,201].includes(status))throw new Error('Application not confirmed');
+      return respond({reference:application.id,status:'awaiting_review',published:false,charged:false},status);
+    }catch{return respond({error:'We could not confirm a save. Retry the same application details.'},503);}
+  }
   if (activity) {
     const event = validateActivity(input);
     if (!event) return respond({error: 'Invalid contact action.'}, 400);

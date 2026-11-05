@@ -249,6 +249,8 @@ from project_experience import upgrade
 upgrade(OUT, PUBLIC, PAGES, BOOKING)
 from homeowner_experience import strengthen
 strengthen(OUT, PUBLIC, PAGES, PROVIDERS)
+from contractors import add as add_contractor_applications
+add_contractor_applications(OUT, PUBLIC, PAGES)
 from contact_measurement import improve as measure_contacts
 measure_contacts(OUT)
 from agent_content import generate
