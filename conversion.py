@@ -5,7 +5,7 @@ import re
 import shutil
 from urllib.parse import urlsplit, parse_qsl, urlencode, urlunsplit
 
-DISCLOSURE = 'Wazoozie recommends local home-service businesses. Middletown HVAC is promoted through Wazoozie alongside the other listed businesses. Listings are not a competitive ranking; each business agrees on the work directly with the homeowner.'
+DISCLOSURE = 'Wazoozie connects homeowners with local home-service businesses. Choose who you contact and agree on the work directly with the business.'
 
 def enhance(out, public, pages, booking):
     for name in ("valley-stone-home.jpg", "valley-colonial-home.jpg", "porch-homeowners.jpg", "family-at-home.jpg", "evergreen-installed.jpg", "outdoor-lighting.jpg", "sink.jpg", "tankless.jpg", "carpentry.jpg", "tempstar-ion-angled.jpg", "garden-fountain.jpg", "window-framing.jpg", "electrical-outlet.jpg"):
