@@ -1,3 +1,4 @@
+import {entryContext} from './lead-context.mjs';
 import {neighborCode} from './neighbor-config.mjs';
 import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS, PROJECT_GROUPS} from './project-config.mjs';
 
@@ -135,7 +136,7 @@ form.elements.state.addEventListener('change', updateNotices);
 form.elements.timing.addEventListener('change', updateNotices);
 function values() {
   const data = Object.fromEntries(new FormData(form));
-  return {...data, ...(incomingNeighbor && document.querySelector('#keepNeighborCredit').checked ? {neighborCode:incomingNeighbor} : {}), provider: INTENTS[selected].provider, intent: selected, notifyProvider: emailProviders.includes(INTENTS[selected].provider), consent: form.elements.consent.checked, consentVersion: CONSENT_VERSION, id, startedAt, source: ['partner-ryan', 'partner-liberator', 'partner-cooke', 'neighbor'].includes(params.get('ref')) ? params.get('ref') : 'start-page'};
+  return {...data, ...(incomingNeighbor && document.querySelector('#keepNeighborCredit').checked ? {neighborCode:incomingNeighbor} : {}), provider: INTENTS[selected].provider, intent: selected, notifyProvider: emailProviders.includes(INTENTS[selected].provider), consent: form.elements.consent.checked, consentVersion: CONSENT_VERSION, id, startedAt, entryContext:entryContext(params.get('entry')), source: ['partner-ryan', 'partner-liberator', 'partner-cooke', 'neighbor'].includes(params.get('ref')) ? params.get('ref') : 'start-page'};
 }
 function review(data) {
   const list = make('dl');

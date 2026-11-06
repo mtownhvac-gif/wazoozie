@@ -292,6 +292,11 @@ from homepage_layout import add as add_homepage_layout
 add_homepage_layout(OUT, PUBLIC, PAGES)
 from situation_guides import add as add_situation_guides
 add_situation_guides(OUT, PUBLIC, PAGES)
+shutil.copy(ROOT/'lead-context.mjs', OUT/'assets/lead-context.mjs')
+shutil.copy(ROOT/'assets/request-context.js', OUT/'assets/request-context.js')
+for target in OUT.rglob('*.html'):
+    if target.parent.name not in ('account','404'):
+        target.write_text(target.read_text().replace('</body>','<script type="module" src="/assets/request-context.js"></script></body>',1))
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from agent_content import generate

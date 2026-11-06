@@ -1,3 +1,4 @@
+import {entryContext} from '../lead-context.mjs';
 import {neighborCode} from '../neighbor-config.mjs';
 import {BUSINESSES, INTENTS, CONSENT_VERSION} from '../project-config.mjs';
 
@@ -18,10 +19,11 @@ export function validateBrief(data, now = Date.now()) {
   for (const [key, limit] of Object.entries({name:100,phone:35,email:180,town:100,zip:5,state:2,details:2500,timing:30,role:30,property:30,equipment:120,source:100})) {
     if (data[key] !== undefined && (typeof data[key] !== 'string' || data[key].length > limit)) return {error: 'One or more fields is too long or invalid.'};
   }
+  if(data.entryContext!==undefined&&(typeof data.entryContext!=='string'||data.entryContext.length>32))return {error:'Invalid request context.'};
   if (data.notifyProvider !== undefined && typeof data.notifyProvider !== 'boolean') return {error:'Invalid email choice.'};
   if (data.notifyProvider && data.provider !== 'middletown') return {error:'Email delivery is not available for this business.'};
   const brief = {
-    id: data.id, provider: data.provider, intent: data.intent, notifyProvider: data.notifyProvider === true,
+    id: data.id, ...(entryContext(data.entryContext)!=='direct'?{entryContext:entryContext(data.entryContext)}:{}), provider: data.provider, intent: data.intent, notifyProvider: data.notifyProvider === true,
     name: text(data.name, 100), phone: text(data.phone, 35), email: text(data.email, 180),
     town: text(data.town, 100), zip: text(data.zip, 5), state: text(data.state, 2),
     details: text(data.details, 2500), timing: text(data.timing, 30), role: text(data.role, 30),

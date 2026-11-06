@@ -25,7 +25,11 @@ test('private store is durable, idempotent, rate limited and expires old records
     assert.equal((await store.saveBrief({...brief,id:crypto.randomUUID()},'new','client',now)).status,429);
     const sql=await mf.unsafeGetDurableObjectStorage(undefined,'TestInbox',{name:'synthetic-test'});
     assert.equal((await sql.exec('SELECT count(*) AS n FROM project_briefs'))[0].n,5);
-    assert.equal((await sql.exec("SELECT count FROM contact_counts WHERE action='brief_saved'"))[0].count,5);
+    assert.equal((await sql.exec('SELECT entry_context FROM project_briefs WHERE id=?',brief.id))[0].entry_context,'direct');
+    const attributed={...brief,id:crypto.randomUUID(),entryContext:'pricing'};
+    assert.equal((await store.saveBrief(attributed,'attributed','other-client',now)).status,201);
+    assert.equal((await sql.exec('SELECT entry_context FROM project_briefs WHERE id=?',attributed.id))[0].entry_context,'pricing');
+    assert.equal((await sql.exec("SELECT count FROM contact_counts WHERE action='brief_saved'"))[0].count,6);
     const event={action:'call_click',provider:'middletown',context:'help'};
     for(let i=0;i<100;i++) assert.equal((await store.recordActivity(event,'metrics-client',now)).status,200);
     assert.equal((await store.recordActivity(event,'metrics-client',now)).status,429);
