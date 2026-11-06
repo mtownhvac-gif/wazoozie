@@ -77,7 +77,7 @@ export function initConcierge(doc, suppliedStorage) {
       const details=el('details');details.open=item.stage!=='done';details.append(el('summary','Before the first conversation'));
       const list=el('ul');for(const question of PROJECT_QUESTIONS[item.intent]||PROJECT_QUESTIONS.comfort)list.append(el('li',question));details.append(list);card.append(details);
       const contact=el('div',undefined,'home-project-contact');contact.append(el('strong',business.name),link('Meet the business ↗','/businesses/'+business.slug+'/'));
-      const actions=el('div',undefined,'home-project-actions');actions.append(link('Plan this project →','/start/?intent='+item.intent,'btn primary'),link('Call '+business.phone,'tel:'+business.tel));contact.append(actions,el('span',business.phone,'home-project-print-phone'));card.append(contact);
+      const actions=el('div',undefined,'home-project-actions');actions.append(link('Plan this project →','/start/?intent='+item.intent,'btn primary'),link('Call '+business.phone,'tel:'+business.tel),link('Build a project sheet ↗','/project-kit/?intent='+item.intent));contact.append(actions,el('span',business.phone,'home-project-print-phone'));card.append(contact);
       card.append(el('p','Confirm your address, scope, availability and any visit charge directly. Saving this project does not send an inquiry.','home-project-footnote'));board.append(card);
     }
   }
