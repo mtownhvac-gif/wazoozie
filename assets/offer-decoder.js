@@ -12,6 +12,9 @@ if (form) {
   const copy = document.querySelector('#offer-copy');
   const panel = document.querySelector('#offer-notes-panel');
   const copyStatus = document.querySelector('#offer-copy-status');
+  const receipt = document.querySelector('#offer-receipt');
+  const totalDisplay = document.querySelector('#offer-total');
+  const receiptLabel = document.querySelector('#offer-receipt-label');
   const keys = ['visit','diagnostic','extras'];
   const field = key => form.querySelector(`[name="${key}"]`);
   const clear = message => {
@@ -21,6 +24,8 @@ if (form) {
     panel.open = false;
     copy.disabled = true;
     copyStatus.textContent = '';
+    receipt.hidden = true;
+    totalDisplay.textContent = '';
   };
   function calculate(example=false) {
     const values = keys.map(key=>field(key).value.trim());
@@ -30,6 +35,9 @@ if (form) {
       return;
     }
     const prefix = example ? 'Fictional example—not a business quote. ' : 'Based only on your inputs. ';
+    receipt.hidden = false;
+    receiptLabel.textContent = example ? 'FICTIONAL EXAMPLE' : 'YOUR INPUT TOTAL';
+    totalDisplay.textContent = money.format(total);
     result.textContent = `${prefix}Pre-repair visit total: ${money.format(total)}. Repairs are separate. Ask whether any fee credit depends on approving further work.`;
     notes.value = `${prefix}\nVisit / dispatch: ${money.format(Number(values[0]))}\nAdditional diagnosis: ${money.format(Number(values[1]))}\nOther required charges and taxes: ${money.format(Number(values[2]))}\nPre-repair total: ${money.format(total)}\n\nBefore I book:\n• Is this the full charge if I approve no repairs?\n• What assessment is included?\n• Does any credit require an approved repair or purchase?\n• Will you get my approval before additional work?\n\nPrepared with https://wazoozie.com/pricing-guide/#offer-decoder`;
     panel.hidden = false;
@@ -42,6 +50,10 @@ if (form) {
   form.addEventListener('reset',()=>clear('Enter all three confirmed amounts. Blank fields mean the total is still unknown.'));
   document.querySelector('#offer-example').addEventListener('click',()=>{
     ['49','150','0'].forEach((value,i)=>{field(keys[i]).value=value;});
+    calculate(true);
+  });
+  document.querySelector('#offer-included-example').addEventListener('click',()=>{
+    ['49','0','0'].forEach((value,i)=>{field(keys[i]).value=value;});
     calculate(true);
   });
   copy.addEventListener('click',async()=>{

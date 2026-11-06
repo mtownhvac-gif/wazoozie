@@ -18,13 +18,18 @@ test('offer decoder distinguishes unknown fees from confirmed zero and adds cent
 test('fictional example is clearly labeled and changed or reset inputs invalidate call notes',()=>{
  const w=setup(),d=w.document,form=d.querySelector('#offer-form');
  assert.equal(form.hidden,false);
+ d.querySelector('#offer-included-example').click();
+ assert.equal(d.querySelector('#offer-total').textContent,'$49.00');
+ assert.equal(d.querySelector('#offer-receipt-label').textContent,'FICTIONAL EXAMPLE');
  d.querySelector('#offer-example').click();
+ assert.equal(d.querySelector('#offer-total').textContent,'$199.00');
  assert.match(d.querySelector('#offer-result').textContent,/Fictional example.*\$199.00/);
  assert.match(d.querySelector('#offer-notes').value,/approve no repairs/);
  assert.equal(d.querySelector('#offer-notes-panel').hidden,false);
  form.querySelector('input').dispatchEvent(new w.Event('input',{bubbles:true}));
  assert.equal(d.querySelector('#offer-copy').disabled,true);
  assert.equal(d.querySelector('#offer-notes-panel').hidden,true);
+ assert.equal(d.querySelector('#offer-receipt').hidden,true);
  assert.equal(d.querySelector('#offer-notes').value,'');
  d.querySelector('#offer-example').click();form.reset();
  assert.equal(d.querySelector('#offer-notes').value,'');
