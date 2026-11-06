@@ -276,6 +276,8 @@ from growth import add as add_growth
 add_growth(OUT, PUBLIC, PAGES)
 from discovery import add as add_discovery
 add_discovery(OUT, PUBLIC, PAGES)
+from magazine import add as add_magazine
+add_magazine(OUT, PUBLIC, PAGES)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
