@@ -6,7 +6,7 @@ import {validateApplication} from '../server/application-validation.mjs';
 import {APPLICATION_CONSENT_VERSION} from '../contractor-config.mjs';
 const read=path=>readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8');
 test('new local referrals preserve exact identity and direct contacts without homeowner intake',()=>{
- const contacts={'c-and-j-automotive-upper-chichester':'+16104853103','caitlin-kerezsi':'+16103689912','megan-kerezsi':'+16103684189','libbi-skivo':'+12153162843'};
+ const contacts={'c-and-j-automotive-upper-chichester':'+16104853103','caitlin-kerezsi':'+16103689912','megan-kerezsi':'+16103684189','libbi-skivo':'+12153162843','authority-auto-repair-glenolden':'+14844946562','trans-man-transmissions-eddystone':'+16105216672'};
  for(const [slug,phone] of Object.entries(contacts)){
   const dom=new JSDOM(read('/businesses/'+slug+'/'));const main=dom.window.document.querySelector('main');
   assert.ok(main.querySelector(`a[href="tel:${phone}"]`));

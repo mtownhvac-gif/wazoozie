@@ -13,9 +13,9 @@ def add(out,origin,pages,providers):
     for name in ('valley-stone-home','valley-colonial-home'):
         for suffix in ('.webp','-small.webp'):shutil.copy(root/'assets'/(name+suffix),out/'assets'/(name+suffix))
     records=[{'name':p['name'],'category':'home','services':p['trade'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':p['web']} for p in providers.values()]
-    records += [{'name':p['name'],'category':'auto' if p['category']=='automotive' else 'realestate','services':p['label'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':p['website']} for p in PEOPLE]
+    records += [{'name':p['name'],'category':'auto' if p['category']=='automotive' else 'realestate','services':p['label'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':None if p.get('website_label') else p['website'],'publicSourceUrl':p['website']} for p in PEOPLE]
     records.sort(key=lambda p:p['name'].casefold())
-    (out/'assets/public-discovery.json').write_text(json.dumps({'businesses':records,'planning':{'pricingGuide':origin+'/pricing-guide/','buyerQuestions':origin+'/before-you-say-yes/','projectSheet':origin+'/project-kit/','compareEstimates':origin+'/compare/','budget':origin+'/project-budget/','homeTips':origin+'/home-tips/','reminder':origin+'/home-care-reminder/','ductless':origin+'/services/ductless-mini-splits/'}},ensure_ascii=False))
+    (out/'assets/public-discovery.json').write_text(json.dumps({'businesses':records,'planning':{'dailyQuiz':origin+'/good-call-club/','pricingGuide':origin+'/pricing-guide/','buyerQuestions':origin+'/before-you-say-yes/','projectSheet':origin+'/project-kit/','compareEstimates':origin+'/compare/','budget':origin+'/project-budget/','homeTips':origin+'/home-tips/','reminder':origin+'/home-care-reminder/','ductless':origin+'/services/ductless-mini-splits/'}},ensure_ascii=False))
     shutil.copy(root/'assets/public-discovery.js',out/'assets/public-discovery.js')
     target=out/'services/ductless-mini-splits/index.html';s=target.read_text()
     title='Ductless Mini-Split Installation & Cost Planning | Middletown HVAC'

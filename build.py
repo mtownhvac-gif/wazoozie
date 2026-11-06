@@ -286,6 +286,10 @@ from pricing import add as add_pricing
 add_pricing(OUT, PUBLIC, PAGES)
 from buyer_edge import add as add_buyer_edge
 add_buyer_edge(OUT, PUBLIC, PAGES)
+from good_call_club import add as add_good_call_club
+add_good_call_club(OUT, PUBLIC, PAGES)
+from homepage_layout import add as add_homepage_layout
+add_homepage_layout(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from agent_content import generate

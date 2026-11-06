@@ -13,7 +13,7 @@ test('finder routes common home projects to the correct named businesses without
  try{
   assert.equal(doc.querySelectorAll('[data-project-choice]:not([hidden])').length,6);
   const input=doc.querySelector('#concierge-search');input.value='window';input.dispatchEvent(new dom.window.Event('input'));
-  const cards=[...doc.querySelectorAll('[data-project-choice]:not([hidden])')];assert.equal(cards.length,1);assert.ok(cards[0].querySelector('a').href.endsWith('/start/?intent=windows'));assert.ok(cards[0].textContent.includes('Hart'));
+  const cards=[...doc.querySelectorAll('[data-project-choice]:not([hidden])')];assert.equal(cards.length,1);assert.ok(cards[0].querySelector('a').href.endsWith('/start/?intent=windows'));assert.ok(cards[0].textContent.includes('See your contact'));assert.ok(!cards[0].textContent.includes('Hart'));
   input.value='unmatched thing';input.dispatchEvent(new dom.window.Event('input'));assert.ok(doc.querySelector('#concierge-results a').href.endsWith('/help/'));
   input.value='';input.dispatchEvent(new dom.window.Event('input'));doc.querySelector('#concierge-show-all').click();assert.equal(doc.querySelectorAll('[data-project-choice]:not([hidden])').length,Object.keys(INTENTS).length);
  }finally{dom.window.close();}

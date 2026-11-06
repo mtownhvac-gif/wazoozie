@@ -1,0 +1,43 @@
+{
+  "generator": "Built-in image_gen",
+  "generated": "2026-11-06",
+  "images": [
+    {
+      "file": "price-notebook.webp",
+      "type": "AI-generated editorial illustration; not a documented business project",
+      "prompt": "Use case: photorealistic-natural. Asset: premium editorial website card, landscape. Warm natural-light still life of a cream project notebook with blank pages, brass ruler, sample tile, pencil and ceramic coffee cup on a walnut table beside a sunlit window. Tasteful lived-in Pennsylvania home, plum and olive accents, luxurious magazine photography, tactile materials, realistic calm lighting. No readable text, no logos, no watermark. Main objects centered with crop room."
+    },
+    {
+      "file": "vinyl-road.webp",
+      "type": "AI-generated editorial illustration; not a documented business project",
+      "prompt": "Use case: photorealistic-natural. Asset: premium local automotive editorial card, landscape. Close three-quarter detail of an unbranded modern car in deep satin plum vinyl, parked near a refined brick workshop in autumn Pennsylvania. Cropped hood, front wheel and beautiful vinyl finish. No people, no license plate text, no brand logos, no signage, no watermark. Natural cinematic afternoon lighting, tasteful realistic photography. This is illustrative not a real business project."
+    },
+    {
+      "file": "front-door.webp",
+      "type": "AI-generated editorial illustration; not a documented business project",
+      "prompt": "Use case: photorealistic-natural. Asset: premium real-estate editorial website card, landscape. Beautiful welcoming muted olive front door of a southeastern Pennsylvania stone house, brass hardware, cream trim, autumn plant pots and warm interior glimpse, no visible house numbers, no people, no logos, no text. Elegant architectural magazine photography, realistic texture, warm late afternoon light. Centered composition with space for cropping."
+    },
+    {
+      "file": "fine-print-stage.webp",
+      "type": "AI-generated editorial illustration; not a documented business project",
+      "prompt": "Use case: illustration-story. Asset: premium playful website illustration, landscape. A miniature theatrical stage made of plum velvet curtains and warm cream paper, a giant curled receipt with blank illegible lines, brass magnifying glass in a spotlight, tiny golden stars and a small orange question-mark shaped prop. Clever editorial collage meets sophisticated tactile 3D paper craft, entertaining and luxurious, soft studio lighting, no readable text, no logos, no watermark. Centered composition."
+    },
+    {
+      "file": "good-call-club.webp",
+      "type": "AI-generated editorial illustration; not a documented business project",
+      "prompt": "Use case: illustration-story. Asset: premium playful quiz and rewards website illustration, landscape. An elegant playful tabletop board-game world with a small cream Pennsylvania-style house, a plum car token, brass keys, gold star badge, orange question-mark token and curving cream path over muted olive and plum fields. Tactile paper craft and ceramic miniature style, warm luxury editorial illustration, crisp beautiful materials, joyful and sophisticated, no people, no readable text, no logos, no watermark. Centered composition."
+    },
+    {
+      "file": "hvac-comfort.webp",
+      "type": "AI-generated editorial illustration; not a documented installation",
+      "promptFile": "hvac-image-prompt.txt"
+    }
+  ],
+  "projectPhoto": {
+    "file": "sound-wraps-project.webp",
+    "publisher": "Sound Wraps LLC",
+    "source": "https://www.facebook.com/photo/?fbid=1575250094402346",
+    "published": "2026-09-09",
+    "authorization": "User explicitly requested use of a public Sound Wraps Facebook photo; attribution shown beside the image."
+  }
+}
