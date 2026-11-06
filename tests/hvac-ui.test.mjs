@@ -124,3 +124,17 @@ test('configured sending needs separate explicit permission and preserves a save
   posted=undefined;submit(app);await tick();assert.equal(posted.sendInquiry,undefined);assert.match(app.$('hvac-result').textContent,/has not been notified/);
  }finally{app.dom.window.close();}
 });
+test('rechecking an emailed inquiry refreshes status with the same id and does not create a new request',async()=>{
+ let posts=[];
+ const app=await setup(async(url,opts)=>{
+  if(url.includes('capabilities'))return response({captureReady:true,deliveryReady:true});
+  const body=JSON.parse(opts.body);posts.push(body);
+  return response({status:'saved',reference:body.id,provider:'Middletown HVAC',providerDelivery:posts.length===1?'queued':'accepted'});
+ });
+ try{
+  next(app);fill(app);app.$('hvac-consent').checked=true;app.$('hvac-send-consent').checked=true;
+  app.$('hvac-send').click();await tick();assert.match(app.$('hvac-result').textContent,/queued/);
+  app.$('hvac-send').click();await tick();assert.match(app.$('hvac-result').textContent,/accepted by the email provider/);
+  assert.equal(posts.length,2);assert.equal(posts[0].id,posts[1].id);
+ }finally{app.dom.window.close();}
+});

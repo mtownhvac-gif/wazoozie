@@ -49,8 +49,9 @@ queued records remain private. Stop provider retries before rolling back code.
 
 ## Remaining issue-27 work / release gates
 
-Real configured-provider and webhook end-to-end test, narrow/mobile QA of the enabled
-send controls, and operator process validation remain activation gates. Production
+Real configured-provider and webhook end-to-end test and operator process validation
+remain activation gates. Enabled send controls passed desktop and 390px browser QA
+with a mocked local provider. No actual email was transmitted. Production
 sender and credentials are unavailable in this environment. The general /start/
 planner remains save-only. Contractor application office alerts, participation for
 other providers, authenticated outcome tracking and unacknowledged-inquiry alerts
@@ -59,3 +60,8 @@ remain future work. Twilio is phase 2 and is not implemented or activated here.
 References: https://resend.com/docs/api-reference/emails/send-email
 https://resend.com/docs/dashboard/emails/idempotency-keys
 https://resend.com/docs/webhooks/verify-webhooks-requests
+
+Recovery schedules the alarm before committing new outbox records. Retry submits retain
+the same reference and refresh delivery status. Expanded failure tests cover timeouts,
+429 quota errors, concurrent-provider 409s, permanent errors, early and duplicate
+callbacks, retention-before-dispatch and public-route send-consent enforcement.

@@ -69,7 +69,7 @@ if (root) {
     $('hvac-save').disabled = !ready;
     $('hvac-retry-capability').hidden = ready;
     $('hvac-retry-capability').disabled = false;
-    $('hvac-capture-status').textContent = ready ? 'Saving is available. A saved request stays with Wazoozie; it is not sent to Middletown.' : 'Private saving is unavailable right now. You can still call, open booking, or preview and copy an email.';
+    $('hvac-capture-status').textContent = ready ? (deliveryReady ? 'Save privately keeps your request with Wazoozie. Email my inquiry queues an email only with your extra permission.' : 'Saving is available. A saved request stays with Wazoozie; it is not sent to Middletown.') : 'Private saving is unavailable right now. You can still call, open booking, or preview and copy an email.';
   }
   $('hvac-retry-capability').addEventListener('click', capabilities);
   capabilities();
@@ -87,7 +87,7 @@ if (root) {
     const body = {...value, consent:true, consentVersion:HVAC_CONSENT_VERSION,...(send?{sendInquiry:true,sendConsentVersion:'hvac-send-2026-11-v1'}:{})};
     const fingerprint = JSON.stringify(body);
     if (attempt?.fingerprint !== fingerprint) attempt = {fingerprint, id:crypto.randomUUID(), receipt:null};
-    if (attempt.receipt) { $('hvac-result').textContent = attempt.receipt; return; }
+    if (attempt.receipt && !send) { $('hvac-result').textContent = attempt.receipt; return; }
     const currentAttempt = attempt;
     pending = true;
     const controls = [...form.elements, ...start.elements, $('hvac-back')];

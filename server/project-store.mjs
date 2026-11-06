@@ -25,6 +25,8 @@ export class ProjectInbox extends DurableObject {
   }
 
   async saveBrief(brief, fingerprint, client, now, delivery = null) {
+    // Arm recovery before committing an outbox: a crash after commit must not orphan mail.
+    if(delivery){const alarm=await this.ctx.storage.getAlarm();if(!alarm||alarm>now+1000)await this.ctx.storage.setAlarm(now+1000);}
     let status = 201;
     let referralAttributed=Boolean(brief.neighborCode);
     this.ctx.storage.transactionSync(() => {
@@ -47,7 +49,6 @@ export class ProjectInbox extends DurableObject {
       this.incrementContact({action:'brief_saved',provider:b.provider,context:b.source==='hvac-page'?'hvac':'planner'}, now);
     });
     if (status === 201 && !await this.ctx.storage.getAlarm()) await this.ctx.storage.setAlarm(now + 86400000);
-    if ([200,201].includes(status) && delivery) await this.ctx.storage.setAlarm(now + 1000);
     const queued = this.ctx.storage.sql.exec('SELECT state FROM delivery_outbox WHERE brief_id=?', brief.id).toArray();
     return {status,referralAttributed,deliveryState:queued.length ? (queued.some(r=>r.state==='failed')?'failed':queued.every(r=>r.state==='delivered')?'delivered':queued.every(r=>['accepted','delivered'].includes(r.state))?'accepted':'queued') : 'not_sent'};
   }
