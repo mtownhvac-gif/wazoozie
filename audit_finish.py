@@ -59,6 +59,7 @@ def add(out, origin, pages):
 
     for target in out.rglob('*.html'):
         content=target.read_text()
+        content=content.replace('</nav></details></div></header>', '</nav></details></div><p class="header-tagline">I’m choosy. I use Wazoozie.</p></header>', 1)
         path='/' if target==home else '/'+str(target.parent.relative_to(out))+'/'
         content=content.replace('href="/local-help/">Find local help <span aria-hidden="true">↗</span>', 'href="/book/">Book or call <span aria-hidden="true">↗</span>')
         content=content.replace('<nav aria-label="Mobile navigation">','<nav aria-label="Mobile navigation"><a href="/book/">Book or call a business</a>',1)
