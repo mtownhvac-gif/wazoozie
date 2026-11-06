@@ -166,8 +166,8 @@ test('whole-home categories start neutral and route doors and painting with rele
   }finally{env.close();}
 });
 
-test('homepage finder preserves direct routes for whole-home projects',async()=>{
-  const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+test('home-service page finder preserves direct routes for whole-home projects',async()=>{
+  const markup=await readFile(new URL('../dist/home-services/index.html',import.meta.url),'utf8');
   const dom=new JSDOM(markup);
   try{
     const entries=[...dom.window.document.querySelectorAll('[data-project-choice] > a')];
@@ -176,8 +176,8 @@ test('homepage finder preserves direct routes for whole-home projects',async()=>
   }finally{dom.window.close();}
 });
 
-test('homepage directory still initializes after category navigation is replaced',async()=>{
-  const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
+test('home-service directory still initializes after category navigation is replaced',async()=>{
+  const markup=await readFile(new URL('../dist/home-services/index.html',import.meta.url),'utf8');
   const script=await readFile(new URL('../dist/assets/home.js',import.meta.url),'utf8');
   const dom=new JSDOM(markup,{url:'https://wazoozie.com/',runScripts:'outside-only'});
   try{

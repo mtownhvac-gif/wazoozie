@@ -9,7 +9,7 @@ const memory=()=>{const values=new Map();return {getItem:key=>values.get(key)||n
 test('finder routes common home projects to the correct named businesses without a request',async()=>{
  assert.deepEqual(matchingProjects('ac'),['comfort']);
  for(const [query,intent] of [['tankless','water'],['boiler','boiler'],['window','windows'],['drywall','painting'],['shelving','carpentry'],['electrician','electrical']])assert.ok(matchingProjects(query).includes(intent),query);
- const {dom,doc}=await page('index.html',memory());
+ const {dom,doc}=await page('home-services/index.html',memory());
  try{
   assert.equal(doc.querySelectorAll('[data-project-choice]:not([hidden])').length,6);
   const input=doc.querySelector('#concierge-search');input.value='window';input.dispatchEvent(new dom.window.Event('input'));
@@ -19,7 +19,7 @@ test('finder routes common home projects to the correct named businesses without
  }finally{dom.window.close();}
 });
 test('home list persists only categories and stages, survives navigation, and supports undo and removal',async()=>{
- const storage=memory();let env=await page('index.html',storage);
+ const storage=memory();let env=await page('home-services/index.html',storage);
  env.doc.querySelector('[data-home-save="comfort"]').click();env.doc.querySelector('[data-home-save="comfort"]').click();env.doc.querySelector('[data-home-save="water"]').click();
  assert.deepEqual(JSON.parse(storage.getItem(HOME_LIST_KEY)),{version:1,items:[{intent:'comfort',stage:'planning'},{intent:'water',stage:'planning'}]});env.dom.window.close();
  env=await page('my-home/index.html',storage);

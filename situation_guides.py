@@ -43,6 +43,6 @@ def add(out,origin,pages):
         write_editorial_page(out,origin,pages,'/guides/'+slug+'/',title,lede,body)
         target=out/'guides'/slug/'index.html';s=target.read_text().replace('</head>','<link rel="stylesheet" href="/assets/situation-guides.css"></head>').replace('</body>','<script type="module" src="/assets/situation-guides.js"></script></body>');target.write_text(s)
     cards='<section class="wrap situation-new" aria-labelledby="situation-new-title"><div class="eyebrow">LIFE HAS QUESTIONS. START HERE.</div><h2 id="situation-new-title">What do I do now?</h2><div>'+''.join('<a href="/guides/'+slug+'/"><span>THE NEXT GOOD STEP</span><h3>'+e(title)+'</h3><p>'+e(lede)+'</p><strong>Read the friendly field guide →</strong></a>' for slug,headline,title,lede,*_ in GUIDES)+'</div></section>'
-    for path,marker in [(out/'index.html','<section class="wrap journal-home"'),(out/'home-tips/index.html','</main>'),(out/'guides/index.html','</main>')]:
+    for path,marker in [(out/'home-tips/index.html','</main>'),(out/'guides/index.html','</main>')]:
         s=path.read_text().replace(marker,cards+marker,1).replace('</head>','<link rel="stylesheet" href="/assets/situation-guides.css"></head>',1);path.write_text(s)
     for asset in ('situation-guides.css','situation-guides.js'):shutil.copy(out.parent/'assets'/asset,out/'assets'/asset)

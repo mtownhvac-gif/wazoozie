@@ -56,12 +56,15 @@ test('streaks count consecutive played days and reset after a gap',()=>{
  const state={days:{'2026-11-04':{},'2026-11-05':{},'2026-11-06':{}}};
  assert.equal(clubStats(state,'2026-11-06').streak,3);assert.equal(clubStats(state,'2026-11-07').streak,3);assert.equal(clubStats(state,'2026-11-08').streak,0);
 });
-test('homepage puts pricing and play first, keeps all service routes and triples visual placements',()=>{
+test('short homepage opens dedicated destinations and preserves pricing and daily play',()=>{
  const dom=new JSDOM(readFileSync(new URL('../dist/index.html',import.meta.url),'utf8')),d=dom.window.document,main=d.querySelector('main');
  assert.match(d.querySelector('h1').textContent,/What shouldyour project cost/);
- assert.equal(main.children[1].id,'explore');assert.ok(main.children[1].querySelector('a[href="/good-call-club/"]'));assert.ok(main.children[1].querySelector('a[href="/pricing-guide/"]'));
- assert.ok(main.querySelectorAll('img').length>=27);
- assert.doesNotMatch(d.querySelector('#concierge-choices').textContent,/Middletown HVAC|Ryan Dugan|Liberator|Cooke|Hart Builders|Rolled Right/);
- assert.ok(d.querySelector('#concierge-choices a[href="/start/?intent=comfort"]'));assert.ok(d.querySelector('.directory a[href="/businesses/middletown-hvac/"]'));
+ assert.equal(main.children.length,4);assert.equal(main.children[1].id,'explore');
+ for(const path of ['/pricing-guide/','/good-call-club/','/home-tips/','/explore/','/home-services/','/auto-mechanics/','/real-estate-agents/','/vehicle-wraps/'])assert.ok(main.querySelector('a[href="'+path+'"]'));
+ assert.equal(main.querySelector('.directory'),null);assert.equal(main.querySelector('form'),null);assert.equal(main.querySelector('.situation-new'),null);
+ const catalog=new JSDOM(readFileSync(new URL('../dist/home-services/index.html',import.meta.url),'utf8')).window.document;
+ assert.ok(catalog.querySelector('#concierge-choices a[href="/start/?intent=comfort"]'));assert.ok(catalog.querySelector('.directory a[href="/businesses/middletown-hvac/"]'));
+ const explore=new JSDOM(readFileSync(new URL('../dist/explore/index.html',import.meta.url),'utf8')).window.document;
+ for(const path of ['/compare/','/project-budget/','/project-kit/','/before-you-say-yes/'])assert.ok(explore.querySelector('main a[href="'+path+'"]'));
  dom.window.close();
 });

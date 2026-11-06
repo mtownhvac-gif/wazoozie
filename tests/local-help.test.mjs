@@ -25,7 +25,7 @@ test('local business applications accept new categories without publishing or in
  assert.ok(dom.window.document.querySelector('input[name="services"][value="realestate"]'));dom.window.close();
 });
 test('ductless discovery stays contextual and preserves distinct referral destinations',()=>{
- const home=new JSDOM(read('/'));assert.ok(home.window.document.querySelector('.journal-home-reads a[href="/services/ductless-mini-splits/"]'));home.window.close();
+ const home=new JSDOM(read('/'));assert.ok(home.window.document.querySelector('a[href="/home-services/"]'));home.window.close();
  const page=new JSDOM(read('/services/ductless-mini-splits/'));
  assert.ok(page.window.document.querySelector('#ductless-room-title'));
  assert.ok(page.window.document.querySelector('a[href^="https://www.mtownhvac.com/ductless-estimator/"]'));page.window.close();

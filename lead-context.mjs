@@ -8,6 +8,8 @@ export function requestPageContext(path){
  if(path==='/home-tips/')return 'field-guide';
  if(['/guides/surprise-repair-quote/','/guides/one-room-too-hot-too-cold/','/guides/car-repair-estimate-changed/'].includes(path))return 'situation-guide';
  if(path.startsWith('/guides/'))return 'guide';
+ if(path==='/home-services/')return 'service';
+ if(path==='/local-stories/')return 'guide';
  if(path.startsWith('/services/'))return 'service';
  if(path.startsWith('/businesses/'))return 'profile';
  return 'other';

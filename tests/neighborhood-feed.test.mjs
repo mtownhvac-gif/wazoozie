@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
 test('feed filters existing stories and shares only the public page link',async()=>{
- const dom=new JSDOM(await readFile('dist/index.html','utf8'),{url:'https://wazoozie.com/'});
+ const dom=new JSDOM(await readFile('dist/local-stories/index.html','utf8'),{url:'https://wazoozie.com/local-stories/'});
  const previous=new Map();let copied;
  for(const [key,value] of Object.entries({document:dom.window.document,location:dom.window.location,navigator:{clipboard:{writeText:async url=>{copied=url;}}}})){
   previous.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{value,configurable:true});

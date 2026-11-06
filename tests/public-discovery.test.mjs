@@ -26,6 +26,6 @@ test('render optimization combines local CSS without importing fonts after style
   const html=readFileSync(new URL('../dist/'+path,import.meta.url),'utf8');const styles=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)">/g)];assert.equal(styles.length,1);
   const css=readFileSync(new URL('../dist'+styles[0][1],import.meta.url),'utf8');assert.match(css,/^@import/);assert.equal(css.match(/@import/g).length,1);
  }
- const home=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');assert.match(home,/valley-stone-home-small.webp 768w/);assert.match(home,/valley-stone-home.webp 1280w/);
+ const home=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');assert.match(home,/clay-family-painting.webp/);assert.match(home,/AI-created editorial illustration/);
  const account=readFileSync(new URL('../dist/account/index.html',import.meta.url),'utf8');assert.doesNotMatch(account,/public-discovery.js/);
 });

@@ -1,59 +1,85 @@
-"""A deliberate, service-first homepage with tools and play at the entrance."""
+"""A short front door with dedicated destinations for discovery and services."""
 import re
 import shutil
 from homeowner_tools import section_range
+from editorial import write_editorial_page
 
 
 def add(out, origin, pages):
-    for name in ('price-notebook','vinyl-road','front-door','fine-print-stage','good-call-club','hvac-comfort'):
-        shutil.copy(out.parent/'assets'/(name+'.webp'),out/'assets'/(name+'.webp'))
-    home=out/'index.html';s=home.read_text()
+    root = out.parent
+    for name in ('price-notebook', 'vinyl-road', 'front-door', 'fine-print-stage', 'good-call-club', 'hvac-comfort'):
+        shutil.copy(root/'assets'/(name+'.webp'), out/'assets'/(name+'.webp'))
+    home = out/'index.html'
+    original = home.read_text()
+
     def section(marker):
-        a,b=section_range(s,marker);return s[a:b]
-    def image(name,alt,cls=''):
+        a, b = section_range(original, marker)
+        return original[a:b]
+
+    def image(name, alt, cls=''):
         return '<img class="'+cls+'" src="/assets/'+name+'" alt="'+alt+'" width="960" height="640" loading="lazy" decoding="async">'
-    hero=section('<section class="grand-hero"')
-    hero=re.sub(r'<h1 id="hero-title">.*?</h1>','<h1 id="hero-title">What should<br><em>your project cost?</em></h1>',hero,flags=re.S)
-    hero=hero.replace('Small businesses. Local affiliates. Reputations worth protecting. Meet the people behind the work—for the home you love, the car you count on and the next chapter you’re planning.','Start with clearer numbers. Stay for useful tools, a little local know-how and good people worth getting to know.')
-    hero=hero.replace('href="/local-help/">Explore your local shortlist','href="/pricing-guide/">Explore the pricing guide').replace('href="/home-tips/">Wander through the field guide →','href="/good-call-club/">Play today’s Good Call →')
-    hero=hero.replace('href="#grand-paths">Find your next good connection ↓','href="#explore">Tools, tips &amp; a little fun ↓')
-    cards=[('price-notebook.webp','Illustrative project-planning notebook and materials','/pricing-guide/','THE PRICE NOTEBOOK','A number with context.','National cost ranges, scope notes and the offer decoder.'),('good-call-club.webp','Illustrative home-and-car board game with star badges','/good-call-club/','GOOD CALL CLUB','Five questions. A little glory.','Play the daily quiz. Collect Wins. Build your badge collection.'),('fine-print-stage.webp','Illustrative miniature theater with a receipt and magnifying glass','/before-you-say-yes/#fine-print-theater','FINE PRINT THEATER','The pitch. The plot twist.','Pull back the curtain on the details worth asking about.'),('carpentry.jpg','Illustrative carpentry planning scene','/project-kit/','THE PROJECT DESK','Make the first call count.','Prepare your questions, compare estimates and plan a budget.'),('valley-colonial-home.webp','Illustrative landscaped colonial home','/home-tips/','THE FIELD GUIDE','Your home, better understood.','Small discoveries, practical tips and seasonal inspiration.'),('front-door.webp','Illustrative welcoming stone-house entrance','/local-help/','THE LOCAL SHORTLIST','People worth a conversation.','Find help for the house, the car and your next move.')]
-    hub='<section class="wrap explore-hub buying-home" id="explore" aria-labelledby="explore-title"><div class="homepage-heading"><div><div class="eyebrow">THE WAZOOZIE EDIT</div><h2 id="explore-title">Useful. Delightful.<br><em>Worth coming back for.</em></h2></div><p>Your local starting point for smart decisions,<br>good connections and a little everyday discovery.</p></div><div class="explore-grid">'
-    for name,alt,url,kicker,title,copy in cards:
-        hub+='<a class="explore-card" href="'+url+'">'+image(name,alt)+'<div><span>'+kicker+'</span><h3>'+title+'</h3><p>'+copy+'</p><strong>Explore →</strong></div></a>'
-    hub+='</div><p class="homepage-image-note">Editorial illustrations are illustrative; labeled project photos show published business work.</p></section>'
-    start=s.index('<div class="wrap grand-paths"');depth=0;end=None
-    for m in re.finditer(r'</?div\b[^>]*>',s[start:]):
-        depth+=-1 if m.group().startswith('</') else 1
-        if depth==0:end=start+m.end();break
-    assert end is not None;paths=s[start:end]
-    for url,name,alt in [('/#find','outdoor-lighting.jpg','Illustrative home lighting scene'),('/auto-mechanics/','sound-wraps-project.webp','Sound Wraps vehicle project, published on its Facebook page'),('/real-estate-agents/','front-door.webp','Illustrative stone-house doorway')]:
-        paths=paths.replace('<a href="'+url+'">','<a href="'+url+'">'+image(name,alt,'path-photo'),1)
-    finder=section('<section class="concierge-home wrap grand-finder"')
-    finder=finder.replace('Choose the project, see the named business and decide how you want to make contact.','Choose the service first. Your selected business appears at the contact step, where you decide how to get in touch.')
-    finder=finder.replace('<div class="grand-finder-links">','<figure class="comfort-art">'+image('hvac-comfort.webp','Custom illustration of home comfort with ductless and outdoor heat-pump equipment')+'<figcaption>Room-by-room possibilities. Custom editorial illustration.</figcaption></figure><div class="grand-finder-links">',1)
-    why=section('<section class="wrap why-local"')
-    tools=section('<section class="workbench-tools"').replace('class="workbench-tools"','class="workbench-tools" id="home-tools"',1)
-    for url,name,alt in [('/project-kit/','carpentry.jpg','Illustrative carpentry planning scene'),('/compare/','window-framing.jpg','Illustrative window and construction scene'),('/my-home/','sink.jpg','Illustrative home plumbing scene')]:
-        tools=tools.replace('href="'+url+'" class="workbench-tool">','href="'+url+'" class="workbench-tool">'+image(name,alt,'tool-photo'),1)
-    journal=section('<section class="wrap journal-home"')
-    for url,name,alt in [('/guides/painting-estimate-checklist/','valley-colonial-home.webp','Illustrative painted colonial home'),('/guides/electrical-project-estimate/','outdoor-lighting.jpg','Illustrative outdoor lighting'),('/services/ductless-mini-splits/','middletown-ductless-project.jpg','Published Middletown HVAC ductless project'),('/seasonal-home-checklist/','valley-stone-home.webp','Illustrative autumn stone home')]:
-        journal=journal.replace('<a href="'+url+'">','<a href="'+url+'">'+image(name,alt,'journal-read-photo'),1)
-    club='<section class="wrap club-home" aria-labelledby="club-home-title"><div class="club-home-art">'+image('good-call-club.webp','Illustrative Good Call Club game board')+image('fine-print-stage.webp','Illustrative Fine Print Theater stage','club-secondary-art')+'</div><div><div class="eyebrow">YOUR DAILY GOOD CALL</div><h2 id="club-home-title">A little wiser.<br><em>A little more legendary.</em></h2><p>Meet Good Call Club. Five daily questions about homes, cars and buying smarter. Collect Wazoozie Wins, earn digital badges and make a return visit a good habit.</p><a class="btn primary" href="/good-call-club/">Play today’s five →</a><p class="club-home-fine">Free to play. No account needed. Digital badges only; no cash value or business discounts. Progress stays in this browser.</p></div></section>'
-    directory=section('<section class="directory"')
-    directory=directory.replace('Your next call starts with a name.','Your local contacts.').replace('The people behind the work','WHEN YOU’RE READY TO CONNECT')
-    wrap=lambda x:'<div class="wrap">'+x+'</div>'
-    content=hero+hub+paths+finder+why+wrap(tools)+club+journal+directory+wrap(section('<section class="account-home-invite"'))+wrap(section('<section class="neighbor-layout"'))+wrap(section('<section class="read-section"'))+wrap(section('<section class="how"'))+wrap(section('<section class="valley"'))+wrap(section('<section class="recruit partner-band"'))
-    s=re.sub(r'<main id="main">.*?</main>',lambda _:'<main id="main">'+content+'</main>',s,count=1,flags=re.S)
-    s=s.replace('</head>','<link rel="stylesheet" href="/assets/homepage-layout.css"></head>',1)
-    for path in ('services/heating-cooling','services/ductless-mini-splits'):
-        target=out/path/'index.html';t=target.read_text().replace('</main>','<figure class="wrap service-comfort-art">'+image('hvac-comfort.webp','Illustrative heating and cooling concept with ductless and outdoor heat-pump equipment')+'<figcaption>Custom Wazoozie editorial illustration. Equipment and installation depend on a site assessment.</figcaption></figure></main>',1).replace('</head>','<link rel="stylesheet" href="/assets/homepage-layout.css"></head>',1);target.write_text(t)
-    # Keep service selection neutral; provider identity remains explicit at contact.
-    home.write_text(s)
-    for path,name,alt in [('pricing-guide','price-notebook','Illustrative project-planning notebook'),('before-you-say-yes','fine-print-stage','Illustrative Fine Print Theater stage')]:
-        target=out/path/'index.html';t=target.read_text();visual='<figure class="section-visual">'+image(name+'.webp',alt)+'<figcaption>Custom editorial illustration for Wazoozie.</figcaption></figure>';t=t.replace('<div class="buying-intro">',visual+'<div class="buying-intro">',1).replace('</head>','<link rel="stylesheet" href="/assets/homepage-layout.css"></head>',1);target.write_text(t)
+
+    cards = [
+        ('price-notebook.webp', 'Illustrative project-planning notebook', '/pricing-guide/', 'THE PRICE NOTEBOOK', 'A number with context.', 'National cost ranges, scope notes and the offer decoder.'),
+        ('good-call-club.webp', 'Illustrative home-and-car board game', '/good-call-club/', 'GOOD CALL CLUB', 'Five questions. A little glory.', 'Play the daily quiz. Collect Wins. Build your badge collection.'),
+        ('clay-fine-print-pitchman.webp', 'Fictional clay-style sales pitchman with commission and scare-script props', '/before-you-say-yes/', 'FINE PRINT THEATER', 'The pitch. The plot twist.', 'Explore the details worth asking about before you approve.'),
+        ('carpentry.jpg', 'Illustrative carpentry planning scene', '/project-kit/', 'THE PROJECT DESK', 'Make the first call count.', 'Prepare a project sheet with useful questions for your chosen business.'),
+        ('clay-window-renovation.webp', 'AI-created clay-style family admiring a new window', '/home-tips/', 'THE FIELD GUIDE', 'Your home, better understood.', 'Practical tips, seasonal inspiration and friendly next steps.'),
+        ('front-door.webp', 'Illustrative stone-house entrance', '/local-help/', 'THE LOCAL SHORTLIST', 'People worth a conversation.', 'Find help for the house, the car and your next move.'),
+    ]
+
+    def card(item):
+        name, alt, url, kicker, title, copy = item
+        return '<a class="explore-card" href="'+url+'">'+image(name, alt)+'<div><span>'+kicker+'</span><h3>'+title+'</h3><p>'+copy+'</p><strong>Explore →</strong></div></a>'
+
+    hub = '<section class="wrap explore-hub buying-home" id="explore" aria-labelledby="explore-title"><div class="homepage-heading"><div><div class="eyebrow">THE WAZOOZIE EDIT</div><h2 id="explore-title">Find your next<br><em>good discovery.</em></h2></div><p>Choose a destination. Make a little room<br>for useful ideas and a good time.</p></div><div class="explore-grid">'+''.join(card(c) for c in cards)+'</div><p class="homepage-image-note">Editorial illustrations are illustrative; labeled project photos show published business work.</p></section>'
+    explore_intro = '<header class="wrap destination-intro"><div class="breadcrumb"><a href="/">Home</a><span>/</span>Tools & discoveries</div><div class="eyebrow">PULL UP A CHAIR.</div><h1>Useful things.<br><em>Excellent rabbit holes.</em></h1><p>Each tool and collection has its own home. Find the one that fits what you’re wondering about.</p></header>'
+    shortcuts = '<section class="wrap destination-shortcuts"><h2>Already know what you need?</h2><a href="/compare/">Compare two estimates →</a><a href="/project-budget/">Plan a project budget →</a><a href="/home-care-reminder/">Make a care reminder →</a><a href="/my-home/">Open my home list →</a><a href="/local-stories/">Around the neighborhood →</a></section>'
+    write_editorial_page(out, origin, pages, '/explore/', 'Tools, guides & Good Call Club', 'Explore Wazoozie’s pricing guide, project tools, homeowner field guide and daily Good Call Club quiz. Choose a dedicated page for your next step.', explore_intro+hub+shortcuts)
+
+    finder = section('<section class="concierge-home wrap grand-finder"')
+    finder = finder.replace('Choose the project, see the named business and decide how you want to make contact.', 'Choose your project. Meet the business and decide how you want to get in touch.')
+    finder = finder.replace('<div class="grand-finder-links">', '<figure class="clay-editorial finder-family"><img src="/assets/clay-hot-water.webp" alt="AI-created clay-style parent and child sharing an everyday kitchen moment" width="1200" height="800" loading="lazy"><figcaption>AI-created editorial illustration · Good help for everyday life.</figcaption></figure><div class="grand-finder-links">', 1)
+    directory = section('<section class="directory"')
+    directory = directory.replace('Your next call starts with a name.', 'Your local contacts.').replace('The people behind the work', 'WHEN YOU’RE READY TO CONNECT')
+    services_intro = '<header class="wrap destination-intro"><div class="breadcrumb"><a href="/local-help/">Local help</a><span>/</span>Home services</div><div class="eyebrow">THE PEOPLE BEHIND THE WORK.</div><h1>Your home.<br><em>Good people to call.</em></h1><p>Heating, cooling, plumbing, electrical work, repairs and finishing touches. Start with the project or browse the business profiles.</p><a href="/services/">Browse every service category →</a></header>'
+    write_editorial_page(out, origin, pages, '/home-services/', 'Local home-service businesses & project finder', 'Find local heating, cooling, plumbing, electrical, carpentry, painting and remodeling contacts. Explore profiles and choose how to contact the business.', services_intro+finder+directory+'<div class="wrap">'+section('<section class="valley"')+'</div>'+section('<section class="wrap why-local"'))
+
+    service_page = out/'home-services/index.html'
+    dialogs = ''.join(re.findall(r'<dialog\b.*?</dialog>', original, flags=re.S))
+    service_page.write_text(service_page.read_text().replace('</body>', dialogs+'<script src="/assets/home.js" defer></script></body>'))
+    stories_intro = '<header class="wrap destination-intro"><div class="breadcrumb"><a href="/explore/">Discoveries</a><span>/</span>Local stories</div><h1>Around the neighborhood.</h1><p>Published projects, service introductions and ideas for your next conversation. Illustrative scenes are labeled.</p></header>'
+    write_editorial_page(out, origin, pages, '/local-stories/', 'Local project stories & service introductions', 'Browse Wazoozie’s curated local business introductions and published project stories, with clear image labels and direct service links.', stories_intro+'<div class="wrap">'+section('<section class="neighbor-layout"')+'</div>')
+    story_page = out/'local-stories/index.html'
+    story_page.write_text(story_page.read_text().replace('</head>', '<link rel="stylesheet" href="/assets/neighborhood-feed.css"></head>').replace('</body>', '<script src="/assets/neighborhood-feed.js" defer></script></body>'))
+
+    hero = section('<section class="grand-hero"')
+    hero = re.sub(r'<h1 id="hero-title">.*?</h1>', '<h1 id="hero-title">What should<br><em>your project cost?</em></h1>', hero, flags=re.S)
+    hero = hero.replace('Small businesses. Local affiliates. Reputations worth protecting. Meet the people behind the work—for the home you love, the car you count on and the next chapter you’re planning.', 'Good local people. Clearer numbers. A little more happy at home.')
+    hero = hero.replace('href="/local-help/">Explore your local shortlist', 'href="/pricing-guide/">Explore the pricing guide').replace('href="/home-tips/">Wander through the field guide →', 'href="/local-help/">Find local help →')
+    hero = hero.replace('href="#grand-paths">Find your next good connection ↓', 'href="/explore/">Tools, guides & a little fun →')
+    hero = hero.replace('/assets/valley-stone-home.jpg', '/assets/clay-family-painting.webp').replace('Illustrative Pennsylvania stone home with an autumn garden', 'AI-created clay-style family enjoying a painting project')
+    hero = hero.replace('</section>', '<span class="grand-illustration-note">AI-created editorial illustration</span></section>', 1)
+    front_cards = '<section class="wrap explore-hub buying-home front-door-edit" id="explore" aria-labelledby="explore-title"><div class="homepage-heading"><div><div class="eyebrow">MAKE YOURSELF AT HOME.</div><h2 id="explore-title">Where shall we start?</h2></div><a href="/explore/">All tools & discoveries →</a></div><div class="explore-grid">'+''.join(card(cards[i]) for i in (0,4,1))+'</div><p class="homepage-image-note">Custom editorial illustrations. Explore each collection on its own page.</p></section>'
+    categories = [('/home-services/','01','The house.','Repairs, comfort and the next big project.'),('/auto-mechanics/','02','The car.','Auto care and transmission specialists.'),('/vehicle-wraps/','03','The finishing touch.','Vehicle wraps and vinyl customization.'),('/real-estate-agents/','04','The next chapter.','Conversations about buying and selling.')]
+    local = '<section class="wrap front-door-local" id="find"><div class="homepage-heading"><div><div class="eyebrow">YOUR LOCAL SHORTLIST.</div><h2>Good help starts here.</h2></div><a href="/local-help/">Explore all local help →</a></div><div class="front-door-categories">'+''.join('<a href="'+url+'"><span>'+number+'</span><h3>'+title+'</h3><p>'+copy+'</p><strong>Meet your local contacts →</strong></a>' for url,number,title,copy in categories)+'</div></section>'
+    trust = '<section class="wrap front-door-note" id="partners"><div><div class="eyebrow">GET CHOOSY. GO WAZOOZIE.</div><h2>Get to know your next good connection.</h2><p>Read why a business is listed, review the linked evidence and choose who you contact. Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. Recommendations and recorded checks are explained on the profiles.</p><a href="/our-standards/">How we choose & what we check →</a></div><aside><a href="/account/">Your Wazoozie · Create an account or sign in →</a><a href="/for-contractors/">Own a local business? Start here →</a><a href="/share-wazoozie/">Know someone who could use this? →</a></aside></section>'
+    original = original.replace('<script src="/assets/home.js" defer></script>', '').replace('<script src="/assets/neighborhood-feed.js" defer></script>', '')
+    home.write_text(re.sub(r'<main id="main">.*?</main>', lambda _:'<main id="main">'+hero+front_cards+local+trust+'</main>', original, count=1, flags=re.S))
+
+    # Keep familiar links working while directing navigation to dedicated pages.
     for target in out.rglob('*.html'):
-        t=target.read_text().replace('<a href="/project-kit/">Project tools</a>','<a href="/#explore">Tools, tips &amp; play</a>')
-        t=t.replace('<strong>The useful details</strong>','<strong>The useful details</strong><a href="/good-call-club/">Good Call Club · daily quiz</a>',1)
-        target.write_text(t)
-    shutil.copy(out.parent/'assets/homepage-layout.css',out/'assets/homepage-layout.css')
+        content = target.read_text()
+        content = content.replace('href="/#find"', 'href="/home-services/"').replace('href="/#explore"', 'href="/explore/"')
+        if target == out/'home-services/index.html':
+            content = content.replace('href="/home-services/"', 'href="#find"')
+        content = content.replace('href="/project-kit/">Project tools</a>', 'href="/explore/">Tools, tips &amp; play</a>')
+        content = content.replace('<strong>The useful details</strong>', '<strong>The useful details</strong><a href="/explore/">Tools &amp; discoveries</a><a href="/good-call-club/">Good Call Club · daily quiz</a>', 1)
+        content = content.replace('Your home deserves good people.<br>', 'Get choosy. Go Wazoozie.<br>')
+        footer = '<div class="footergrid"><div><a href="/" class="brand"><span class="wordmark">wazoozie<span style="color:var(--orange)">.</span></span></a><p>Get choosy. Go Wazoozie.<br>Good people for the place you call home.<br>Delco · Chester County · The Main Line</p></div><div><strong>Make yourself at home</strong><a href="/local-help/">Find local help</a><a href="/pricing-guide/">The pricing guide</a><a href="/explore/">Tools &amp; discoveries</a><a href="/home-tips/">The field guide</a><a href="/good-call-club/">Good Call Club</a><a href="/projects/">Published local work</a></div><div><strong>The useful details</strong><a href="/account/">Sign in / create an account</a><a href="/about/">About Wazoozie</a><a href="/our-standards/">How we choose</a><a href="/how-it-works/">How it works</a><a href="/for-contractors/">For local businesses</a><a href="/privacy/">Privacy</a></div></div>'
+        content = re.sub(r'<div class="footergrid">.*?</div>(?=<section class="operator-disclosure")', lambda _: footer, content, count=1, flags=re.S)
+        content = content.replace('</head>', '<link rel="stylesheet" href="/assets/homepage-layout.css"></head>', 1)
+        target.write_text(content)
+    from clay_storytelling import add as add_clay_storytelling
+    add_clay_storytelling(out)
+    shutil.copy(root/'assets/homepage-layout.css', out/'assets/homepage-layout.css')
