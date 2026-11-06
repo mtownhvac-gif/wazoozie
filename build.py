@@ -268,6 +268,8 @@ from neighborhood_feed import add as add_neighborhood_feed
 add_neighborhood_feed(OUT)
 from project_concierge import add as add_project_concierge
 add_project_concierge(OUT, PUBLIC, PAGES)
+from homeowner_tools import add as add_homeowner_tools
+add_homeowner_tools(OUT, PUBLIC, PAGES)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:

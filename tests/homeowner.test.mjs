@@ -166,12 +166,12 @@ test('whole-home categories start neutral and route doors and painting with rele
   }finally{env.close();}
 });
 
-test('homepage has direct whole-home project entries rather than an HVAC-heavy category bar',async()=>{
+test('homepage finder preserves direct routes for whole-home projects',async()=>{
   const markup=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');
   const dom=new JSDOM(markup);
   try{
-    const entries=[...dom.window.document.querySelectorAll('.home-project-card')];
-    assert.equal(entries.length,10);
+    const entries=[...dom.window.document.querySelectorAll('[data-project-choice] > a')];
+    assert.equal(entries.length,14);
     for(const key of ['doors','windows','decks','additions','painting'])assert.ok(entries.some(link=>link.getAttribute('href')===`/start/?intent=${key}`));
   }finally{dom.window.close();}
 });
@@ -183,7 +183,7 @@ test('homepage directory still initializes after category navigation is replaced
   try{
     dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
     dom.window.eval(script);
-    assert.equal(dom.window.document.querySelectorAll('.home-project-card').length,10);
+    assert.equal(dom.window.document.querySelectorAll('[data-project-choice] > a').length,14);
     assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,6);
     assert.ok(dom.window.document.querySelector('#resultCount').textContent.includes('6'));
     for (const [service,name,tel] of [['painting','Rolled Right Painting','+16102919552'],['construction-remodeling','Hart Builders','+12153505502']]) {
