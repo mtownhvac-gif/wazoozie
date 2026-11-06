@@ -1,4 +1,4 @@
-export const CONSENT_VERSION = 'project-brief-2026-11-05';
+export const CONSENT_VERSION = 'project-brief-2026-11-06-email';
 
 export const BUSINESSES = {
   middletown: {

@@ -2,10 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Miniflare, convertV4MiniflareOptions} from 'miniflare';
 import {readFile} from 'node:fs/promises';
+import {build} from 'esbuild';
+async function storeSource(){
+ const source=await readFile(new URL('../server/project-store.mjs',import.meta.url),'utf8');
+ const result=await build({stdin:{contents:source,resolveDir:new URL('../server/',import.meta.url).pathname},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:workers']});
+ return result.outputFiles[0].text;
+}
 
 // Execute the actual SQLite-backed class inside the local Cloudflare runtime.
 test('private store is durable, idempotent, rate limited and expires old records',async()=>{
-  const source=await readFile(new URL('../server/project-store.mjs',import.meta.url),'utf8');
+  const source=await storeSource();
   const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:source+'\nexport class TestInbox extends ProjectInbox { async runExpiry() { return this.alarm(); } }\nexport default {fetch(){return new Response("local test");}};',compatibilityDate:'2026-11-04',durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}}}));
   try {
     const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');
@@ -33,7 +39,7 @@ test('private store is durable, idempotent, rate limited and expires old records
 });
 
 test('contractor applications remain private, idempotent, rate limited and expire',async()=>{
-  const source=await readFile(new URL('../server/project-store.mjs',import.meta.url),'utf8');
+  const source=await storeSource();
   const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:source+'\nexport class TestInbox extends ProjectInbox { async runExpiry(){return this.alarm();} }\nexport default {fetch(){return new Response("test");}};',compatibilityDate:'2026-11-04',durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}}}));
   try{
     const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');const store=ns.get(ns.idFromName('application-test'));const now=Date.now();
@@ -51,7 +57,7 @@ test('contractor applications remain private, idempotent, rate limited and expir
 });
 
 test('neighbor attribution persists privately, retries safely, and expires after 90 days',async()=>{
- const source=await readFile(new URL('../server/project-store.mjs',import.meta.url),'utf8');
+ const source=await storeSource();
  const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:source+'\nexport class TestInbox extends ProjectInbox { async runExpiry(){return this.alarm();} }\nexport default {fetch(){return new Response("test");}};',compatibilityDate:'2026-11-04',durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}}}));
  try{
   const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');const store=ns.get(ns.idFromName('neighbor-test'));const now=Date.now();
