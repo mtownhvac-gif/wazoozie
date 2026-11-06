@@ -109,3 +109,32 @@ test('a saved receipt for a different UUID fails closed; matching retry receipt 
   assert.ok(app.$('hvac-result').textContent.includes(calls[1].id));
  }finally{app.dom.window.close();}
 });
+test('configured sending needs separate explicit permission and preserves a save-only action',async()=>{
+ let posted;
+ const app=await setup(async(url,opts)=>{
+  if(url.includes('capabilities'))return response({captureReady:true,deliveryReady:true});
+  posted=JSON.parse(opts.body);return response({status:'saved',reference:posted.id,provider:'Middletown HVAC',providerDelivery:posted.sendInquiry?'queued':'not_sent'});
+ });
+ try{
+  next(app);fill(app);app.$('hvac-consent').checked=true;
+  assert.equal(app.$('hvac-send').hidden,false);
+  app.$('hvac-send').click();await tick();assert.equal(posted,undefined);assert.match(app.$('hvac-result').textContent,/permission/);
+  app.$('hvac-send-consent').checked=true;app.$('hvac-send').click();await tick();
+  assert.equal(posted.sendInquiry,true);assert.equal(posted.sendConsentVersion,'hvac-send-2026-11-v1');assert.match(app.$('hvac-result').textContent,/queued/);
+  posted=undefined;submit(app);await tick();assert.equal(posted.sendInquiry,undefined);assert.match(app.$('hvac-result').textContent,/has not been notified/);
+ }finally{app.dom.window.close();}
+});
+test('rechecking an emailed inquiry refreshes status with the same id and does not create a new request',async()=>{
+ let posts=[];
+ const app=await setup(async(url,opts)=>{
+  if(url.includes('capabilities'))return response({captureReady:true,deliveryReady:true});
+  const body=JSON.parse(opts.body);posts.push(body);
+  return response({status:'saved',reference:body.id,provider:'Middletown HVAC',providerDelivery:posts.length===1?'queued':'accepted'});
+ });
+ try{
+  next(app);fill(app);app.$('hvac-consent').checked=true;app.$('hvac-send-consent').checked=true;
+  app.$('hvac-send').click();await tick();assert.match(app.$('hvac-result').textContent,/queued/);
+  app.$('hvac-send').click();await tick();assert.match(app.$('hvac-result').textContent,/accepted by the email provider/);
+  assert.equal(posts.length,2);assert.equal(posts[0].id,posts[1].id);
+ }finally{app.dom.window.close();}
+});

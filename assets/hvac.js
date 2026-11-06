@@ -8,7 +8,8 @@ if (root) {
   const business = BUSINESSES.middletown;
   const labels = {comfort:'Repair / I’m not sure', replacement:'A new system', maintenance:'Maintenance', secondopinion:'A second opinion', boiler:'Boilers & radiators'};
   let startedAt = Date.now();
-  let pending = false, ready = false, attempt = null;
+  let pending = false, ready = false, deliveryReady = false, sending = false, attempt = null;
+  $('hvac-send').addEventListener('click',()=>{sending=true;form.requestSubmit();sending=false;});
   const initial = new URLSearchParams(location.search).get('intent');
   if (HVAC_INTENTS.includes(initial)) start.elements.intent.value = initial;
 
@@ -61,11 +62,14 @@ if (root) {
       const response = await fetch('/api/project-capabilities', {headers:{Accept:'application/json'}, cache:'no-store'});
       const body = response.ok ? await response.json() : null;
       ready = body?.captureReady === true;
-    } catch { ready = false; }
+      deliveryReady=body?.deliveryReady===true;
+    } catch { ready = false; deliveryReady=false; }
+    $('hvac-send-choice').hidden=!deliveryReady;
+    $('hvac-send').hidden=!deliveryReady;
     $('hvac-save').disabled = !ready;
     $('hvac-retry-capability').hidden = ready;
     $('hvac-retry-capability').disabled = false;
-    $('hvac-capture-status').textContent = ready ? 'Saving is available. A saved request stays with Wazoozie; it is not sent to Middletown.' : 'Private saving is unavailable right now. You can still call, open booking, or preview and copy an email.';
+    $('hvac-capture-status').textContent = ready ? (deliveryReady ? 'Save privately keeps your request with Wazoozie. Email my inquiry queues an email only with your extra permission.' : 'Saving is available. A saved request stays with Wazoozie; it is not sent to Middletown.') : 'Private saving is unavailable right now. You can still call, open booking, or preview and copy an email.';
   }
   $('hvac-retry-capability').addEventListener('click', capabilities);
   capabilities();
@@ -78,10 +82,12 @@ if (root) {
       form.elements.consent.setCustomValidity('Please agree before saving privately with Wazoozie.');
       form.elements.consent.reportValidity(); return;
     }
-    const body = {...value, consent:true, consentVersion:HVAC_CONSENT_VERSION};
+    const send=sending;
+    if(send&&(!deliveryReady||!$('hvac-send-consent').checked)){ $('hvac-result').textContent='Check the email permission box before requesting delivery.';return;}
+    const body = {...value, consent:true, consentVersion:HVAC_CONSENT_VERSION,...(send?{sendInquiry:true,sendConsentVersion:'hvac-send-2026-11-v1'}:{})};
     const fingerprint = JSON.stringify(body);
     if (attempt?.fingerprint !== fingerprint) attempt = {fingerprint, id:crypto.randomUUID(), receipt:null};
-    if (attempt.receipt) { $('hvac-result').textContent = attempt.receipt; return; }
+    if (attempt.receipt && !send) { $('hvac-result').textContent = attempt.receipt; return; }
     const currentAttempt = attempt;
     pending = true;
     const controls = [...form.elements, ...start.elements, $('hvac-back')];
@@ -96,11 +102,11 @@ if (root) {
       if (wait) await new Promise(resolve => setTimeout(resolve, wait));
       const response = await fetch('/api/hvac-requests', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({...body,id:currentAttempt.id,startedAt}), referrerPolicy:'no-referrer'});
       const receipt = await response.json();
-      if (!response.ok || receipt?.status !== 'saved' || receipt?.provider !== 'Middletown HVAC' || receipt?.providerDelivery !== 'not_sent' || receipt?.reference !== currentAttempt.id) throw new Error('No valid save receipt');
-      currentAttempt.receipt = `Saved privately with Wazoozie. Reference: ${receipt.reference}. Middletown HVAC has not been notified. No appointment or dispatch is booked. Call, open booking or send your own email to contact the business.`;
+      if (!response.ok || receipt?.status !== 'saved' || receipt?.provider !== 'Middletown HVAC' || !(send?['queued','accepted','delivered','failed']:['not_sent']).includes(receipt?.providerDelivery) || receipt?.reference !== currentAttempt.id) throw new Error('No valid save receipt');
+      currentAttempt.receipt = send ? `Saved privately. Reference: ${receipt.reference}. Email status: ${receipt.providerDelivery==='accepted'?'accepted by the email provider':receipt.providerDelivery}. This does not confirm the business read it. No appointment or dispatch is booked. Call or open booking for direct contact.` : `Saved privately with Wazoozie. Reference: ${receipt.reference}. Middletown HVAC has not been notified. No appointment or dispatch is booked. Call, open booking or send your own email to contact the business.`;
       $('hvac-result').textContent = currentAttempt.receipt;
     } catch {
-      $('hvac-result').textContent = 'We could not confirm a save. You can retry this same request, or call Middletown directly. No provider notification or appointment has been confirmed.';
+      $('hvac-result').textContent = send ? 'We could not confirm the request status. Retry the same details to check; an email may already be queued. Call Middletown for direct help. No appointment is confirmed.' : 'We could not confirm a save. You can retry this same request, or call Middletown directly. No provider notification or appointment has been confirmed.';
     } finally {
       pending = false;
       controls.forEach((control, index) => { control.disabled = disabledBefore[index]; });

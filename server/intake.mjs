@@ -1,3 +1,4 @@
+import {deliveryReady,makeDelivery,SEND_CONSENT_VERSION,handleDeliveryWebhook} from './delivery.mjs';
 import {BUSINESSES} from '../project-config.mjs';
 import {validateBrief} from './brief-validation.mjs';
 import {validateHvacRequest} from './hvac-validation.mjs';
@@ -35,8 +36,9 @@ async function readJSON(request, limit = 16384) {
 
 export async function handleIntake(request, env) {
   const url = new URL(request.url);
+  if (url.pathname === '/api/delivery-webhook') return handleDeliveryWebhook(request,env);
   if (url.pathname === '/api/project-capabilities') {
-    return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX)}) : respond({error: 'Method not allowed.'}, 405);
+    return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX), deliveryReady:deliveryReady(env)}) : respond({error: 'Method not allowed.'}, 405);
   }
   const hvac = url.pathname === '/api/hvac-requests';
   const neighbor = url.pathname === '/api/neighbor-referrals';
@@ -99,6 +101,9 @@ export async function handleIntake(request, env) {
   const {brief, error} = hvac ? validateHvacRequest(input) : validateBrief(input);
   if (error) return respond({error}, 400);
 
+  const wantsDelivery=input.sendInquiry===true;
+  if(wantsDelivery&&(!hvac||input.sendConsentVersion!==SEND_CONSENT_VERSION||!deliveryReady(env)))return respond({error:'Delivery is unavailable or send consent is missing. You can save privately instead.'},400);
+  if(wantsDelivery)brief.sendConsentVersion=SEND_CONSENT_VERSION;
   const now = Date.now();
   const date = new Date(now).toISOString();
   const fingerprint = await hash(JSON.stringify(brief));
@@ -107,11 +112,12 @@ export async function handleIntake(request, env) {
   try {
     if(brief.neighborCode && !await env.PROJECT_INBOX.getByName('neighbors:v1').hasNeighbor(brief.neighborCode,now)) delete brief.neighborCode;
     const inbox = env.PROJECT_INBOX.getByName(`${brief.provider}:${date.slice(0, 7)}`);
-    const {status,referralAttributed} = await inbox.saveBrief(brief, fingerprint, client, now);
+    const delivery=wantsDelivery?makeDelivery(brief,env,`${brief.provider}:${date.slice(0,7)}`):null;
+    const {status,referralAttributed,deliveryState} = await inbox.saveBrief(brief, fingerprint, client, now,delivery);
     if (status === 429) return respond({error: 'Request limit reached. Please call the business directly.'}, 429);
     if (status === 409) return respond({error: 'This reference already has different details. Start a new brief.'}, 409);
     if(![200,201].includes(status)) throw Error('Save not confirmed');
-    return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery: 'not_sent', referralAttributed: referralAttributed ?? Boolean(brief.neighborCode)}, status);
+    return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery: deliveryState || 'not_sent', referralAttributed: referralAttributed ?? Boolean(brief.neighborCode)}, status);
   } catch {
     return respond({error: 'We could not confirm a save. Retry this same brief or call the business directly.'}, 503);
   }

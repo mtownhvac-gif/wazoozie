@@ -266,3 +266,7 @@ hash and 1,000 per day overall; duplicate request IDs with identical details
 return the same code. There is no public referral lookup/list API. Daily cleanup
 expires records; validity also checks age directly. Existing brief databases
 receive an additive nullable `neighbor_code` column, preserving prior records.
+
+## Staged inquiry email implementation
+
+See [DELIVERY.md](DELIVERY.md) for the disabled-by-default HVAC send path, sender/recipient prerequisites, private outbox, failure review and remaining activation gates. Saving alone still does not notify the contractor. Do not enable public sending until the configured-provider test and browser QA of enabled controls pass.

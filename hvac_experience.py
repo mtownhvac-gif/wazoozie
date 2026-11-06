@@ -37,7 +37,7 @@ def add(out, origin, pages):
                       'appointment or dispatch service.</p><p>Unsaved form entries stay in the current browser page; Wazoozie does not '
                       'store them in local browser storage. Previewing an email does not save or send your request. Opening an email '
                       'draft passes the entered details to your email app, where you decide whether to send it to Middletown HVAC. '
-                      'You can also copy the request yourself. No request is automatically emailed by Wazoozie.</p>')
+                      'You can also copy the request yourself. Saving alone never emails a request. When configured, a separate email action and permission box let you ask Wazoozie to send the inquiry to Middletown HVAC and notify its office through Resend. Delivery records are kept privately for about 90 days. Email-provider acceptance does not confirm the business read the inquiry or a booked visit. Failed delivery needs office review. Resend processes the submitted contact and project details for delivery.</p>')
             content = content.replace('<h2>Your private project brief.</h2>', notice + '<h2>Your private project brief.</h2>', 1)
         if target == out / 'hvac/index.html':
             image = (origin or 'http://localhost:8123') + '/assets/middletown-ductless-project.jpg'
