@@ -6,7 +6,7 @@ from editorial import write_editorial_page
 
 E = html.escape
 COLLECTIONS = [
-    ('heating-cooling', 'Heating & cooling', 'Furnace trouble, AC repairs and replacement plans.', 'middletown-outdoor-project'),
+    ('heating-cooling', 'Heating & cooling', 'Furnace trouble, AC repairs and replacement plans.', 'clay-hvac-family'),
     ('ductless-mini-splits', 'Room-by-room comfort', 'For the room that is always too hot or too cold.', 'clay-ductless-comfort'),
     ('water-heaters', 'Hot water & tankless', 'Plan a replacement or find out about tankless.', 'clay-tankless-bath'),
     ('plumbing', 'Plumbing & drains', 'Leaks, slow drains and fixture projects.', 'clay-plumbing-leak'),
@@ -91,7 +91,7 @@ def add(out, origin, pages):
     primary = {'/services/'+slug+'/' for slug, *_ in COLLECTIONS}
     extra = [(url, html.unescape(re.sub(r'\s*↗$', '', title))) for url, title in existing if url not in primary]
     cards = ''.join(visual_card('/services/'+slug+'/', title, copy, image, f'{i:02d}') for i, (slug,title,copy,image) in enumerate(COLLECTIONS, 1))
-    body = '<div class="wrap brand-service-collection"><div class="breadcrumb"><a href="/local-help/">Local help</a><span>/</span>Home services</div><header class="brand-collection-heading"><div><div class="eyebrow">THE HOME COLLECTION</div><h1>What needs<br><em>doing at your place?</em></h1><p>Some jobs need doing now. Others have been on the list for a while. Find yours below, then get to know the person you’ll call.</p></div><aside><span>GET CHOOSY. GO WAZOOZIE.</span><p>Start with the job.<br>Find someone you’d feel good calling.</p><a href="/home-services/">Browse the local businesses →</a></aside></header><section class="brand-collection-grid" aria-label="Explore home services">'+cards+'</section><p class="brand-image-note">Clay scenes are AI-created illustrations. The outdoor-unit photo shows work published by <a href="https://www.mtownhvac.com/services/ductless/">Middletown HVAC ↗</a>.</p><section class="brand-specialist-links"><h2>A more specific project?</h2>'+''.join('<a href="'+url+'">'+E(title)+' →</a>' for url,title in extra)+'</section><section class="brand-next-step"><div><span class="eyebrow">BEFORE THE FIRST CONVERSATION</span><h2>Know what you’re asking for.</h2><p>Check the general cost ranges, prepare your questions, and confirm service fit, coverage and availability with the business.</p></div><div><a class="btn primary" href="/pricing-guide/">Explore the cost guide →</a><a href="/project-kit/">Prepare a project sheet →</a><a href="/our-standards/">How we choose & what we check →</a></div></section></div>'
+    body = '<div class="wrap brand-service-collection"><div class="breadcrumb"><a href="/local-help/">Local help</a><span>/</span>Home services</div><header class="brand-collection-heading"><div><div class="eyebrow">THE HOME COLLECTION</div><h1>What needs<br><em>doing at your place?</em></h1><p>Some jobs need doing now. Others have been on the list for a while. Find yours below, then get to know the person you’ll call.</p></div><aside><span>GET CHOOSY. GO WAZOOZIE.</span><p>Start with the job.<br>Find someone you’d feel good calling.</p><a href="/home-services/">Browse the local businesses →</a></aside></header><section class="brand-collection-grid" aria-label="Explore home services">'+cards+'</section><p class="brand-image-note">Clay scenes are AI-created illustrations of fictional people and home projects.</p><section class="brand-specialist-links"><h2>A more specific project?</h2>'+''.join('<a href="'+url+'">'+E(title)+' →</a>' for url,title in extra)+'</section><section class="brand-next-step"><div><span class="eyebrow">BEFORE THE FIRST CONVERSATION</span><h2>Know what you’re asking for.</h2><p>Check the general cost ranges, prepare your questions, and confirm service fit, coverage and availability with the business.</p></div><div><a class="btn primary" href="/pricing-guide/">Explore the cost guide →</a><a href="/project-kit/">Prepare a project sheet →</a><a href="/our-standards/">How we choose & what we check →</a></div></section></div>'
     write_editorial_page(out, origin, pages, '/services/', 'Local home services | Heating, plumbing, electrical & home projects', 'Explore local heating, cooling, ductless, hot water, plumbing, electrical, painting, carpentry and remodeling services. Find the project and choose who you contact.', body)
 
     # Short, image-led category entries work on the front door and local hub.
@@ -136,7 +136,7 @@ def add(out, origin, pages):
             content = content.replace('<aside class="contact-card">', '<aside class="contact-card">'+proof, 1)
         target.write_text(content)
 
-    for name in ('brand-family-porch','clay-local-pro','brand-family-planning','clay-gutter-care'):
+    for name in ('brand-family-porch','clay-local-pro','brand-family-planning','clay-gutter-care','clay-hvac-family'):
         shutil.copy(out.parent/'assets'/(name+'.webp'), out/'assets'/(name+'.webp'))
     covers = [
         ('local-help','<div class="local-intro">','brand-family-porch','A fictional family relaxing on a stone-house porch',False),

@@ -8,7 +8,7 @@ test('visual service collection preserves specialist routes and keeps the genera
  assert.equal(d.querySelectorAll('.brand-collection-grid>a').length,9);
  for(const slug of ['heating-cooling','ductless-mini-splits','water-heaters','plumbing','electrical','painting','handyman','construction-remodeling','maintenance','boilers','replacement-estimates','second-opinion','oil-to-gas-conversion'])assert.ok(d.querySelector('main a[href="/services/'+slug+'/"]'),slug);
  assert.equal(d.querySelector('main .contact-card'),null);
- assert.ok(d.querySelector('img[src="/assets/middletown-outdoor-project.jpg"]'));
+ assert.ok(d.querySelector('img[src="/assets/clay-hvac-family.webp"]'));
  assert.ok(d.querySelector('nav[aria-label="Main navigation"] a[href="/pricing-guide/"]'));
  assert.ok(d.querySelector('nav[aria-label="Mobile navigation"] a[href="/explore/"]'));
 });
