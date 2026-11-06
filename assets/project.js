@@ -26,6 +26,9 @@ let deliveryStatus = "not_sent";
 function emailChoice() {
   const allowed = selected && emailProviders.includes(INTENTS[selected].provider);
   $('#projectSave').textContent = allowed ? 'Submit request →' : 'Save my project brief →';
+  const heading=$('#projectContactHeading'),note=$('#projectContactNote');
+  if(heading)heading.textContent=allowed?'Ask the business to get in touch':'Save a brief for later';
+  if(note)note.textContent=allowed?'Add your details to submit a callback request. If you book directly, enter your details only on the business’s booking page.':'Saving keeps your brief with Wazoozie; it does not notify this business. Call directly, or use the email draft if one is offered.';
   $('#submissionConsent').textContent = allowed ? 'I agree to Wazoozie saving my contact information and project details and sharing this request with the business I selected so its office can follow up.' : 'I agree to Wazoozie saving my contact information and project details for review and follow-up about this project.';
 }
 let saving = false;
@@ -58,6 +61,7 @@ function showStep(number) {
 function showBusiness() {
   emailChoice();
   const quick = $('#projectQuickConnect');
+  const dock=$('#projectConnectionDock');if(dock){dock.hidden=!selected;if(selected)dock.replaceChildren(directActions(BUSINESSES[INTENTS[selected].provider],true));}
   $('#projectNext1').disabled = !selected;
   quick.hidden = !selected;
   if (!selected) {
@@ -82,7 +86,7 @@ function showBusiness() {
   const copy = make('div', '', 'project-business-copy');
   copy.append(make('div', intent.scopeCheck ? 'DISCUSS YOUR PROJECT WITH' : 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Confirm your address, project fit and availability directly before scheduling.'));
   if (intent.scopeCheck) copy.append(make('p', intent.scopeCheck, 'project-fit-note'));
-  if (provider.booking) copy.append(businessLink('Book with Middletown ↗', provider.booking, 'btn primary'));
+  if (provider.booking) copy.append(businessLink('Book online with Middletown ↗', provider.booking, 'btn primary'));
   copy.append(businessLink('Get to know this business →', `/businesses/${provider.slug}/`), businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`));
   copy.append(make('p', INTENTS[selected].provider === 'middletown' ? 'Actual work · Published by Middletown HVAC' : 'Illustrative imagery · Not a customer project', 'project-photo-label'));
   aside.append(image, copy);
@@ -91,7 +95,7 @@ function showBusiness() {
   for (const question of PROJECT_QUESTIONS[selected]) list.append(make('li', question));
   prompts.replaceChildren(make('h3', 'A few useful things to include.'), list);
   form.elements.details.placeholder = PROJECT_QUESTIONS[selected][0] + ' Tell us what you know; it’s fine to be unsure.';
-  quick.replaceChildren(make('h3', 'Ready to speak with someone?'), make('p', `Contact ${provider.name} directly. Project planning below is optional.`), directActions(provider));
+  quick.replaceChildren(make('h3', 'Call or schedule directly'), make('p', `Contact ${provider.name} directly. The planner below is optional.`), directActions(provider),make('p',provider.booking?'Online booking opens Housecall Pro. Enter your contact details there; your planner notes are not sent to the booking page.':'Call the business to arrange a time. A saved brief is not an appointment.','project-muted'));
 }
 for (const group of PROJECT_GROUPS) {
   const fieldset = make('fieldset', '', 'project-choice-group');
@@ -125,6 +129,7 @@ $('#projectServiceDetail').addEventListener('change', event => {
 });
 
 showBusiness();
+form.addEventListener('input',()=>{if(!$('#projectStep3').hidden)review(values());});
 $('#projectNext1').addEventListener('click', () => { if (selected) showStep(2); });
 for (const button of document.querySelectorAll('[data-back]')) button.addEventListener('click', () => showStep(Number(button.dataset.back)));
 function updateNotices() {
@@ -140,21 +145,21 @@ function values() {
 }
 function review(data) {
   const list = make('dl');
-  const fields = [['Business to contact', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town}, ${data.state} ${data.zip} · ${data.timing}`], ['About the property', `${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified'], ['Your contact details', `${data.name}\n${data.phone}${data.email ? '\n' + data.email : ''}`]];
+  const fields = [['Business to contact', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town?data.town+', '+data.state+' '+data.zip:'Add your location below if you send a request'} · ${data.timing}`], ['About the property', data.property==='Other'&&data.role==='Other'?'Not specified':`${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified']];
+  if(data.name||data.phone||data.email)fields.push(['Your contact details',`${data.name}\n${data.phone}${data.email?'\n'+data.email:''}`]);
   if (data.neighborCode) fields.push(['Neighbor introduction', 'Attach this neighbor’s referral credit when saving. No referrer contact details are shared.']);
   if (INTENTS[data.intent].scopeCheck) fields.push(['Project fit to confirm', INTENTS[data.intent].scopeCheck]);
   for (const [label, value] of fields) list.append(make('dt', label), make('dd', value));
   $('#projectReview').replaceChildren(list);
   const connection = $('#reviewConnections');
-  connection.replaceChildren(make('h3', 'Put your plan to work.'), directActions(BUSINESSES[data.provider]), shareActions(data, false), make('p', 'Calling and booking connect directly to the business. An email link opens a draft in your own email app; review and send it yourself. Saving below is optional.'));
+  connection.replaceChildren(make('h3', 'Choose how to get in touch.'), directActions(BUSINESSES[data.provider]), shareActions(data, false), make('p', BUSINESSES[data.provider].booking?'Book in Housecall Pro or call the office. Your planner details are not sent to the booking page.':'Call the business to arrange a time. You can copy your notes to share yourself; saving a brief below does not notify this business.'));
 }
 $('#projectNext2').addEventListener('click', () => {
   for (const input of $('#projectStep2').querySelectorAll('input,select,textarea')) {
     if (!input.reportValidity()) return;
   }
   const data = values();
-  if (data.phone.replace(/\D/g, '').length < 10 || data.phone.replace(/\D/g, '').length > 15) return error('Enter a valid phone number so the office can reach you.');
-  if (data.details.trim().length < 15 || data.town.trim().length < 2 || data.name.trim().length < 2) return error('Add your name, town and a little more detail about the project.');
+  if(data.details.trim().length<15)return error('Add a little more detail about the job.');
   review(data); showStep(3);
 });
 async function checkAvailability() {
@@ -181,7 +186,10 @@ form.addEventListener('submit', async event => {
   error(); saving = true;
   $('#projectSave').disabled = true; $('#projectSave').textContent = 'Saving your brief…';
   try {
+    for(const input of $('#projectStep3').querySelectorAll('input,select,textarea'))if(!input.reportValidity())return;
     const data = values();
+    const digits=data.phone.replace(/\D/g,'');
+    if(digits.length<10||digits.length>15){error('Enter a valid phone number so the office can reach you.');return;}
     const response = await fetch('/api/project-briefs', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || 'We could not confirm that your brief was saved. Retry or call the business directly.');
@@ -190,22 +198,23 @@ form.addEventListener('submit', async event => {
     $('#receiptDelivery').textContent = deliveryStatus === 'automation_accepted' ? 'Saved privately. Your selected business’s email service accepted the request. Inbox delivery is not confirmed, and no appointment has been booked.' : deliveryStatus === 'pending' ? 'Saved privately. Your email request is waiting for retry. Call the business directly if you need help soon; no appointment has been booked.' : deliveryStatus === 'failed' ? 'Saved privately, but automatic email could not be confirmed. Please call the business directly.' : 'Saved privately with Wazoozie. The business has not been notified, and no appointment has been booked.';
     document.querySelector('#neighborCredit').hidden=true;
     if(data.neighborCode) document.querySelector('#receiptNeighborStatus').textContent=result.referralAttributed ? 'Your neighbor introduction was credited with this saved brief.' : 'Your project was saved, but this neighbor link could not be credited. It may have expired.';
+    const dock=$('#projectConnectionDock');if(dock)dock.hidden=true;
     form.hidden = true;
     $('#projectReceipt').hidden = false;
     $('#receiptMessage').textContent = `WZ-${id.slice(0, 8).toUpperCase()} · ${INTENTS[data.intent].label} with ${BUSINESSES[data.provider].name}.`;
     const provider = BUSINESSES[data.provider];
     $('#receiptActions').append(businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`, 'btn primary'));
-    if (provider.booking) $('#receiptActions').append(businessLink('Book with Middletown ↗', provider.booking, 'btn outline'));
+    if (provider.booking) $('#receiptActions').append(businessLink('Book online with Middletown ↗', provider.booking, 'btn outline'));
     $('#projectQuickConnect').hidden = true;
     $('#receiptShare').replaceChildren(shareActions(data, true));
     $('#projectReceipt').focus();
   } catch (failure) { error(failure.message || 'We could not confirm the save. Your next step is to retry or call directly.'); }
   finally { saving = false; $('#projectSave').disabled = !captureReady; emailChoice(); }
 });
-function directActions(provider) {
+function directActions(provider, compact = false) {
   const actions = make('div', '', 'project-actions');
-  actions.append(businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`, 'btn primary'));
-  if (provider.booking) actions.append(businessLink('Book with Middletown ↗', provider.booking, 'btn outline'));
+  actions.append(businessLink(compact?'Call':`Call ${provider.phone}`, `tel:${provider.tel}`, 'btn primary'));
+  if (provider.booking) actions.append(businessLink(compact?'Book online':'Book online with Middletown ↗', provider.booking, 'btn outline'));
   return actions;
 }
 function download(data, saved) {

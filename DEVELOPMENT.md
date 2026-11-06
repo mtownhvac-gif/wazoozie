@@ -116,3 +116,16 @@ The header now includes the cost guide and active-section indication; the mobile
 Middletown receives a contextual homepage ductless feature and clearly labeled request links on its heating/cooling, ductless, hot-water, boiler, maintenance, replacement, conversion and second-opinion pages. Three main HVAC service pages show labeled published Middletown installation photos in their contact cards. Request intent and referral attribution continue through the existing consent-based intake; no delivery routing or authentication behavior changed. No conversion, ranking or lead-volume gain is claimed without measured evidence.
 
 The cost-guide introduction now neutrally explains published U.S. ranges and local job factors without comparing the guide against a named provider. General framing and source notes are shorter and friendlier. The 21 sourced range cards remain unchanged; the Middletown estimator referral and accurate operator disclosure remain in their relevant contexts.
+
+
+## Booking and usability finish — November 6, 2026
+
+/book/ provides category-filtered contact options for all 13 existing businesses. Middletown links to its existing Housecall Pro flow; C&J links to its Upper Chichester service page; Sound Wraps links to its contact page; remaining listings offer phone scheduling. No fabricated appointment slots, new provider routing or automated bookings were introduced. Each business confirms its own availability and appointment.
+
+The homepage exposes common services and a primary service-finding action while retaining the cost-guide opening. The header and mobile menu expose the contact hub. Business profiles and service pages have relevant compact-screen contact actions. Middletown pages explain the Housecall Pro handoff. The optional planner reaches review with project notes alone; contact information is requested only when saving/submitting. Property and equipment details are optional. Consent and server validation remain in place, and booking links contain no planner or contact data. Self-hosted SVG arrows replace action glyphs without changing destinations or handlers.
+
+A new fictional Black family clay illustration appears on Local Help. The earlier family photo-style illustration remains on the sharing page. Its generation prompt and provenance are recorded in assets/audit-image-manifest.json. Existing genuine project imagery remains.
+
+Validation: 84 automated tests passed, including mocked request submission, contact filters and action icons. Browser checks at 390×700 verified category filtering, contact-free planner review, compact booking actions and no horizontal overflow on the ductless page. No live inquiry or appointment was submitted. Housecall Pro appointment slots and final confirmation remain unverified. Production capabilities remain a separate read-only check; a configured email path is not proof of new delivery or booking.
+
+A Google site:wazoozie.com check on November 6 showed the current local-home-services homepage title and local-service results. No old agency result was observed in that limited check. This does not establish that all stale results are gone or new pages are indexed. Existing canonical URLs, sitemap and genuine missing-page 404 behavior are retained.

@@ -84,4 +84,6 @@ def add(out, origin, pages):
     add_clay_storytelling(out)
     from brand_finish import add as add_brand_finish
     add_brand_finish(out, origin, pages)
+    from audit_finish import add as add_audit_finish
+    add_audit_finish(out, origin, pages)
     shutil.copy(root/'assets/homepage-layout.css', out/'assets/homepage-layout.css')

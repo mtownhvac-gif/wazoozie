@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 const PROBLEMS = JSON.parse(await readFile(new URL('../assets/problem-config.json', import.meta.url), 'utf8'));
 import {INTENTS,BUSINESSES} from '../project-config.mjs';
 
-async function page(path, query = '') {
+async function page(path, query = '', capability = {captureReady:true}) {
   const markup = await readFile(new URL(`../dist/${path}/index.html`, import.meta.url), 'utf8');
   const dom = new JSDOM(markup, {url: `https://wazoozie.com/${path}/${query}`});
   const previous = new Map();
@@ -17,7 +17,7 @@ async function page(path, query = '') {
   const requests=[];
   globalThis.fetch=async (url,options)=>{
     requests.push({url,options});
-    return Response.json(url.includes('capabilities')?{captureReady:true}:{status:'saved',providerDelivery:'not_sent'});
+    return Response.json(url.includes('capabilities')?capability:{status:'saved',providerDelivery:'not_sent'});
   };
   return {document:dom.window.document,requests,close(){
     dom.window.close();globalThis.fetch=originalFetch;
@@ -221,4 +221,26 @@ test('contractor signup preserves homeowner choice and submits a reviewed-intere
     assert.equal(env.document.querySelector('input[name="cardNumber"]'),null);
     const posted=JSON.parse(env.requests.find(r=>r.options?.method==='POST').options.body);assert.equal(posted.interest,'sponsored');assert.deepEqual(posted.services,['carpentry']);
   }finally{env.close();}
+});
+
+
+test('optional planner reaches review without personal details and only submits after valid contact and consent',async()=>{
+ const env=await page('start','?intent=comfort',{captureReady:true,emailProviders:['middletown']});
+ try{
+  await import(`../dist/assets/project.js?optional=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
+  const d=env.document,form=d.querySelector('#projectForm');
+  assert.ok(d.querySelector('#projectQuickConnect a[href^="https://book.housecallpro.com/"]'));
+  assert.equal(d.querySelector('#projectStep2 [name="phone"]'),null);
+  d.querySelector('#projectNext1').click();form.elements.details.value='Synthetic local notes about a room comfort concern.';d.querySelector('#projectNext2').click();
+  assert.equal(d.querySelector('#projectStep3').hidden,false);assert.equal(form.elements.phone.value,'');
+  assert.equal(env.requests.filter(r=>r.options?.method==='POST').length,0);
+  form.elements.consent.checked=true;form.dispatchEvent(new d.defaultView.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(env.requests.filter(r=>r.options?.method==='POST').length,0,'missing contact details never submit');
+  for(const [key,value] of Object.entries({name:'Synthetic Test',phone:'202-555-0100',town:'Media',zip:'19063'}))form.elements[key].value=value;
+  form.dispatchEvent(new d.defaultView.Event('input',{bubbles:true}));
+  const booking=new URL(d.querySelector('#reviewConnections a[href^="https://book.housecallpro.com/"]').href);
+  assert.equal(booking.searchParams.has('name'),false);assert.equal(booking.searchParams.has('phone'),false);assert.equal(booking.searchParams.has('email'),false);
+  form.dispatchEvent(new d.defaultView.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
+  const posts=env.requests.filter(r=>r.options?.method==='POST');assert.equal(posts.length,1);assert.equal(JSON.parse(posts[0].options.body).notifyProvider,true);
+ }finally{env.close();}
 });

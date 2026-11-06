@@ -17,5 +17,5 @@ test('Middletown requests stay relevant and mixed imagery retains clear source l
  for(const [slug,intent] of Object.entries(intents))assert.ok(doc('/services/'+slug+'/').querySelector('main a[href="/start/?intent='+intent+'"]'));
  for(const path of ['/auto-mechanics/','/real-estate-agents/','/vehicle-wraps/'])assert.equal(doc(path).querySelector('main a[href*="mtownhvac.com/ductless-estimator"]'),null);
  const home=doc('/');assert.equal(home.querySelector('main').children.length,4);assert.ok(home.querySelector('main img[src="/assets/valley-stone-home.webp"]'));assert.ok(home.querySelector('.brand-comfort-callout a[href*="mtownhvac.com/ductless-estimator"]'));
- const local=doc('/local-help/');assert.ok(local.querySelector('main img[src="/assets/brand-family-porch.webp"]'));assert.match(local.querySelector('main').textContent,/AI-created editorial image/);
+ const local=doc('/local-help/');assert.ok(local.querySelector('main img[src="/assets/clay-family-porch.webp"]'));assert.match(local.querySelector('main').textContent,/AI-created clay illustration/);
 });
