@@ -1,5 +1,6 @@
 import {BUSINESSES} from '../project-config.mjs';
 import {validateBrief} from './brief-validation.mjs';
+import {validateHvacRequest} from './hvac-validation.mjs';
 import {validateActivity} from '../activity-config.mjs';
 import {validateNeighbor} from './neighbor-validation.mjs';
 import {validateApplication} from './application-validation.mjs';
@@ -37,10 +38,11 @@ export async function handleIntake(request, env) {
   if (url.pathname === '/api/project-capabilities') {
     return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX)}) : respond({error: 'Method not allowed.'}, 405);
   }
+  const hvac = url.pathname === '/api/hvac-requests';
   const neighbor = url.pathname === '/api/neighbor-referrals';
   const activity = url.pathname === '/api/contact-activity';
   const businessApplication = url.pathname === '/api/contractor-applications';
-  if (url.pathname !== '/api/project-briefs' && !activity && !businessApplication && !neighbor) return respond({error: 'Not found.'}, 404);
+  if (url.pathname !== '/api/project-briefs' && !activity && !businessApplication && !neighbor && !hvac) return respond({error: 'Not found.'}, 404);
   if (request.method !== 'POST') return respond({error: 'Method not allowed.'}, 405);
   const origins = new Set(['https://wazoozie.com', 'https://www.wazoozie.com']);
   if (env.INTAKE_LOCAL_PREVIEW === '1' || ['localhost', '127.0.0.1'].includes(url.hostname)) origins.add(url.origin);
@@ -94,7 +96,7 @@ export async function handleIntake(request, env) {
       return respond(status === 429 ? {error:'Action limit reached.'} : {counted:true}, status);
     } catch { return respond({error:'Counting is unavailable.'}, 503); }
   }
-  const {brief, error} = validateBrief(input);
+  const {brief, error} = hvac ? validateHvacRequest(input) : validateBrief(input);
   if (error) return respond({error}, 400);
 
   const now = Date.now();

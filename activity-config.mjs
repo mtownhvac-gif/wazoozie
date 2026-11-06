@@ -1,6 +1,6 @@
 import {BUSINESSES} from './project-config.mjs';
 export const CONTACT_ACTIONS = ['call_click', 'booking_click', 'email_draft_click', 'website_click'];
-export const PAGE_CONTEXTS = ['home', 'planner', 'help', 'profile', 'service', 'guide', 'other'];
+export const PAGE_CONTEXTS = ['home', 'hvac', 'planner', 'help', 'profile', 'service', 'guide', 'other'];
 
 export function validateActivity(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return null;
@@ -12,6 +12,7 @@ export function validateActivity(input) {
 
 export function pageContext(path) {
   if (path === '/') return 'home';
+  if (path === '/hvac/') return 'hvac';
   if (path === '/start/') return 'planner';
   if (path === '/help/') return 'help';
   if (path.startsWith('/businesses/')) return 'profile';

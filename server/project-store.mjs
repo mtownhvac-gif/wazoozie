@@ -37,7 +37,7 @@ export class ProjectInbox extends DurableObject {
         b.id, now, b.provider, b.intent, b.name, b.phone, b.email, b.town, b.zip,
         b.state, b.details, b.timing, b.role, b.property, b.equipment, b.source, b.consentVersion, fingerprint, b.neighborCode || null);
       this.ctx.storage.sql.exec('INSERT INTO submission_limits(client_hash,day,count) VALUES (?,?,1) ON CONFLICT(client_hash) DO UPDATE SET count=count+1', client, new Date(now).toISOString().slice(0, 10));
-      this.incrementContact({action:'brief_saved',provider:b.provider,context:'planner'}, now);
+      this.incrementContact({action:'brief_saved',provider:b.provider,context:b.source==='hvac-page'?'hvac':'planner'}, now);
     });
     if (status === 201 && !await this.ctx.storage.getAlarm()) await this.ctx.storage.setAlarm(now + 86400000);
     return {status,referralAttributed};

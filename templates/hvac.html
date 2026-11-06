@@ -1,0 +1,48 @@
+<div class="wrap hvac-page">
+  <div class="breadcrumb"><a href="/">Home</a><span>/</span>Heating &amp; cooling</div>
+  <section class="hvac-intro" aria-labelledby="hvac-title">
+    <div><div class="eyebrow">A GOOD PLACE TO START</div><h1 id="hvac-title">Let’s get your home<br><em>feeling right.</em></h1><p>Something stopped working. A room never feels comfortable. Or it’s time to plan what comes next.</p><p>Start with your project. Talk directly with <strong>Middletown HVAC.</strong></p></div>
+    <figure><img src="/assets/middletown-ductless-project.jpg" width="1024" height="768" alt="Fujitsu ductless unit installed above a bedroom doorway, published by Middletown HVAC" fetchpriority="high"><figcaption>Real Middletown HVAC work · <a href="https://www.mtownhvac.com/services/ductless/" target="_blank" rel="noopener">Published project ↗</a></figcaption></figure>
+  </section>
+  <div class="hvac-layout">
+    <section class="hvac-card" aria-labelledby="hvac-step-title">
+      <p class="hvac-progress" id="hvac-progress">1 · Your project &nbsp; / &nbsp; 2 · Your next step</p>
+      <h2 id="hvac-step-title" tabindex="-1">What needs attention?</h2>
+      <form id="hvac-start">
+        <fieldset class="hvac-options"><legend>Choose a service</legend>
+          <label><input type="radio" name="intent" value="comfort" required><span><strong>Repair / I’m not sure</strong><small>Something isn’t heating or cooling right.</small></span><span aria-hidden="true">↗</span></label>
+          <label><input type="radio" name="intent" value="replacement"><span><strong>A new system</strong><small>Replacement, conversion or ductless.</small></span><span aria-hidden="true">↗</span></label>
+          <label><input type="radio" name="intent" value="maintenance"><span><strong>Maintenance</strong><small>Care for the system you already have.</small></span><span aria-hidden="true">↗</span></label>
+          <label><input type="radio" name="intent" value="secondopinion"><span><strong>A second opinion</strong><small>Talk through a repair or replacement quote.</small></span><span aria-hidden="true">↗</span></label>
+          <label><input type="radio" name="intent" value="boiler"><span><strong>Boilers &amp; radiators</strong><small>Gas, oil, baseboards or radiators.</small></span><span aria-hidden="true">↗</span></label>
+        </fieldset>
+        <label class="hvac-field" for="hvac-zip">Your project ZIP<input id="hvac-zip" name="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" placeholder="e.g. 19063" required aria-describedby="hvac-coverage"></label>
+        <p class="hvac-note" id="hvac-coverage">Middletown confirms address coverage and availability. Entering a ZIP does not check either.</p>
+        <button class="btn primary" type="submit" id="hvac-continue" disabled>Choose my next step →</button>
+      </form>
+      <div id="hvac-next" hidden>
+        <p id="hvac-summary" class="hvac-summary"></p><button type="button" id="hvac-back" class="hvac-text-button">← Edit service or ZIP</button>
+        <p>Call or open Middletown’s booking page whenever you’re ready. You don’t need to fill out a request.</p>
+        <div class="hvac-actions"><a class="btn primary" href="tel:{{tel}}">Call {{phone}}</a><a class="btn" href="{{booking}}" target="_blank" rel="noopener">Open booking ↗</a></div>
+        <details id="hvac-request"><summary>Prefer to write it down? Prepare a short request</summary>
+          <p>Optional. Save privately with Wazoozie, or prepare an email you send yourself. Neither option books a visit.</p>
+          <form id="hvac-form">
+            <label class="hvac-field" for="hvac-name">Your name<input id="hvac-name" name="name" autocomplete="name" maxlength="100" required></label>
+            <label class="hvac-field" for="hvac-contact">Phone or email<input id="hvac-contact" name="contact" autocomplete="off" maxlength="180" required aria-describedby="hvac-contact-hint"></label><p class="hvac-note" id="hvac-contact-hint">Use the phone number or email where you can be reached.</p>
+            <label class="hvac-field" for="hvac-details">What’s happening?<textarea id="hvac-details" name="details" rows="4" minlength="15" maxlength="1500" required placeholder="What isn’t working, or what would you like to change?"></textarea></label><p class="hvac-note">15–1,500 characters. Leave out payment information and other sensitive details.</p>
+            <label class="hvac-field" for="hvac-timing">When are you thinking?<select id="hvac-timing" name="timing" required><option value="">Choose timing</option><option value="This week">This week</option><option value="Planning ahead">Planning ahead</option><option value="Urgent">Urgent</option></select></label>
+            <div class="hvac-trap" aria-hidden="true"><label>Company<input name="company" tabindex="-1" autocomplete="off"></label></div>
+            <label class="hvac-consent"><input id="hvac-consent" name="consent" type="checkbox"><span>I agree to save my request privately with Wazoozie, operated by Bryan Cordy, owner of Middletown HVAC. The operator may review it and follow up. Middletown is not automatically notified. This is not an appointment or dispatch. <a href="/privacy/">Privacy details</a>.</span></label>
+            <p class="hvac-note" id="hvac-capture-status" role="status">Checking whether private saving is available…</p>
+            <button class="hvac-text-button" type="button" id="hvac-retry-capability" hidden>Check private saving again</button><div class="hvac-actions"><button class="btn primary" type="submit" id="hvac-save" disabled>Save privately with Wazoozie</button><button class="btn" type="button" id="hvac-preview">Preview email instead</button></div>
+          </form>
+          <p id="hvac-result" role="status" aria-live="polite"></p>
+          <section id="hvac-email" hidden aria-labelledby="hvac-email-title"><h3 id="hvac-email-title" tabindex="-1">Your email preview</h3><p>To: {{email}} · Middletown HVAC</p><label class="hvac-field" for="hvac-email-body">Request to copy<textarea id="hvac-email-body" readonly rows="10"></textarea></label><div class="hvac-actions"><a class="btn primary" id="hvac-open-email">Open my email draft</a><button class="btn" type="button" id="hvac-copy">Copy request</button></div><p class="hvac-note">Opening a draft does not send it. Review and send in your email app. No email app? Copy the text or select it above.</p><p id="hvac-copy-status" role="status"></p></section>
+        </details>
+      </div>
+      <noscript><p>This short planner needs JavaScript. You can still call Middletown or open its booking page using the links beside this form.</p></noscript>
+    </section>
+    <aside class="hvac-provider" aria-labelledby="hvac-provider-title"><div class="eyebrow">KNOW WHO YOU’RE CONTACTING</div><span class="hvac-monogram" aria-hidden="true">MH</span><h2 id="hvac-provider-title">Middletown HVAC</h2><p>Heating, cooling, boilers, ductless systems and maintenance.</p><p class="hvac-relationship">Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. This is a related business, not a comparison of competing quotes.</p><div class="hvac-actions"><a class="btn primary" href="tel:{{tel}}">Call {{phone}}</a><a class="btn" href="{{booking}}" target="_blank" rel="noopener">Open booking ↗</a></div><p class="hvac-note">Discuss your address, project scope, pricing and scheduling directly with Middletown. A booking link is not a confirmed appointment.</p><a href="/businesses/middletown-hvac/">Meet the business →</a><hr><h3>Need help urgently?</h3><p>Don’t wait on a saved request. Call for service availability. If you smell gas, suspect carbon monoxide or face immediate danger, leave the area and contact emergency services or your utility from a safe location.</p></aside>
+  </div>
+  <section class="hvac-more"><h2>Something else around the house?</h2><p>The neighborhood is still here. Find electrical, plumbing, carpentry and other home-service introductions.</p><a href="/#find">Meet local businesses →</a></section>
+</div>

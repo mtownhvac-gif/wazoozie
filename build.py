@@ -254,6 +254,8 @@ from homeowner_experience import strengthen
 strengthen(OUT, PUBLIC, PAGES, PROVIDERS)
 from contractors import add as add_contractor_applications
 add_contractor_applications(OUT, PUBLIC, PAGES)
+from hvac_experience import add as add_hvac_experience
+add_hvac_experience(OUT, PUBLIC, PAGES)
 from contact_measurement import improve as measure_contacts
 measure_contacts(OUT)
 from water_heater_presentation import improve as improve_water_heater_photos
@@ -266,6 +268,10 @@ from launch_finish import finish as finish_launch
 finish_launch(OUT, PUBLIC)
 from neighborhood_feed import add as add_neighborhood_feed
 add_neighborhood_feed(OUT)
+from hvac_experience import enhance_home as enhance_hvac_home
+enhance_hvac_home(OUT)
+from hvac_experience import promote_help
+promote_help(OUT)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
