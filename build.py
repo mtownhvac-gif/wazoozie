@@ -266,6 +266,8 @@ from launch_finish import finish as finish_launch
 finish_launch(OUT, PUBLIC)
 from neighborhood_feed import add as add_neighborhood_feed
 add_neighborhood_feed(OUT)
+from project_concierge import add as add_project_concierge
+add_project_concierge(OUT, PUBLIC, PAGES)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
