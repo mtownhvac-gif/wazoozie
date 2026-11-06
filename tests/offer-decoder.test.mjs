@@ -18,6 +18,7 @@ test('offer decoder distinguishes unknown fees from confirmed zero and adds cent
 test('fictional example is clearly labeled and changed or reset inputs invalidate call notes',()=>{
  const w=setup(),d=w.document,form=d.querySelector('#offer-form');
  assert.equal(form.hidden,false);
+ assert.ok(d.querySelector('#hvac').compareDocumentPosition(d.querySelector('#offer-decoder')) & w.Node.DOCUMENT_POSITION_FOLLOWING);
  d.querySelector('#offer-included-example').click();
  assert.equal(d.querySelector('#offer-total').textContent,'$49.00');
  assert.equal(d.querySelector('#offer-receipt-label').textContent,'FICTIONAL EXAMPLE');
