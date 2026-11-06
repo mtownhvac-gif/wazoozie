@@ -24,3 +24,13 @@ console.log('Markdown negotiation, browser HTML, discovery headers and missing-p
 const redirect=await worker.fetch(new Request('https://www.wazoozie.com/about/index.html?ref=test'),env);
 assert.equal(redirect.status,301);
 assert.equal(redirect.headers.get('location'),'https://wazoozie.com/about/?ref=test');
+const {readFileSync} = await import('node:fs');
+const publicSummary=readFileSync(new URL('./dist/llms.txt',import.meta.url),'utf8');
+assert.match(publicSummary,/Account and agent capabilities/);
+assert.match(publicSummary,/Delegated OAuth access.*not implemented or advertised/);
+assert.match(publicSummary,/Optional Middletown project-request submission supports email delivery/);
+assert.match(publicSummary,/real-estate-agents/);
+const referralMarkdown=readFileSync(new URL('./dist/agent-content/local-help/index.md',import.meta.url),'utf8');
+assert.doesNotMatch(referralMarkdown,/automatic lead delivery is not enabled/);
+assert.match(referralMarkdown,/explicit consent/);
+console.log('AI-readable account capabilities, referral scope and email-delivery facts match the implemented site.');

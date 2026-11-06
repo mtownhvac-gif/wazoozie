@@ -28,7 +28,15 @@ class Markdown(HTMLParser):
         if self.in_main and not self.skip:self.parts.append(re.sub(r'\s+',' ',data))
 
 def generate(out,origin):
-    from conversion import DISCLOSURE
+    disclosure = 'Wazoozie provides local recommendations and public business information for home services, automotive care and real estate. New referral profiles identify owner recommendations and linked public sources; those are not independent credential inspections. Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. You choose who to contact and agree on services directly.'
+    delivery = 'Optional Middletown project-request submission supports email delivery through the configured Zapier integration after explicit consent. Saving alone and preparing an email draft do not send email. Other businesses and professionals are contacted directly. An accepted email request does not confirm inbox receipt or book an appointment.'
+    directory = out / 'llms.txt'
+    if directory.exists():
+        summary = directory.read_text()
+        summary = summary.replace('Email forms prepare drafts; they do not automatically deliver leads.', delivery)
+        summary = summary.replace('Listed businesses have been vetted by Wazoozie;', 'Home-service profile evidence panels describe selection and recorded checks;')
+        summary += '\n## Expanded local referrals\n\n' + origin + '/local-help/ connects home services, automotive care and real estate. ' + origin + '/auto-mechanics/ lists C&J Automotive & Tire at Upper Chichester. ' + origin + '/real-estate-agents/ lists Caitlin Kerezsi, Megan Kerezsi and Libbi Skivo. These new profiles identify owner recommendations and linked official business details; they do not claim independent credential inspections.\n\n## Account and agent capabilities\n\n' + origin + '/account/ offers optional, user-operated passkey sign-in for private saved projects and favorite home-service businesses. It is excluded from the public sitemap. Browsing and direct business contact do not require an account. Delegated OAuth access, an authenticated MCP service and autonomous appointment booking are not implemented or advertised. Private account data and submitted briefs have no public listing endpoint.\n'
+        directory.write_text(summary)
     for f in out.rglob('index.html'):
         path='/' if f.parent==out else '/'+str(f.parent.relative_to(out))+'/'
         if path=='/404/':continue
@@ -37,4 +45,4 @@ def generate(out,origin):
         content=re.sub(r'\n{3,}','\n\n',content).strip()
         target=out/'agent-content'/f.relative_to(out).with_suffix('.md')
         target.parent.mkdir(parents=True,exist_ok=True)
-        target.write_text('Source: '+origin+path+'\n\n'+content+'\n\n## About this directory\n\n'+DISCLOSURE+'\n\nContact the selected business directly. Email request forms prepare drafts; automatic lead delivery is not enabled. Confirm coverage and availability with the business.\n')
+        target.write_text('Source: '+origin+path+'\n\n'+content+'\n\n## About this directory\n\n'+disclosure+'\n\n'+delivery+'\n')

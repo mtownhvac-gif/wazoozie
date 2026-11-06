@@ -280,6 +280,8 @@ from magazine import add as add_magazine
 add_magazine(OUT, PUBLIC, PAGES)
 from local_help import add as add_local_help
 add_local_help(OUT, PUBLIC, PAGES)
+from grand import add as add_grand
+add_grand(OUT, PUBLIC, PAGES)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
