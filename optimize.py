@@ -15,7 +15,7 @@ def add(out,origin,pages,providers):
     records=[{'name':p['name'],'category':'home','services':p['trade'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':p['web']} for p in providers.values()]
     records += [{'name':p['name'],'category':'auto' if p['category']=='automotive' else 'realestate','services':p['label'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':None if p.get('website_label') else p['website'],'publicSourceUrl':p['website']} for p in PEOPLE]
     records.sort(key=lambda p:p['name'].casefold())
-    (out/'assets/public-discovery.json').write_text(json.dumps({'businesses':records,'planning':{'repairQuoteGuide':origin+'/guides/surprise-repair-quote/','roomComfortGuide':origin+'/guides/one-room-too-hot-too-cold/','autoRepairGuide':origin+'/guides/car-repair-estimate-changed/','dailyQuiz':origin+'/good-call-club/','pricingGuide':origin+'/pricing-guide/','buyerQuestions':origin+'/before-you-say-yes/','projectSheet':origin+'/project-kit/','compareEstimates':origin+'/compare/','budget':origin+'/project-budget/','homeTips':origin+'/home-tips/','reminder':origin+'/home-care-reminder/','ductless':origin+'/services/ductless-mini-splits/'}},ensure_ascii=False))
+    (out/'assets/public-discovery.json').write_text(json.dumps({'businesses':records,'planning':{'repairQuoteGuide':origin+'/guides/surprise-repair-quote/','roomComfortGuide':origin+'/guides/one-room-too-hot-too-cold/','autoRepairGuide':origin+'/guides/car-repair-estimate-changed/','dailyQuiz':origin+'/good-call-club/','matchingGame':origin+'/who-would-you-call/','serviceSearch':origin+'/book/','pricingGuide':origin+'/pricing-guide/','buyerQuestions':origin+'/before-you-say-yes/','projectSheet':origin+'/project-kit/','compareEstimates':origin+'/compare/','budget':origin+'/project-budget/','homeTips':origin+'/home-tips/','reminder':origin+'/home-care-reminder/','ductless':origin+'/services/ductless-mini-splits/'}},ensure_ascii=False))
     shutil.copy(root/'assets/public-discovery.js',out/'assets/public-discovery.js')
     target=out/'services/ductless-mini-splits/index.html';s=target.read_text()
     title='Ductless Mini-Split Installation & Cost Planning | Middletown HVAC'
@@ -33,8 +33,26 @@ def add(out,origin,pages,providers):
         return '<script type="application/ld+json">'+json.dumps(data,ensure_ascii=False).replace('<','\\u003c')+'</script>'
     s=re.sub(r'<script type="application/ld\+json">(.*?)</script>',page_schema,s,flags=re.S)
     target.write_text(s)
+    # The business catalog moved to /home-services/; keep its markup with the visible list.
+    home=out/'index.html';home_html=home.read_text();catalog=[]
+    def move_catalog(match):
+        data=json.loads(match.group(1))
+        if data.get('@type')=='ItemList':
+            catalog.append(match.group(0));return ''
+        return match.group(0)
+    home.write_text(re.sub(r'<script type="application/ld\+json">(.*?)</script>',move_catalog,home_html,flags=re.S))
+    if catalog:
+        directory=out/'home-services/index.html';directory.write_text(directory.read_text().replace('</head>',''.join(catalog)+'</head>',1))
     for target in out.rglob('*.html'):
         s=target.read_text()
+        def identify_organization(match):
+            data=json.loads(match.group(1))
+            for item in data.get('@graph',[data]):
+                if item.get('@type')=='Organization' and item.get('@id')==origin+'/#organization':
+                    item['sameAs']=['https://www.facebook.com/profile.php?id=61596314640388']
+                    item['description']='Local help for home, auto and real estate around Delco, Chester County and the Main Line.'
+            return '<script type="application/ld+json">'+json.dumps(data,ensure_ascii=False).replace('<','\\u003c')+'</script>'
+        s=re.sub(r'<script type="application/ld\+json">(.*?)</script>',identify_organization,s,flags=re.S)
         # Keep dimensions/aspect ratio and accessible descriptions; offer smaller image candidates.
         def image(match):
             tag=match.group(0);name=re.search(r'/assets/(valley-(?:stone|colonial)-home)\.jpg',tag).group(1)

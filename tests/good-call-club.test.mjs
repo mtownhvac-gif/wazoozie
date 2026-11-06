@@ -61,7 +61,7 @@ test('short homepage opens dedicated destinations and preserves pricing and dail
  assert.match(d.querySelector('h1').textContent,/What shouldyour project cost/);
  assert.equal(main.children.length,4);assert.equal(main.children[1].id,'explore');
  for(const path of ['/pricing-guide/','/good-call-club/','/home-tips/','/explore/','/home-services/','/auto-mechanics/','/real-estate-agents/','/vehicle-wraps/'])assert.ok(main.querySelector('a[href="'+path+'"]'));
- assert.equal(main.querySelector('.directory'),null);assert.equal(main.querySelector('form'),null);assert.equal(main.querySelector('.situation-new'),null);
+ assert.equal(main.querySelector('.directory'),null);assert.equal(main.querySelector('form').getAttribute('action'),'/book/');assert.ok(main.querySelector('form input[name="q"]'));assert.equal(main.querySelector('form input[type="email"]'),null);assert.equal(main.querySelector('.situation-new'),null);
  const catalog=new JSDOM(readFileSync(new URL('../dist/home-services/index.html',import.meta.url),'utf8')).window.document;
  assert.ok(catalog.querySelector('#concierge-choices a[href="/start/?intent=comfort"]'));assert.ok(catalog.querySelector('.directory a[href="/businesses/middletown-hvac/"]'));
  const explore=new JSDOM(readFileSync(new URL('../dist/explore/index.html',import.meta.url),'utf8')).window.document;
