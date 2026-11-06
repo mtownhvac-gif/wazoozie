@@ -12,7 +12,7 @@ def add(out,origin,pages):
     trades=json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {CONTRACTOR_TRADES} from './contractor-config.mjs'; process.stdout.write(JSON.stringify(CONTRACTOR_TRADES));"],cwd=root,text=True))
     choices=''.join('<label><input type="checkbox" name="services" value="'+key+'"><span>'+html.escape(label)+'</span></label>' for key,label in trades.items())
     body=(root/'templates/contractors.html').read_text().replace('{{TRADE_CHECKBOXES}}',choices)
-    write_editorial_page(out,origin,pages,'/for-contractors/','For local businesses | Contractor applications','Apply for Wazoozie listing consideration or express interest in sponsored visibility. Applications are reviewed, not automatically published. No charge to apply.',body)
+    write_editorial_page(out,origin,pages,'/for-contractors/','For local businesses | Listing applications','Apply for Wazoozie listing consideration or express interest in sponsored visibility. Applications are reviewed, not automatically published. No charge to apply.',body)
     for name in ('contractors.js','contractors.css'):
         shutil.copy(root/'assets'/name,out/'assets'/name)
     shutil.copy(root/'contractor-config.mjs',out/'assets/contractor-config.mjs')

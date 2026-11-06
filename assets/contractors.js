@@ -1,7 +1,12 @@
-import {APPLICATION_CONSENT_VERSION, CONTRACTOR_INTERESTS} from './contractor-config.mjs';
+import {APPLICATION_CONSENT_VERSION, CONTRACTOR_INTERESTS, CONTRACTOR_TRADES} from './contractor-config.mjs';
 const form=document.querySelector('#contractorForm');
 const interest=new URLSearchParams(location.search).get('interest');
 if(Object.hasOwn(CONTRACTOR_INTERESTS,interest))form.elements.interest.value=interest;
+const category=new URLSearchParams(location.search).get('category');
+if(Object.hasOwn(CONTRACTOR_TRADES,category)){
+  const choice=[...form.querySelectorAll('input[name="services"]')].find(input=>input.value===category);
+  if(choice)choice.checked=true;
+}
 const button=document.querySelector('#submitApplication');
 const error=document.querySelector('#applicationError');
 const id=crypto.randomUUID ? crypto.randomUUID() : fallbackReference();
