@@ -284,6 +284,8 @@ from grand import add as add_grand
 add_grand(OUT, PUBLIC, PAGES)
 from pricing import add as add_pricing
 add_pricing(OUT, PUBLIC, PAGES)
+from buyer_edge import add as add_buyer_edge
+add_buyer_edge(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from agent_content import generate
