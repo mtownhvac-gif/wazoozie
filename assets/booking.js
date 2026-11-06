@@ -1,4 +1,11 @@
 const normalize=value=>String(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+const searchText=value=>normalize(value)
+ .replace(/\b(?:air conditioning|air conditioners?|heat pumps?|mini splits?|ductless|heating|cooling|furnaces?|ac)\b/g,'hvac')
+ .replace(/\b(?:water heaters?|hot water|tankless)\b/g,'waterheater')
+ .replace(/\bplumbers?\b/g,'plumbing').replace(/\belectricians?\b/g,'electrical')
+ .replace(/\bmechanics?\b/g,'mechanic').replace(/\b(?:real estate|realtors?)\b/g,'realestate')
+ .replace(/\b(?:painters?|paint)\b/g,'painting');
+const filler=new Set(['i','we','need','needs','a','an','the','for','to','my','our','with','help','someone','looking','near','me','please','fix','repair','repairs','service','services','install','installation']);
 export function initBooking(doc=document){
  const cards=[...doc.querySelectorAll('[data-book-category]')],buttons=[...doc.querySelectorAll('[data-book-filter]')],status=doc.querySelector('#booking-count'),input=doc.querySelector('#booking-query'),empty=doc.querySelector('#booking-empty');
  let category='all';
@@ -7,8 +14,9 @@ export function initBooking(doc=document){
  if(['all','home','auto','realestate'].includes(params.get('category')))category=params.get('category');
  function filter(next=category){
   if(!['all','home','auto','realestate'].includes(next))return;category=next;
-  const terms=normalize(input?.value||'').split(' ').filter(Boolean);
-  for(const card of cards){const haystack=normalize(card.dataset.search||card.textContent);card.hidden=(category!=='all'&&card.dataset.bookCategory!==category)||!terms.every(term=>haystack.includes(term));}
+  const rawTerms=searchText(input?.value||'').split(' ').filter(Boolean);
+  const terms=rawTerms.filter(term=>!filler.has(term));
+  for(const card of cards){const haystack=searchText(card.dataset.search||card.textContent);card.hidden=(category!=='all'&&card.dataset.bookCategory!==category)||!terms.every(term=>haystack.includes(term));}
   for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.bookFilter===category));
   const count=cards.filter(card=>!card.hidden).length;if(status)status.textContent=count+' '+(count===1?'local contact':'local contacts')+(terms.length?' matching your search':'');if(empty)empty.hidden=count>0;
  }
