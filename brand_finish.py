@@ -14,7 +14,7 @@ COLLECTIONS = [
     ('painting', 'Painting & finishing', 'Walls, cabinets, drywall and the prep work.', 'clay-family-painting'),
     ('handyman', 'Carpentry & home repairs', 'Doors, trim and the repairs you keep putting off.', 'clay-door-replacement'),
     ('construction-remodeling', 'Windows & remodeling', 'Windows, decks and changes to the space you have.', 'clay-window-renovation'),
-    ('maintenance', 'Seasonal maintenance', 'Find out what is included before you book a tune-up.', 'clay-dusty-filter'),
+    ('maintenance', 'HVAC maintenance', 'Find out what is included before you book a tune-up.', 'clay-dusty-filter'),
 ]
 
 

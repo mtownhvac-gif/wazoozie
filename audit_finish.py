@@ -64,6 +64,8 @@ def add(out, origin, pages):
 
     from home_match import add as add_home_match
     add_home_match(out, origin, pages)
+    from project_next_steps import add as add_project_next_steps
+    add_project_next_steps(out)
 
     for target in out.rglob('*.html'):
         content=target.read_text()

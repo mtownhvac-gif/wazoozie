@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 const doc=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8')).window.document;
 test('visual service collection preserves specialist routes and keeps the general index neutral',()=>{
  const d=doc('/services/');
- assert.equal(d.querySelectorAll('.brand-collection-grid>a').length,9);
+ assert.equal(d.querySelectorAll('.brand-collection-grid>a').length,10);
  for(const slug of ['heating-cooling','ductless-mini-splits','water-heaters','plumbing','electrical','painting','handyman','construction-remodeling','maintenance','boilers','replacement-estimates','second-opinion','oil-to-gas-conversion'])assert.ok(d.querySelector('main a[href="/services/'+slug+'/"]'),slug);
  assert.equal(d.querySelector('main .contact-card'),null);
  assert.ok(d.querySelector('img[src="/assets/clay-hvac-family.webp"]'));
