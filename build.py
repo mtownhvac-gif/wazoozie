@@ -290,6 +290,8 @@ from good_call_club import add as add_good_call_club
 add_good_call_club(OUT, PUBLIC, PAGES)
 from homepage_layout import add as add_homepage_layout
 add_homepage_layout(OUT, PUBLIC, PAGES)
+from situation_guides import add as add_situation_guides
+add_situation_guides(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from agent_content import generate

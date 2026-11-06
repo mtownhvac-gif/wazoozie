@@ -6,8 +6,6 @@ from editorial import write_editorial_page
 FTC_HOME = 'https://consumer.ftc.gov/articles/how-avoid-home-improvement-scam'
 FTC_AUTO = 'https://consumer.ftc.gov/articles/0211-auto-repair-basics'
 NAR = 'https://www.nar.realtor/the-facts/consumer-guide-to-written-buyer-agreements'
-MAINTENANCE = 'https://www.mtownhvac.com/services/contracts/'
-DUCTLESS = 'https://www.mtownhvac.com/ductless-estimator/'
 WRAPS = 'https://www.soundwraps.com/services.html'
 
 # Editorial questions, not allegations about any listed or unlisted business.
@@ -30,29 +28,8 @@ def add(out, origin, pages):
     e = html.escape
     def render(path, title, desc, body):
         write_editorial_page(out, origin, pages, path, title, desc, '<div class="wrap buying-page">'+body+'</div>')
-    def price(title, value, scope, source, label):
-        return '<article class="price-card"><p class="eyebrow">'+e(title)+'</p><h3>'+e(value)+'</h3><p>'+e(scope)+'</p><a href="'+source+'">'+e(label)+' ↗</a><small>Published reference · checked November 6, 2026</small></article>'
-
-    intro='<div class="buying-intro"><div class="eyebrow">THE LOCAL PRICE NOTEBOOK</div><h1>Good help.<br><em>Clearer numbers.</em></h1><p class="buying-lede">What should it cost? Start with a real published number, then make sure you’re comparing the same work.</p><p>These are business-published price references, not a survey of typical local prices or a ceiling on what a project should cost. Starting prices describe a limited scope. Confirm current pricing, eligibility, taxes, exclusions and the complete written quote with the business before booking.</p><p><a href="/before-you-say-yes/">Spot the pressure. Ask the better question →</a></p></div>'
-    jumps='<nav class="buying-jumps" aria-label="Price guide sections"><a href="#hvac">Heating & cooling</a><a href="#vehicle-wraps">Vehicle wraps</a><a href="#directory-prices">Every other category</a><a href="#method">Our method</a></nav>'
-    hvac='<section id="hvac" class="buying-section"><div class="eyebrow">MIDDLETOWN HVAC · PUBLISHED ENTRY PRICES & PLANS</div><h2>Comfort, with a place to start.</h2><div class="price-grid">'
-    hvac+=price('One-time maintenance', '$129', 'One visit for one eligible gas, propane or electric system; no annual commitment. Not the oil tune-up price. Repairs and other work require their own scope.', MAINTENANCE, 'Middletown’s published maintenance terms')
-    hvac+=price('Oil tune-up', '$250', 'Published oil tune-up reference. Confirm the equipment, included work and any additional materials directly; the $129 eligible-system visit does not apply to oil.', MAINTENANCE, 'Read the oil-service terms')
-    hvac+=price('Ductless installation', 'From $6,300', 'Middletown’s installed starting reference for a standard wall-mounted configuration. A planning figure, not a binding quote: equipment, electrical work, routes, drainage and site conditions affect the final scope.', DUCTLESS, 'Explore the published ductless estimator')
-    hvac+=price('Annual maintenance plans', '$325 / $600', 'Published annual prices for two visits / four visits respectively, for one HVAC system. Confirm equipment eligibility, included work, renewal terms and additional-system pricing.', MAINTENANCE, 'Compare the published plan terms')
-    hvac+='</div><p><a class="btn primary" href="/businesses/middletown-hvac/">Discuss your home with Middletown HVAC →</a> <a href="/services/ductless-mini-splits/">Explore room-by-room ductless comfort →</a></p></section>'
-    wraps='<section id="vehicle-wraps" class="buying-section"><div class="eyebrow">SOUND WRAPS · WEST CHESTER</div><h2>A new look. A defined canvas.</h2><div class="price-grid">'
-    wraps+=price('Full exterior wrap', 'Starting at $3,500', 'Sound Wraps publishes this starting price excluding door jambs. Material, vehicle, finish, coverage and complexity affect the quote.', WRAPS, 'Sound Wraps’ published services')
-    wraps+=price('Hood, trunk or roof', '$350–$500', 'Published reference for a partial-panel project, not the price for all three panels together. Confirm the selected panel, vehicle, film and preparation.', WRAPS, 'Check partial-wrap scope')
-    wraps+=price('Decals', '$75–$500', 'Sound Wraps’ published size-dependent decal range. Confirm design, coverage, preparation and installation details in the quote.', WRAPS, 'Check decal pricing')
-    wraps+='</div><p><a class="btn primary" href="/businesses/sound-wraps-west-chester/">Meet Sound Wraps →</a></p></section>'
-    other='<section id="directory-prices" class="buying-section"><div class="eyebrow">THE REST OF YOUR LOCAL SHORTLIST</div><h2>Price the actual project.</h2><p>We have not verified a fixed published rate for the categories below. Each needs a scope-specific written quote; we won’t fill the gap with an invented bargain. Use these questions to get a number you can actually compare.</p><div class="quote-grid">'
-    for slug, label, headline, copy, question, destination, source in INDUSTRIES:
-        if slug in ('hvac','vehicle-wraps'): continue
-        other+='<article><span class="price-type">WRITTEN QUOTE NEEDED</span><h3>'+e(label)+'</h3><p>'+e(question)+'</p><a href="'+destination+'">Find the relevant local contact →</a><p><a href="/before-you-say-yes/#'+slug+'">Before you say yes →</a></p></article>'
-    other+='</div></section>'
-    method='<section id="method" class="buying-section buying-note"><h2>Our method: a source beside the number.</h2><p>Checked November 6, 2026. Numeric references above come from the linked business’s own published service pages or estimator. They are not independently audited transactions, competing bids, guaranteed availability or promises of the lowest price. Recheck the source and get a current written quote.</p><p>Wazoozie is connected with Middletown HVAC, and these pages can generate referrals to listed businesses. That relationship does not turn a starting price into a market average. Owner-recommended listings describe their evidence separately.</p><p><a href="/compare/">Compare two written estimates →</a> · <a href="/project-budget/">Build your project budget →</a> · <a href="/our-standards/">Read our directory standards →</a></p></section>'
-    render('/pricing-guide/', 'Local Service Pricing Guide | HVAC, Vehicle Wraps & More', 'Sourced local HVAC maintenance, ductless and vehicle-wrap prices, with scope questions for plumbing, electrical, painting, repairs, auto and real estate.', intro+jumps+hvac+wraps+other+method)
+    from cost_ranges import guide_body
+    render('/pricing-guide/', 'What Should Your Project Cost? | Service Price Ranges', 'Explore sourced national cost ranges for HVAC, ductless, water heaters, plumbing, electrical, painting, remodeling, auto care and vehicle wraps, with clear scope notes.', guide_body())
 
     body='<div class="buying-intro"><div class="eyebrow">THE WAZOOZIE BUYER’S EDGE</div><h1>Less pressure.<br><em>Better questions.</em></h1><p class="buying-lede">The sales pitch can be polished. Your next question can be sharper.</p><p>A little homework for every corner of local life: the house, the car and the next move. These are questions to ask, not accusations about any particular business.</p><a class="btn primary" href="/pricing-guide/">Start with the sourced price guide →</a></div>'
     theater = '<section id="fine-print-theater" class="fine-print-theater"><div class="eyebrow">WELCOME TO FINE PRINT THEATER</div><h2>Big headline.<br><em>Now for the small print.</em></h2><p>Familiar sales-pitch scenarios, with the questions that bring the full cost into view. These are illustrative examples, not verified offers or findings against a named company. A low fee, large business or promotion is not, by itself, evidence of misconduct.</p><div class="theater-grid">'

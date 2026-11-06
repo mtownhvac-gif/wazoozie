@@ -3,19 +3,19 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 const page=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8'));
-test('published price references keep source and scope beside each number',()=>{
+test('general cost ranges keep sources, scopes and estimator referrals distinct',()=>{
  const dom=page('/pricing-guide/'),doc=dom.window.document;
- assert.equal(doc.querySelectorAll('.price-card').length,7);
+ assert.equal(doc.querySelectorAll('.price-card').length,21);
  for(const card of doc.querySelectorAll('.price-card')){
-  assert.ok(card.querySelector('a[href^="https://"]'));
-  assert.match(card.textContent,/checked November 6, 2026/);
+  assert.ok(card.querySelector('a[href^="https://"]'));assert.match(card.textContent,/NATIONAL PLANNING REFERENCE/);assert.match(card.textContent,/Source checked November 6, 2026/);
  }
- assert.match(doc.querySelector('#hvac').textContent,/\$129.*Not the oil tune-up price/s);
- assert.match(doc.querySelector('#hvac').textContent,/From \$6,300.*not a binding quote/s);
- assert.match(doc.querySelector('#vehicle-wraps').textContent,/\$3,500.*excluding door jambs/s);
- assert.match(doc.querySelector('#method').textContent,/connected with Middletown HVAC/);
- assert.equal(doc.querySelectorAll('.quote-grid article').length,9);
- dom.window.close();
+ assert.match(doc.querySelector('#hvac').textContent,/\$5,000–\$11,000/);
+ assert.match(doc.querySelector('#hvac').textContent,/\$2,500–\$6,000/);
+ assert.match(doc.querySelector('#vehicle-wraps').textContent,/\$2,000–\$10,000/);
+ assert.doesNotMatch(doc.querySelector('main').textContent,/\$129|\$6,300|Starting at \$3,500/);
+ assert.ok(doc.querySelector('.range-next-step a[href^="https://www.mtownhvac.com/install-estimate/"]'));
+ assert.match(doc.querySelector('#method').textContent,/owner of Middletown HVAC/);
+ assert.match(doc.querySelector('#real-estate').textContent,/negotiable/);dom.window.close();
 });
 test('buyer questions span every directory industry with linked context and neutral ownership guidance',()=>{
  const dom=page('/before-you-say-yes/'),doc=dom.window.document;

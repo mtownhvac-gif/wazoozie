@@ -2,9 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {CLUB_KEY,QUESTIONS,easternDay,dailyQuestions,cleanProgress,clubStats,initClub} from '../assets/good-call-club.js';
+import {CLUB_KEY,QUESTIONS,easternDay,dailyQuestions,cleanProgress,clubStats,initClub,HVAC_IDS,legacyDailyQuestions,roundQuestions} from '../assets/good-call-club.js';
 const html=()=>readFileSync(new URL('../dist/good-call-club/index.html',import.meta.url),'utf8');
 const now=()=>new Date('2026-11-06T17:00:00Z');
+test('new rounds vary the mix, cap HVAC at two and always include automotive',()=>{
+ const counts=new Set();
+ for(let i=1;i<=28;i++){
+  const qs=dailyQuestions('2026-11-'+String(i).padStart(2,'0'));
+  const count=qs.filter(q=>HVAC_IDS.has(q[0])).length;counts.add(count);
+  assert.ok(count<=2);assert.ok(qs.some(q=>['approval','second','vehicle','addon'].includes(q[0])));
+  assert.equal(new Set(qs.map(q=>q[0])).size,5);
+ }
+ assert.deepEqual([...counts].sort(),[0,1,2]);
+});
+test('existing first answers and Wins survive the balanced-round upgrade',()=>{
+ const day='2026-11-06',qs=legacyDailyQuestions(day),answers=Object.fromEntries(qs.map(q=>[q[0],q[4]]));
+ const upgraded=cleanProgress({version:1,days:{[day]:answers}},day);
+ assert.deepEqual(roundQuestions(upgraded,day).map(q=>q[0]),qs.map(q=>q[0]));
+ assert.equal(clubStats(upgraded,day).points,60);
+ assert.deepEqual(cleanProgress(upgraded,day),upgraded);
+});
 function setup(storage){const dom=new JSDOM(html(),{url:'https://wazoozie.com/good-call-club/'});initClub(dom.window.document,storage??dom.window.localStorage,now);return dom;}
 test('daily challenge follows Eastern calendar dates across DST and has five distinct defensible questions',()=>{
  assert.equal(easternDay(new Date('2026-11-06T04:59:59Z')),'2026-11-05');
@@ -26,7 +43,7 @@ test('first answers persist, completion earns exactly one bonus, and reload cann
 });
 test('corrupt, future, foreign and oversized stored fields cannot award points or inject content',()=>{
  const q=dailyQuestions('2026-11-06')[0];
- const state=cleanProgress({version:1,points:999999,days:{'2026-11-06':{[q[0]]:q[4],foreign:3,script:'<img onerror=x>'},'2026-11-07':{[q[0]]:q[4]},'2026-02-30':{[q[0]]:q[4]},'2020-01-01':{[q[0]]:q[4]}}},'2026-11-06');
+ const state=cleanProgress({version:2,decks:{'2026-11-06':dailyQuestions('2026-11-06').map(q=>q[0])},points:999999,days:{'2026-11-06':{[q[0]]:q[4],foreign:3,script:'<img onerror=x>'},'2026-11-07':{[q[0]]:q[4]},'2026-02-30':{[q[0]]:q[4]},'2020-01-01':{[q[0]]:q[4]}}},'2026-11-06');
  assert.deepEqual(Object.keys(state.days),['2026-11-06']);assert.deepEqual(Object.keys(state.days['2026-11-06']),[q[0]]);assert.equal(clubStats(state,'2026-11-06').points,10);
  assert.deepEqual(cleanProgress({version:1,days:[]},'2026-11-06').days,{});
 });
