@@ -35,7 +35,7 @@ async function readJSON(request, limit = 16384) {
 export async function handleIntake(request, env) {
   const url = new URL(request.url);
   if (url.pathname === '/api/project-capabilities') {
-    return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX)}) : respond({error: 'Method not allowed.'}, 405);
+    return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX), emailProviders: env.MIDDLETOWN_ZAPIER_WEBHOOK ? ['middletown'] : []}) : respond({error: 'Method not allowed.'}, 405);
   }
   const neighbor = url.pathname === '/api/neighbor-referrals';
   const activity = url.pathname === '/api/contact-activity';
@@ -109,7 +109,12 @@ export async function handleIntake(request, env) {
     if (status === 429) return respond({error: 'Request limit reached. Please call the business directly.'}, 429);
     if (status === 409) return respond({error: 'This reference already has different details. Start a new brief.'}, 409);
     if(![200,201].includes(status)) throw Error('Save not confirmed');
-    return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery: 'not_sent', referralAttributed: referralAttributed ?? Boolean(brief.neighborCode)}, status);
+    let providerDelivery = 'not_sent';
+    if (brief.notifyProvider) {
+      try { providerDelivery = await inbox.deliverBrief(brief.id); }
+      catch { providerDelivery = 'pending'; }
+    }
+    return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery, referralAttributed: referralAttributed ?? Boolean(brief.neighborCode)}, status);
   } catch {
     return respond({error: 'We could not confirm a save. Retry this same brief or call the business directly.'}, 503);
   }
