@@ -95,9 +95,9 @@ def add(out, origin, pages):
     write_editorial_page(out, origin, pages, '/services/', 'Local home services | Heating, plumbing, electrical & home projects', 'Explore local heating, cooling, ductless, hot water, plumbing, electrical, painting, carpentry and remodeling services. Find the project and choose who you contact.', body)
 
     # Short, image-led category entries work on the front door and local hub.
-    groups = [('/home-services/','The house.','Comfort, repairs and the next big project.','valley-stone-home',False),('/auto-mechanics/','The car.','Good local contacts for the road ahead.','clay-auto-pickup',False),('/vehicle-wraps/','The finishing touch.','Vehicle wraps and vinyl customization.','sound-wraps-project',True),('/real-estate-agents/','The next chapter.','People to talk to about your next move.','clay-home-keys',False)]
+    groups = [('/home-services/','The house.','Comfort, repairs and the next big project.','valley-stone-home',False),('/auto-mechanics/','The car.','Good local contacts for the road ahead.','clay-auto-pickup',False),('/vehicle-wraps/','The finishing touch.','Vehicle wraps and vinyl customization.','clay-vehicle-wraps',False),('/real-estate-agents/','The next chapter.','People to talk to about your next move.','clay-home-keys',False)]
     group_cards = ''.join(visual_card(url,title,copy,image,f'{i:02d}',real) for i,(url,title,copy,image,real) in enumerate(groups,1))
-    note = '<p class="brand-image-note">Clay scenes and home imagery are AI-created illustrations. Vehicle-wrap photo: Sound Wraps, from its <a href="https://www.facebook.com/photo/?fbid=1575250094402346">published project photo ↗</a>.</p>'
+    note = '<p class="brand-image-note">AI-created clay scenes and home imagery. Published business projects are labeled separately.</p>'
     home = out/'index.html'
     content = home.read_text()
     a,b = div_range(content, '<div class="front-door-categories">')
@@ -105,6 +105,8 @@ def add(out, origin, pages):
     content = content.replace('Good help starts here.', 'Local people. Real possibilities.')
     comfort = '<aside class="brand-comfort-callout" aria-label="Ductless planning with Middletown HVAC"><img src="/assets/clay-ductless-comfort.webp" width="1200" height="800" loading="lazy" alt="AI-created illustration of a family enjoying a room with a mini-split"><div><span class="eyebrow">HEATING &amp; COOLING</span><h3>Got a room that’s never comfortable?</h3><p>Middletown HVAC’s ductless tool can help you start planning. Have them check the room before you pick a system.</p><div><a href="/services/ductless-mini-splits/">See the ductless options →</a><a href="https://www.mtownhvac.com/ductless-estimator/?utm_source=wazoozie&amp;utm_medium=referral&amp;utm_campaign=home-comfort">Try Middletown’s estimator ↗</a></div><small>AI-created editorial illustration.</small></div></aside>'
     content = content.replace('</section><section class="wrap front-door-note"', comfort+'</section><section class="wrap front-door-note"', 1)
+    home_scenes = '<div class="brand-home-scenes" aria-label="Ideas for the place you call home"><header><span class="eyebrow">THE GOOD PART OF GETTING IT DONE.</span><h2>A little more home.</h2><p>A room to unwind. A kitchen that feels like yours. Good local help starts with what you want to enjoy.</p></header><div><a href="/services/construction-remodeling/"><figure><img src="/assets/valley-living-room.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Illustrative sunlit living room with linen seating, a sage armchair and garden windows"><figcaption>Room for your everyday.</figcaption></figure></a><a href="/project-kit/"><figure><img src="/assets/valley-family-kitchen.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Illustrative warm family kitchen with oak floors and garden doors"><figcaption>Make the next idea feel possible.</figcaption></figure></a></div><p class="brand-image-note">AI-created home inspiration · Fictional spaces.</p></div>'
+    content = content.replace('</section><section class="wrap front-door-note"', home_scenes+'</section><section class="wrap front-door-note"', 1)
     home.write_text(content)
     local = out/'local-help/index.html'
     content = local.read_text()
@@ -136,7 +138,7 @@ def add(out, origin, pages):
             content = content.replace('<aside class="contact-card">', '<aside class="contact-card">'+proof, 1)
         target.write_text(content)
 
-    for name in ('brand-family-porch','clay-local-pro','brand-family-planning','clay-gutter-care','clay-hvac-family'):
+    for name in ('brand-family-porch','clay-local-pro','brand-family-planning','clay-gutter-care','clay-hvac-family','valley-living-room','valley-family-kitchen'):
         shutil.copy(out.parent/'assets'/(name+'.webp'), out/'assets'/(name+'.webp'))
     covers = [
         ('local-help','<div class="local-intro">','brand-family-porch','A fictional family relaxing on a stone-house porch',False),

@@ -4,6 +4,7 @@ import re
 import shutil
 
 SCENES = {
+    'clay-vehicle-wraps': ('Clay-style vehicle wrap specialist and happy customer admiring a plum supercar with copper vinyl accents', ['vehicle-wraps', 'businesses/sound-wraps-west-chester']),
     'clay-auto-pickup': ('Clay-style mechanic greeting a family beside a parked car', ['auto-mechanics']),
     'clay-home-keys': ('Clay-style real-estate professional and family with a house key', ['real-estate-agents']),
     'clay-family-shelving': ('Clay-style carpenter, parent and child beside a fitted bookshelf', ['businesses/cooke-carpentry-construction']),

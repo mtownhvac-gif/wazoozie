@@ -1,0 +1,26 @@
+{
+  "generator": "Built-in image_gen",
+  "generated": "2026-11-06",
+  "assets": [
+    {
+      "asset": "clay-vehicle-wraps.webp",
+      "prompt": "Use case: style-transfer. Create the final replacement for the referenced Wazoozie vehicle-wrap illustration. Preserve the reference's premium handmade stop-motion claymation style, tactile sculpted clay, cream and sage professional wrap studio, plum/copper palette and warm lighting. Change the scene to an upscale custom vehicle wrap reveal: at left Alex represented by a fictional friendly WHITE male wrap specialist with light skin, brown hair and neat brown beard in sage workwear holding a fan of vinyl swatches; center a spectacular LOW-SLUNG MID-ENGINE TWO-SEAT SUPERCAR, long wide exotic proportions, sculptural side air intakes, large alloy wheels, low roof, deep plum satin vinyl with sophisticated copper geometric accents, no brand logo; at right a wealthy-looking WHITE male customer with salt-and-pepper hair, impeccable navy tailored jacket, cream trousers, loafers and elegant watch, smiling with delight at his finished supercar. Three-quarter view of entire car, full figures in clear middle band for category crops. Expensive automotive styling and credible meticulous craft, not a compact family car, no woman customer. Friendly expressive handmade faces. No text, logos or watermark. Fictional editorial scene, not a documented customer or exact portrait of Alex.",
+      "references": [
+        "/Users/middletownhvac/Documents/Codex/2026-11-06/task/wazoozie/assets/clay-auto-pickup.webp"
+      ],
+      "purpose": "Fictional editorial imagery; not documented business work or a property listing"
+    },
+    {
+      "asset": "valley-living-room.webp",
+      "prompt": "Use case: photorealistic-natural. Landscape 3:2 editorial home photograph for Wazoozie, a warm local home services guide in suburban southeastern Pennsylvania. An inviting genuinely lived-in family living room in a renovated stone colonial: tall white-trimmed windows looking onto leafy garden, oatmeal linen sofa with slightly rumpled cushions, sage green armchair, oak coffee table with a ceramic mug and an open book, child's wooden toy neatly beside woven basket, warm plaster walls, muted plum throw and an old framed landscape. Real natural afternoon window light, believable wood grain, linen and plaster imperfections, sophisticated but attainable comfort, magazine photography with honest everyday texture, eye-level 35mm lens. No people, no typography, no logos, no watermark. Not a real property listing or claimed contractor project.",
+      "references": [],
+      "purpose": "Fictional editorial imagery; not documented business work or a property listing"
+    },
+    {
+      "asset": "valley-family-kitchen.webp",
+      "prompt": "Use case: photorealistic-natural. Landscape 3:2 high quality natural editorial photograph of an inviting renovated Pennsylvania family kitchen opening onto a modest back garden through closed glazed French doors. Warm off-white inset cabinets, restrained sage island, aged brass hardware, oak floor with natural variation, pale stone countertop, a bowl of apples, folded tea towel and two handmade mugs, one child's crayon drawing attached to the side of a cabinet. Small potted herbs at window, soft early morning daylight, believable reflections and architectural proportions, relaxed lived-in home, luxurious in care rather than excess. Tactile real materials, subtle film grain, professionally composed eye-level 35mm photography. No people, text, logos, watermarks. Fictional illustrative home, not a real listing or contractor project.",
+      "references": [],
+      "purpose": "Fictional editorial imagery; not documented business work or a property listing"
+    }
+  ]
+}
