@@ -24,7 +24,29 @@
   },
   "main": "entry.mjs",
   "durable_objects": {
-    "bindings": [{"name": "PROJECT_INBOX", "class_name": "ProjectInbox"}]
+    "bindings": [
+      {
+        "name": "PROJECT_INBOX",
+        "class_name": "ProjectInbox"
+      },
+      {
+        "name": "HOME_ACCOUNTS",
+        "class_name": "HomeAccounts"
+      }
+    ]
   },
-  "migrations": [{"tag": "project-inbox-v1", "new_sqlite_classes": ["ProjectInbox"]}]
+  "migrations": [
+    {
+      "tag": "project-inbox-v1",
+      "new_sqlite_classes": [
+        "ProjectInbox"
+      ]
+    },
+    {
+      "tag": "home-accounts-v1",
+      "new_sqlite_classes": [
+        "HomeAccounts"
+      ]
+    }
+  ]
 }
