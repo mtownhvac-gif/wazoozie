@@ -266,3 +266,25 @@ hash and 1,000 per day overall; duplicate request IDs with identical details
 return the same code. There is no public referral lookup/list API. Daily cleanup
 expires records; validity also checks age directly. Existing brief databases
 receive an additive nullable `neighbor_code` column, preserving prior records.
+
+### Search-engine submissions
+
+The production build publishes the root ownership file configured in
+`indexnow-config.json`. After deploying, run `npm run notify:search` to notify
+IndexNow's participating engines using the **live** sitemap. Running
+`python3 scripts/submit_indexnow.py` alone only verifies the live file and lists
+its URL count. The script rejects query strings, fragments, other hosts and API
+paths; it does not transmit visitor details or referral codes.
+
+An HTTP 200 means the URLs were received; 202 means receipt with ownership-key
+validation pending. Neither confirms indexing or ranking. Keep the ownership
+file deployed. Future updates can be submitted using the same command after
+successful deployment; ordinary builds do not send notifications.
+
+Google uses its separate Search Console sitemap submission and URL inspection.
+Bing Webmaster Tools is useful for its reporting but is not required for an
+IndexNow notification. Yahoo and DuckDuckGo rely on Bing for some or much of
+their results; inclusion is decided by each engine. No paid submission service
+is required. Protocol reference: https://www.indexnow.org/documentation.html.
+Run `python3 -m unittest discover -s tests -p 'test_search_submission.py'` for the
+submission validation checks.
