@@ -270,4 +270,6 @@ from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:
     (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+PUBLIC+p+'</loc></url>' for p in PAGES if p!='/404/')+'</urlset>')
+from search_submission import prepare as prepare_search_submission
+prepare_search_submission(OUT, PUBLIC)
 print(f'Built {len(PAGES)} pages. '+('Production origin: '+PUBLIC if PUBLIC else 'Private preview: search indexing disabled.'))
