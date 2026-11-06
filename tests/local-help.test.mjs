@@ -18,7 +18,7 @@ test('new local referrals preserve exact identity and direct contacts without ho
 });
 test('local business applications accept new categories without publishing or inventing checks',()=>{
  const data={id:crypto.randomUUID(),startedAt:Date.now()-5000,businessName:'Synthetic Business',contactName:'Synthetic Test',phone:'202-555-0100',email:'test@example.invalid',town:'Media',state:'PA',coverage:'Media and nearby towns',insurance:'discuss',interest:'standard',consent:true,consentVersion:APPLICATION_CONSENT_VERSION};
- for(const category of ['automotive','realestate'])assert.ok(validateApplication({...data,services:[category]}).application);
+ for(const category of ['automotive','vehiclewraps','realestate'])assert.ok(validateApplication({...data,services:[category]}).application);
  assert.ok(validateApplication({...data,services:['unrecognized']} ).error);
  const dom=new JSDOM(read('/for-contractors/'));
  assert.ok(dom.window.document.querySelector('input[name="services"][value="automotive"]'));

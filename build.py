@@ -282,6 +282,8 @@ from local_help import add as add_local_help
 add_local_help(OUT, PUBLIC, PAGES)
 from grand import add as add_grand
 add_grand(OUT, PUBLIC, PAGES)
+from pricing import add as add_pricing
+add_pricing(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from agent_content import generate
