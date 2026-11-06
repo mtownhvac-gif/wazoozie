@@ -270,6 +270,8 @@ from neighborhood_feed import add as add_neighborhood_feed
 add_neighborhood_feed(OUT)
 from hvac_experience import enhance_home as enhance_hvac_home
 enhance_hvac_home(OUT)
+from hvac_experience import promote_help
+promote_help(OUT)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:

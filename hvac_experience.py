@@ -58,3 +58,20 @@ def enhance_home(out):
         content = content.replace('<div class="neighbor-composer">', starter + '<div class="neighbor-composer">', 1)
     content = re.sub(r'href="/start/\?intent=(comfort|replacement|maintenance|secondopinion|boiler)"', lambda m: 'href="/hvac/?intent=' + m[1] + '"', content)
     target.write_text(content)
+
+
+def promote_help(out):
+    """Keep the problem-to-trade guide visible before visitors choose a service."""
+    for target in out.rglob('*.html'):
+        content = target.read_text()
+        content = re.sub(
+            r'(<nav aria-label="Main navigation">.*?)<a href="(?:/)?#how">How it works</a>',
+            r'\1<a href="/help/">Who do I call?</a>', content, count=1)
+        content = content.replace('<nav aria-label="Mobile navigation">',
+                                  '<nav aria-label="Mobile navigation"><a href="/help/">Who do I call?</a>', 1)
+        content = content.replace('<a class="btn outline" href="/about/">About us</a>',
+                                  '<a class="btn outline" href="/help/">Who do I call?</a>')
+        if target == out / 'index.html':
+            intro = '<p>Local work, useful ideas and people worth knowing. A little help for the place you call home.</p>'
+            content = content.replace(intro, intro + '<a class="btn outline" href="/help/">Not sure who to call? Start here →</a>', 1)
+        target.write_text(content)
