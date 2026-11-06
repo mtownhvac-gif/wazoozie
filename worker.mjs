@@ -1,3 +1,4 @@
+import {handleAccount} from './server/account-http.mjs';
 import {handleIntake} from './server/intake.mjs';
 // Serve public content consistently; keep project submissions in a separate handler.
 function prefersMarkdown(accept = '') {
@@ -14,6 +15,7 @@ export { prefersMarkdown };
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith('/api/account/')) return handleAccount(request, env);
     if (url.pathname.startsWith('/api/')) return handleIntake(request, env);
     if (url.hostname === 'www.wazoozie.com' || /\/index\.html$/.test(url.pathname)) {
       url.hostname = url.hostname === 'www.wazoozie.com' ? 'wazoozie.com' : url.hostname;
@@ -35,6 +37,12 @@ export default {
     }
     response = new Response(response.body, response);
     if (url.pathname.startsWith('/agent-content/')) response.headers.set('X-Robots-Tag', 'noindex');
+    if (url.pathname === '/account/') {
+      response.headers.set('Cache-Control','no-store');
+      response.headers.set('X-Robots-Tag','noindex');
+      response.headers.set('Referrer-Policy','no-referrer');
+      response.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'");
+    }
     if (isPage) {
       response.headers.append('Vary', 'Accept');
       response.headers.set('Link', '<https://wazoozie.com' + url.pathname + '>; rel="canonical", </sitemap.xml>; rel="sitemap"; type="application/xml", </llms.txt>; rel="describedby"; type="text/plain"');
