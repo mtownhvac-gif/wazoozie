@@ -82,4 +82,6 @@ def add(out, origin, pages):
         target.write_text(content)
     from clay_storytelling import add as add_clay_storytelling
     add_clay_storytelling(out)
+    from brand_finish import add as add_brand_finish
+    add_brand_finish(out, origin, pages)
     shutil.copy(root/'assets/homepage-layout.css', out/'assets/homepage-layout.css')

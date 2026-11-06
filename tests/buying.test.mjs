@@ -6,6 +6,9 @@ const page=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',impo
 test('general cost ranges keep sources, scopes and estimator referrals distinct',()=>{
  const dom=page('/pricing-guide/'),doc=dom.window.document;
  assert.equal(doc.querySelectorAll('.price-card').length,21);
+ assert.doesNotMatch(doc.querySelector('.buying-intro').textContent,/Middletown|local bid survey|fair or unfair|guaranteed available offer/);
+ assert.match(doc.querySelector('.buying-intro').textContent,/U.S. planning ranges/);
+ assert.match(doc.querySelector('.buying-intro').textContent,/Delco, Chester County and the Main Line/);
  for(const card of doc.querySelectorAll('.price-card')){
   assert.ok(card.querySelector('a[href^="https://"]'));assert.match(card.textContent,/NATIONAL PLANNING REFERENCE/);assert.match(card.textContent,/Source checked November 6, 2026/);
  }
