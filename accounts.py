@@ -11,7 +11,9 @@ def add(out, origin, pages):
     pages.remove('/account/')  # Private dashboard shell does not belong in search results.
     for target in out.rglob('*.html'):
         s=target.read_text()
-        s=s.replace('<a href="/my-home/">My home <span data-home-count></span></a>', '<a href="/account/">Your Wazoozie</a>')
+        s=s.replace('<a href="/my-home/">My home <span data-home-count></span></a>', '<a href="/account/">Log in / Create account</a>')
+        s=s.replace('<details class="mobile-menu">', '<a class="account-top-link" href="/account/">Log in / Sign up</a><details class="mobile-menu">',1)
+        s=s.replace('<nav aria-label="Mobile navigation">', '<nav aria-label="Mobile navigation"><a href="/account/">Log in / Create account</a>',1)
         s=s.replace('<strong>The useful details</strong>', '<strong>The useful details</strong><a href="/account/">Sign in / create an account</a>',1)
         if target==out/'index.html':
             marker='<section class="workbench-tools"'
