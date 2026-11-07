@@ -17,6 +17,6 @@ test('feed filters existing stories and shares only the public page link',async(
   d.querySelector('[data-feed-filter="all"]').click();
   assert.equal(d.querySelectorAll('[data-feed-topic][hidden]').length,0);
   d.querySelector('[data-share-page]').click();await new Promise(resolve=>setTimeout(resolve,0));
-  assert.equal(copied,'https://wazoozie.com/services/ductless-mini-splits/');
+  assert.equal(copied,'https://wazoozie.com/businesses/cooke-carpentry-construction/');
  }finally{dom.window.close();for(const [key,descriptor] of previous){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}}
 });

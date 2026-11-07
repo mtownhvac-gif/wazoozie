@@ -3,13 +3,12 @@ import html
 import json
 import re
 import shutil
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 METADATA = {
     '/': ('Local Services in Delco & the Main Line', 'Find local HVAC, plumbing, electrical, painting and home-repair businesses in Delco, Chester County and the Main Line. Call your chosen business directly.'),
     '/home-services/': ('Home Services in Delco & Chester County', 'Compare named local contacts for heating, cooling, plumbing, electrical work, painting and home repairs. Read profiles and confirm your address with the business.'),
     '/local-help/': ('Local Businesses in Delco, Chester County & the Main Line', 'Explore local home services, auto care and real estate contacts. Read the business profiles and choose who you contact. Each business confirms its service area.'),
-    '/book/': ('Call or Book a Local Service Business', 'Contact Middletown HVAC and other listed local businesses directly. Find phone numbers, booking options and service details without creating an account.'),
+    '/book/': ('Call or Book a Local Service Business', 'Find phone numbers, booking options and service details for local home, auto and real estate businesses. Choose who to contact, without creating an account.'),
     '/businesses/middletown-hvac/': ('Middletown HVAC in Glen Mills, PA | Services & Contact', 'Call Middletown HVAC at 610-500-6416 for heating, AC, boiler and water-heater inquiries. Read published reviews and confirm service coverage and availability.'),
     '/services/heating-cooling/': ('Heating & AC Repair | Middletown HVAC in Glen Mills', 'Furnace, AC and heat-pump repair inquiries with Glen Mills-based Middletown HVAC. Call 610-500-6416 to confirm address coverage, the diagnostic fee and availability.'),
     '/services/boilers/': ('Boiler Repair & Service | Middletown HVAC, Glen Mills', 'Gas or oil boiler trouble? Contact Glen Mills-based Middletown HVAC about repairs, maintenance or replacement. Confirm coverage, visit charges and availability.'),
@@ -63,17 +62,23 @@ def add(out, origin, pages, booking):
     origin = origin or 'http://localhost:8123'
     shutil.copy(out.parent/'assets/service-discovery.css', out/'assets/service-discovery.css')
     e = html.escape
-    booking_parts = urlsplit(html.unescape(booking))
-    booking_query = dict(parse_qsl(booking_parts.query))
-    booking_query.update(utm_source='wazoozie',utm_medium='referral',utm_campaign='service-contact',utm_content='home')
-    home_booking = e(urlunsplit(booking_parts._replace(query=urlencode(booking_query))), quote=True)
     home = out/'index.html'
     s = home.read_text()
     s = re.sub(r'<h1 id="hero-title">.*?</h1>', '<h1 id="hero-title">Local help for<br><em>Delco &amp; the Main Line.</em></h1>', s, count=1, flags=re.S)
     s = s.replace('Find good local help, get a handle on the cost, and get on with your day.', 'Meet local businesses for your home, your car and your next move. Serving the Delco, Chester County and Main Line community, with coverage confirmed by each business.')
     s = s.replace('href="/pricing-guide/">Check project costs', 'href="/home-services/">Find home services', 1)
     s = s.replace('href="/services/">Find your service →', 'href="/pricing-guide/">Check project costs →', 1)
-    direct = '''<section class="wrap service-direct" aria-labelledby="service-direct-title"><div class="service-direct-heading"><div><span class="eyebrow">READY TO TALK TO SOMEONE?</span><h2 id="service-direct-title">Heating, AC or hot-water trouble?</h2><p><a href="/businesses/middletown-hvac/">Middletown HVAC</a> is based in Glen Mills. Call about your system, confirm your address and ask about the diagnostic charge and next available visit.</p></div><div class="service-direct-actions"><a class="btn primary" href="tel:+16105006416">Call Middletown · 610-500-6416</a><a class="btn outline" href="/start/?intent=comfort">Send a service request</a><a class="service-direct-book" href="'''+home_booking+'''">Check online booking ↗</a></div></div><p class="service-direct-note">No Wazoozie account needed. A request is not a confirmed appointment. When you call, mention that you found Middletown on Wazoozie.</p><p class="service-direct-disclosure">Featured business: Wazoozie and Middletown HVAC share an owner. <a href="/how-it-works/">About our business relationships</a>.</p><nav class="service-direct-trades" aria-label="Other local home-service businesses"><span>Need another trade?</span><a href="/businesses/ryan-dugan-electric/">Ryan Dugan · electrical</a><a href="/businesses/liberator-service-company/">Liberator · plumbing</a><a href="/businesses/rolled-right-painting/">Rolled Right · painting</a><a href="/businesses/hart-builders/">Hart Builders · remodeling</a><a href="/businesses/cooke-carpentry-construction/">Cooke · carpentry</a><a href="/local-help/">Auto, wraps &amp; real estate →</a></nav></section>'''
+    # Equal service cards keep the front door useful without a preferred provider CTA.
+    services = [
+        ('Carpentry & repairs', 'Trim, shelving and the little jobs worth finishing.', 'handyman', 'Cooke Carpentry & Construction', 'cooke-carpentry-construction'),
+        ('Electrical', 'Lighting, outlets, panels and everyday electrical work.', 'electrical', 'Ryan Dugan Electric', 'ryan-dugan-electric'),
+        ('Heating & cooling', 'Heat, AC, boilers and hot-water help.', 'heating-cooling', 'Middletown HVAC', 'middletown-hvac'),
+        ('Painting', 'Fresh paint, drywall repairs and cabinet refinishing.', 'painting', 'Rolled Right Painting', 'rolled-right-painting'),
+        ('Plumbing & drains', 'Leaks, fixtures and getting things flowing again.', 'plumbing', 'Liberator Service Company', 'liberator-service-company'),
+        ('Remodeling', 'Windows, doors, decks and bigger home projects.', 'construction-remodeling', 'Hart Builders', 'hart-builders'),
+    ]
+    cards = ''.join('<article class="service-choice"><h3><a href="/services/'+slug+'/">'+e(label)+' <span aria-hidden="true">→</span></a></h3><p>'+e(copy)+'</p><a class="service-choice-business" href="/businesses/'+profile+'/">'+e(name)+'</a></article>' for label,copy,slug,name,profile in services)
+    direct = '<section class="wrap service-direct" aria-labelledby="service-direct-title"><div class="service-direct-heading"><div><span class="eyebrow">GOOD HELP STARTS WITH YOUR PROJECT.</span><h2 id="service-direct-title">What needs a hand?</h2><p>Start with the job. Meet a local business and choose how you’d like to get in touch.</p></div><a class="btn outline" href="/book/">See all contacts →</a></div><div class="service-choice-grid">'+cards+'</div><div class="service-direct-footer"><p class="service-direct-note">No Wazoozie account needed. Each business confirms its coverage, pricing and availability with you.</p><a href="/local-help/">Auto, wraps &amp; real estate →</a></div><p class="service-direct-disclosure">Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. <a href="/how-it-works/">About our business relationships</a>.</p></section>'
     s = s.replace('<section class="wrap explore-hub', direct+'<section class="wrap explore-hub', 1)
     home.write_text(s)
 

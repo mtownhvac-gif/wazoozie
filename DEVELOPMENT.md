@@ -134,3 +134,10 @@ A Google site:wazoozie.com check on November 6 showed the current local-home-ser
 ## HVAC collection illustration — November 6, 2026
 
 The Heating & cooling card under “What needs doing at your place?” now uses a family-and-technician clay illustration inspired by Middletown's outdoor heat-pump imagery. The final user-requested edit gives the fictional technician a Veto Pro Pac tool bag. The earlier equipment-only generation was rejected and is not used. The card uses the same illustration framing as the other categories. Genuine published Middletown project photos remain on their original service and project pages. Image prompts and provenance are recorded in assets/hvac-clay-manifest.json.
+
+
+## Service-first introductions — November 7, 2026
+
+The general homepage now offers six equal home-service cards, alphabetically by trade, instead of a Middletown-only call/request panel. Each card links to its existing service page and named business profile. The general contact hub and home-service directory show businesses alphabetically, consistently in HTML, client-rendered results and structured data. The story feed introduces each business once, alphabetically, before additional project stories. The extra homepage ductless promotion and single-business story sidebar are removed; contextual HVAC planning, request, phone and booking destinations remain available on their relevant pages.
+
+The homepage retains a plain operator/ownership disclosure beside the service choices, the existing lower-page relationship note and the site-wide footer. No neutral-ranking or independence claim is introduced. Routing, recipients, consent, delivery, price tools, account behavior and booking handoffs are unchanged by the layout work. No live request, call or booking is created by QA. New regression coverage checks equal card structure, all six service/profile links, static and client ordering, filter/reset ordering, structured-data alignment and 13 booking contacts.

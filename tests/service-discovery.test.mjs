@@ -5,21 +5,25 @@ import {JSDOM} from 'jsdom';
 const doc=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8'),{url:'https://wazoozie.com'+path}).window.document;
 const schema=d=>[...d.querySelectorAll('script[type="application/ld+json"]')].flatMap(s=>{const x=JSON.parse(s.textContent);return x['@graph']||[x];});
 
-test('homepage exposes direct service contact before tools and names the featured relationship',()=>{
+test('homepage offers equal service choices before tools and keeps the operator relationship clear',()=>{
  const d=doc('/'),main=d.querySelector('main'),direct=d.querySelector('.service-direct');
  assert.equal(main.children[1],direct);
  assert.equal(d.querySelector('.grand-primary').getAttribute('href'),'/home-services/');
- assert.ok(direct.querySelector('a[href="tel:+16105006416"]'));
- assert.ok(direct.querySelector('a[href="/start/?intent=comfort"]'));
- const booking=new URL(direct.querySelector('.service-direct-book').href);
- assert.equal(booking.host,'book.housecallpro.com');
- assert.equal(booking.searchParams.get('utm_source'),'wazoozie');
- assert.equal(booking.searchParams.get('utm_content'),'home');
- assert.match(direct.textContent,/share an owner/);
- assert.match(direct.textContent,/not a confirmed appointment/);
+ assert.equal(direct.querySelectorAll('.service-choice').length,6);
+ assert.equal(direct.querySelector('a[href^="tel:"]'),null);
+ assert.equal(direct.querySelector('a[href^="https://book.housecallpro.com/"]'),null);
+ assert.ok(direct.querySelector('a[href="/book/"]'));
+ assert.match(direct.textContent,/operated by Bryan Cordy, owner of Middletown HVAC/);
  assert.match(direct.textContent,/No Wazoozie account needed/);
- for(const slug of ['middletown-hvac','ryan-dugan-electric','liberator-service-company','rolled-right-painting','hart-builders','cooke-carpentry-construction'])assert.ok(direct.querySelector('a[href="/businesses/'+slug+'/"]'),slug);
+ const routes=[['handyman','cooke-carpentry-construction'],['electrical','ryan-dugan-electric'],['heating-cooling','middletown-hvac'],['painting','rolled-right-painting'],['plumbing','liberator-service-company'],['construction-remodeling','hart-builders']];
+ for(const [i,[service,slug]] of routes.entries()){
+  const card=direct.querySelectorAll('.service-choice')[i];
+  assert.ok(card.querySelector('h3 a[href="/services/'+service+'/"]'),service);
+  assert.ok(card.querySelector('.service-choice-business[href="/businesses/'+slug+'/"]'),slug);
+  assert.equal(card.className,'service-choice');
+ }
  assert.ok(d.querySelector('script[src="/assets/contact-activity.js"]'));
+ assert.equal(d.querySelector('.brand-comfort-callout'),null);
  d.defaultView.close();
 });
 
@@ -68,7 +72,7 @@ test('Middletown profile and contact page support requests without changing othe
   const d=doc('/businesses/'+slug+'/');assert.ok(d.querySelector('main a[href="tel:'+tel+'"]'),slug);assert.equal(d.querySelector('.service-attribution'),null);d.defaultView.close();
  }
  const md=readFileSync(new URL('../dist/agent-content/index.md',import.meta.url),'utf8');
- assert.match(md,/Heating, AC or hot-water trouble/);assert.match(md,/share an owner/);
+ assert.match(md,/What needs a hand/);assert.match(md,/owner of Middletown HVAC/);
 });
 
 test('standards distinguish consented Middletown delivery from saved briefs and email drafts',()=>{
@@ -78,4 +82,37 @@ test('standards distinguish consented Middletown delivery from saved briefs and 
  assert.doesNotMatch(d.querySelector('main').textContent,/homepage shows all listed businesses/);
  const privacy=doc('/privacy/');assert.match(privacy.querySelector('main').textContent,/pricing-tool links/);
  d.defaultView.close();privacy.defaultView.close();
+});
+
+
+test('home-service directory preserves alphabetical ordering before and after client filtering',()=>{
+ const markup=readFileSync(new URL('../dist/home-services/index.html',import.meta.url),'utf8');
+ const dom=new JSDOM(markup,{url:'https://wazoozie.com/home-services/',runScripts:'outside-only'}),d=dom.window.document;
+ const names=()=>[...d.querySelectorAll('#providerResults .procard h3')].map(e=>e.textContent.trim());
+ const expected=['Cooke Carpentry & Construction, LLC','Hart Builders, Inc.','Liberator Service Company','Middletown HVAC','Rolled Right Painting, LLC','Ryan Dugan Electric LLC'];
+ assert.deepEqual(names(),expected);
+ const catalog=schema(d).find(x=>x['@type']==='ItemList');
+ assert.deepEqual(catalog.itemListElement.map(x=>x.name),expected);
+ dom.window.eval(readFileSync(new URL('../dist/assets/home.js',import.meta.url),'utf8'));
+ assert.deepEqual(names(),expected);
+ dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
+ const filter=service=>{d.querySelector('#serviceSearch').value=service;d.querySelector('#searchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));};
+ filter('plumbing');assert.deepEqual(names(),['Liberator Service Company']);
+ filter('hvac');assert.deepEqual(names(),['Middletown HVAC']);
+ assert.ok(d.querySelector('#providerResults a[href^="https://book.housecallpro.com/"]'));
+ filter('all');assert.deepEqual(names(),expected);
+ assert.match(d.querySelector('#resultCount').textContent,/alphabetical/);
+ dom.window.close();
+});
+
+test('booking and story browsing do not pin the owner business ahead of other businesses',()=>{
+ const d=doc('/book/');
+ const names=[...d.querySelectorAll('.booking-card h2')].map(e=>e.textContent.trim());
+ assert.equal(names.length,13);assert.deepEqual(names,[...names].sort((a,b)=>a.localeCompare(b)));
+ assert.match(d.querySelector('.booking-search').textContent,/alphabetically/);
+ const stories=doc('/local-stories/'),posts=[...stories.querySelectorAll('.neighbor-post header a')].map(e=>e.textContent.trim());
+ assert.equal(posts.length,7);assert.equal(new Set(posts.slice(0,6)).size,6);
+ assert.deepEqual(posts.slice(0,6),[...posts.slice(0,6)].sort((a,b)=>a.localeCompare(b)));
+ assert.ok(stories.querySelector('.neighbor-side a[href="/home-services/"]'));
+ d.defaultView.close();stories.defaultView.close();
 });
