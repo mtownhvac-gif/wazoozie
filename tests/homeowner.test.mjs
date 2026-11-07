@@ -81,8 +81,9 @@ test('direct contact is offered before form entry and an unsaved brief can be em
 test('business evidence is explicit and does not claim a recorded credential inspection',async()=>{
   for(const slug of ['middletown-hvac','ryan-dugan-electric','liberator-service-company','cooke-carpentry-construction','hart-builders','rolled-right-painting']){
     const content=await readFile(new URL(`../dist/businesses/${slug}/index.html`,import.meta.url),'utf8');
-    assert.ok(content.includes('Documents to request'));
-    assert.ok(content.includes('documents are not recorded'));
+    assert.ok(content.includes('Your first conversation'));
+    assert.ok(!content.includes('documents are not recorded'));
+    assert.ok(content.includes('Start with your project.'));
     assert.ok(content.includes('not a credential inspection'));
     assert.ok(!content.includes('Vetted by Wazoozie'));
   }
