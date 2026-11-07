@@ -75,3 +75,10 @@ test('native questions can be opened and closed repeatedly without collecting da
   assert.equal(dom.window.location.pathname,path);assert.equal(d.querySelector('main input, main textarea, main select'),null);dom.window.close();
  }
 });
+
+test('editorial navigation has explicit responsive visibility independent of the site header',()=>{
+ const css=readFileSync(new URL('../assets/service-intents.css',import.meta.url),'utf8');
+ assert.match(css,/\.intent-page \.breadcrumb a\{display:inline-flex/);
+ assert.match(css,/\.intent-page \.intent-jumps a\{display:inline-flex/);
+ for(const path of paths){const dom=doc(path),d=dom.window.document;assert.equal(d.querySelectorAll('.intent-page .breadcrumb a').length,2);assert.equal(d.querySelectorAll('.intent-jumps a').length,3);dom.window.close();}
+});
