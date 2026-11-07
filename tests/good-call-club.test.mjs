@@ -59,7 +59,7 @@ test('streaks count consecutive played days and reset after a gap',()=>{
 test('short homepage opens dedicated destinations and preserves pricing and daily play',()=>{
  const dom=new JSDOM(readFileSync(new URL('../dist/index.html',import.meta.url),'utf8')),d=dom.window.document,main=d.querySelector('main');
  assert.match(d.querySelector('h1').textContent,/Local help forDelco & the Main Line/);
- assert.equal(main.children.length,5);assert.equal(main.children[2].id,'explore');
+ assert.ok(main.querySelector('.network-intro'));assert.ok([...main.children].indexOf(main.querySelector('.network-intro'))<[...main.children].indexOf(main.querySelector('#explore')));
  for(const path of ['/pricing-guide/','/good-call-club/','/home-tips/','/explore/','/home-services/','/auto-mechanics/','/real-estate-agents/','/vehicle-wraps/'])assert.ok(main.querySelector('a[href="'+path+'"]'));
  assert.equal(main.querySelector('.directory'),null);assert.equal(main.querySelector('form').getAttribute('action'),'/book/');assert.ok(main.querySelector('form input[name="q"]'));assert.equal(main.querySelector('form input[type="email"]'),null);assert.equal(main.querySelector('.situation-new'),null);
  const catalog=new JSDOM(readFileSync(new URL('../dist/home-services/index.html',import.meta.url),'utf8')).window.document;
