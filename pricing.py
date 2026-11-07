@@ -29,7 +29,7 @@ def add(out, origin, pages):
     def render(path, title, desc, body):
         write_editorial_page(out, origin, pages, path, title, desc, '<div class="wrap buying-page">'+body+'</div>')
     from cost_ranges import guide_body
-    render('/pricing-guide/', 'What Should Your Project Cost? | Service Price Ranges', 'Explore sourced national cost ranges for HVAC, ductless, water heaters, plumbing, electrical, painting, remodeling, auto care and vehicle wraps, with clear scope notes.', guide_body())
+    render('/pricing-guide/', 'What Should Your Project Cost? | Service Price Ranges', 'Explore local owner planning estimates, sourced cost context and quote guidance for HVAC, hot water, plumbing, electrical and other projects, with clear scope notes.', guide_body())
 
     body='<div class="buying-intro"><div class="eyebrow">THE WAZOOZIE BUYER’S EDGE</div><h1>Less pressure.<br><em>Better questions.</em></h1><p class="buying-lede">The sales pitch can be polished. Your next question can be sharper.</p><p>A little homework for every corner of local life: the house, the car and the next move. These are questions to ask, not accusations about any particular business.</p><a class="btn primary" href="/pricing-guide/">Start with the sourced price guide →</a></div>'
     theater = '<section id="fine-print-theater" class="fine-print-theater"><div class="eyebrow">WELCOME TO FINE PRINT THEATER</div><h2>Big headline.<br><em>Now for the small print.</em></h2><p>Familiar sales-pitch scenarios, with the questions that bring the full cost into view. These are illustrative examples, not verified offers or findings against a named company. A low fee, large business or promotion is not, by itself, evidence of misconduct.</p><div class="theater-grid">'
