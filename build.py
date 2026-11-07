@@ -297,8 +297,12 @@ shutil.copy(ROOT/'assets/request-context.js', OUT/'assets/request-context.js')
 for target in OUT.rglob('*.html'):
     if target.parent.name not in ('account','404'):
         target.write_text(target.read_text().replace('</body>','<script type="module" src="/assets/request-context.js"></script></body>',1))
+from service_discovery import add as improve_service_discovery
+improve_service_discovery(OUT, PUBLIC, PAGES, BOOKING)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
+from service_discovery import finalize as finalize_service_metadata
+finalize_service_metadata(OUT, PUBLIC)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:

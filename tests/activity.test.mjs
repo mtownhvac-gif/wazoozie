@@ -24,3 +24,16 @@ test('activity endpoint uses private monthly storage and exposes no results',asy
   assert.equal((await handleIntake(new Request('https://wazoozie.com/api/contact-activity'),env)).status,405);
   assert.equal((await handleIntake(request({...data,extra:'x'.repeat(600)}),env)).status,413);
 });
+
+test('pricing and service handoffs are measured without URLs or user data',async()=>{
+ const {contactActivityForURL}=await import('../activity-config.mjs');
+ for(const path of ['/install-estimate/','/ductless-estimator/']){
+  const result=contactActivityForURL(new URL('https://www.mtownhvac.com'+path+'?name=private&email=private@example.invalid'));
+  assert.deepEqual(result,{action:'pricing_tool_click',provider:'middletown'});
+  assert.ok(validateActivity({...result,context:'service'}));
+ }
+ for(const path of ['/','/conversion/','/services/','/services/ductless/'])assert.deepEqual(contactActivityForURL(new URL('https://www.mtownhvac.com'+path)),{action:'website_click',provider:'middletown'});
+ for(const url of ['https://www.mtownhvac.com.evil.invalid/install-estimate/','https://www.mtownhvac.com/reviews/','http://www.mtownhvac.com/install-estimate/','https://example.invalid/'])assert.equal(contactActivityForURL(new URL(url)),null);
+ assert.deepEqual(contactActivityForURL(new URL('tel:+14452589962')),{action:'call_click',provider:'ryan'});
+ assert.deepEqual(contactActivityForURL(new URL('mailto:service@mtownhvac.com?body=private')),{action:'email_draft_click',provider:'middletown'});
+});
