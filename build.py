@@ -299,6 +299,8 @@ for target in OUT.rglob('*.html'):
         target.write_text(target.read_text().replace('</body>','<script type="module" src="/assets/request-context.js"></script></body>',1))
 from service_discovery import add as improve_service_discovery
 improve_service_discovery(OUT, PUBLIC, PAGES, BOOKING)
+from service_intents import add as add_service_intents
+add_service_intents(OUT, PUBLIC, PAGES, PROVIDERS, BOOKING)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata

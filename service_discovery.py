@@ -14,6 +14,9 @@ METADATA = {
     '/services/boilers/': ('Boiler Repair & Service | Middletown HVAC, Glen Mills', 'Gas or oil boiler trouble? Contact Glen Mills-based Middletown HVAC about repairs, maintenance or replacement. Confirm coverage, visit charges and availability.'),
     '/services/water-heaters/': ('Water Heater Service | Middletown HVAC, Glen Mills', 'No hot water or planning a replacement? Ask Middletown HVAC in Glen Mills about tank and tankless water heaters. Call 610-500-6416 to discuss your home.'),
     '/services/maintenance/': ('HVAC Maintenance | Middletown HVAC, Glen Mills', 'Plan heating and cooling maintenance with Glen Mills-based Middletown HVAC. Ask about your equipment, current plan terms, service coverage and appointment options.'),
+    '/services/electrical/': ('Electrician in Delco | Repairs, Lighting & Panel Questions', 'Lights not working? Try four simple safe checks, explore electrical repair and panel-upgrade questions, and contact Ryan Dugan Electric at 445-258-9962.'),
+    '/auto-mechanics/': ('Auto Repair in Upper Chichester, Glenolden & Eddystone', 'Meet C&J Automotive, Authority Auto Repair and Trans Man Transmissions. Compare local shop details, service questions and direct phone contacts.'),
+    '/real-estate-agents/': ('Real Estate Agents | Delco & Philadelphia Area Contacts', 'Meet Caitlin Kerezsi, Megan Kerezsi and Libbi Skivo. Prepare buying or selling questions, read public professional profiles and make direct contact.'),
     '/contact/': ('Contact Middletown HVAC in Glen Mills | 610-500-6416', 'Call Middletown HVAC, book through Housecall Pro or send a service request. Heating, AC, boilers and hot water. No Wazoozie account is needed to make contact.'),
 }
 HVAC_INTENTS = {
