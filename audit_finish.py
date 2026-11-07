@@ -58,7 +58,7 @@ def add(out, origin, pages):
     content=content.replace('href="/local-help/">Find local help →', 'href="/services/">Find your service →',1)
     choices=[('/services/heating-cooling/','Heating & cooling'),('/services/plumbing/','Plumbing'),('/services/electrical/','Electrical'),('/services/painting/','Painting'),('/auto-mechanics/','Auto care'),('/real-estate-agents/','Real estate')]
     common='<nav class="home-service-shortcuts" aria-label="Common services">'+''.join('<a href="'+url+'">'+label+'</a>' for url,label in choices)+'</nav>'
-    quick_search='<form class="home-quick-search" role="search" action="/book/"><label for="home-service-query">What needs doing at your place?</label><div><input type="search" id="home-service-query" name="q" maxlength="100" placeholder="A project, a service, a business…"><button class="btn primary" type="submit">Find local help</button></div></form>'
+    quick_search='<form class="home-quick-search" role="search" action="/book/"><label for="home-service-query">What needs doing at your place?</label><div><input type="search" id="home-service-query" name="q" maxlength="100" placeholder="Try no heat, leaking sink or painting"><button class="btn primary" type="submit">Find local help</button></div></form>'
     content=content.replace('<div class="grand-hero-bottom">',quick_search+common+'<div class="grand-hero-bottom">',1)
     home.write_text(content)
 

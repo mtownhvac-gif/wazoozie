@@ -18,10 +18,13 @@ test('homepage offers equal service choices before tools and keeps the operator 
  const routes=[['handyman','cooke-carpentry-construction'],['electrical','ryan-dugan-electric'],['heating-cooling','middletown-hvac'],['painting','rolled-right-painting'],['plumbing','liberator-service-company'],['construction-remodeling','hart-builders']];
  for(const [i,[service,slug]] of routes.entries()){
   const card=direct.querySelectorAll('.service-choice')[i];
-  assert.ok(card.querySelector('h3 a[href="/services/'+service+'/"]'),service);
-  assert.ok(card.querySelector('.service-choice-business[href="/businesses/'+slug+'/"]'),slug);
+  assert.ok(card.querySelector('a.service-tile[href="/services/'+service+'/"]'),service);
+  assert.equal(card.querySelectorAll('a').length,1);
+  assert.equal(card.querySelector('a[href^="/businesses/"]'),null);
+  assert.ok(doc('/services/'+service+'/').querySelector('a[href="/businesses/'+slug+'/"]'),slug);
   assert.equal(card.className,'service-choice');
  }
+ assert.equal(direct.querySelectorAll('.service-next-steps a').length,3);
  assert.ok(d.querySelector('script[src="/assets/contact-activity.js"]'));
  assert.equal(d.querySelector('.brand-comfort-callout'),null);
  d.defaultView.close();

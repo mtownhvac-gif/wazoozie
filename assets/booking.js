@@ -1,11 +1,15 @@
 const normalize=value=>String(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 const searchText=value=>normalize(value)
+ .replace(/\b(?:no heat|not heating|heat (?:is )?not working|ac (?:is )?not (?:working|cooling)|not cooling|air conditioner (?:is )?not working|furnace (?:is )?not working)\b/g,'hvac')
+ .replace(/\b(?:no hot water|water heater (?:is )?not working)\b/g,'waterheater')
+ .replace(/\b(?:lights? (?:are |is )?not working|outlets? (?:are |is )?not working|tripping breaker|breaker (?:keeps )?tripping)\b/g,'electrical')
+ .replace(/\b(?:leaking (?:sink|faucet|toilet)|clogged (?:drain|toilet)|blocked drain|drain (?:is )?blocked)\b/g,'plumbing')
  .replace(/\b(?:air conditioning|air conditioners?|heat pumps?|mini splits?|ductless|heating|cooling|furnaces?|ac)\b/g,'hvac')
  .replace(/\b(?:water heaters?|hot water|tankless)\b/g,'waterheater')
  .replace(/\bplumbers?\b/g,'plumbing').replace(/\belectricians?\b/g,'electrical')
  .replace(/\bmechanics?\b/g,'mechanic').replace(/\b(?:real estate|realtors?)\b/g,'realestate')
  .replace(/\b(?:painters?|paint)\b/g,'painting');
-const filler=new Set(['i','we','need','needs','a','an','the','for','to','my','our','with','help','someone','looking','near','me','please','fix','repair','repairs','service','services','install','installation']);
+const filler=new Set(['i','we','need','needs','a','an','the','for','to','my','our','with','help','someone','looking','near','me','please','fix','repair','repairs','service','services','install','installation','is','are','has','have']);
 export function initBooking(doc=document){
  const cards=[...doc.querySelectorAll('[data-book-category]')],buttons=[...doc.querySelectorAll('[data-book-filter]')],status=doc.querySelector('#booking-count'),input=doc.querySelector('#booking-query'),empty=doc.querySelector('#booking-empty');
  let category='all';

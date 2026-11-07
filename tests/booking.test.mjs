@@ -20,3 +20,16 @@ test('SVG arrows preserve links, button handlers and user-entered text, includin
  const a=d.createElement('a');a.href='/book/';a.textContent='Book →';d.body.append(a);await new Promise(resolve=>setTimeout(resolve,0));assert.ok(a.querySelector('svg'));assert.equal(a.href,'https://wazoozie.com/book/');
  observer.disconnect();dom.window.close();
 });
+test('ordinary problem descriptions find the relevant contact without silently broadening unrelated searches',()=>{
+ const dom=new JSDOM(readFileSync('dist/book/index.html','utf8'),{url:'https://wazoozie.com/book/?q=my%20furnace%20is%20not%20working'}),d=dom.window.document;
+ initBooking(d);
+ const input=d.querySelector('#booking-query'),cards=[...d.querySelectorAll('.booking-card')];
+ const visible=()=>cards.filter(c=>!c.hidden).map(c=>c.dataset.business);
+ assert.deepEqual(visible(),['middletown-hvac']);
+ for(const [query,expected] of [['no heat','middletown-hvac'],['my ac is not cooling','middletown-hvac'],['no hot water','middletown-hvac'],['lights are not working','ryan-dugan-electric'],['breaker keeps tripping','ryan-dugan-electric'],['a clogged drain','liberator-service-company'],['my leaking sink','liberator-service-company']]){
+  input.value=query;input.dispatchEvent(new dom.window.Event('input'));assert.deepEqual(visible(),[expected],query);
+ }
+ input.value='unlisted specialty service';input.dispatchEvent(new dom.window.Event('input'));assert.deepEqual(visible(),[]);assert.equal(d.querySelector('#booking-empty').hidden,false);
+ d.querySelector('#booking-reset').click();assert.equal(visible().length,13);assert.equal(input.value,'');
+ dom.window.close();
+});

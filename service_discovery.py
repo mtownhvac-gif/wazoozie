@@ -83,10 +83,27 @@ def add(out, origin, pages, booking):
         ('Plumbing & drains', 'Leaks, fixtures and getting things flowing again.', 'plumbing', 'Liberator Service Company', 'liberator-service-company'),
         ('Remodeling', 'Windows, doors, decks and bigger home projects.', 'construction-remodeling', 'Hart Builders', 'hart-builders'),
     ]
-    cards = ''.join('<article class="service-choice"><h3><a href="/services/'+slug+'/">'+e(label)+' <span aria-hidden="true">→</span></a></h3><p>'+e(copy)+'</p><a class="service-choice-business" href="/businesses/'+profile+'/">'+e(name)+'</a></article>' for label,copy,slug,name,profile in services)
+    icons = {
+        'handyman': 'M4 20 15 9m-3-5 3-2 7 7-3 3-7-8ZM3 17l4 4',
+        'electrical': 'm13 2-8 12h6l-1 8 9-13h-6l1-7Z',
+        'heating-cooling': 'M12 3v18M3 12h18M5.6 5.6l12.8 12.8M5.6 18.4 18.4 5.6',
+        'painting': 'M4 3h14v7H4zM18 6h3v8h-9v7M10 17h4v5h-4z',
+        'plumbing': 'M12 2S5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13ZM8 15a4 4 0 0 0 4 4',
+        'construction-remodeling': 'm3 11 9-8 9 8M5 10v11h14V10M10 21v-7h4v7',
+    }
+    cards = ''.join('<article class="service-choice" data-service="'+slug+'"><a class="service-tile" href="/services/'+slug+'/"><span class="service-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+icons[slug]+'"/></svg></span><h3>'+e(label)+'</h3><p>'+e(copy)+'</p><strong>Explore this service <span aria-hidden="true">→</span></strong></a></article>' for label,copy,slug,name,profile in services)
     direct = '<section class="wrap service-direct" aria-labelledby="service-direct-title"><div class="service-direct-heading"><div><span class="eyebrow">GOOD HELP STARTS WITH YOUR PROJECT.</span><h2 id="service-direct-title">What needs a hand?</h2><p>Start with the job. Meet a local business and choose how you’d like to get in touch.</p></div><a class="btn outline" href="/book/">See all contacts →</a></div><div class="service-choice-grid">'+cards+'</div><div class="service-direct-footer"><p class="service-direct-note">No Wazoozie account needed. Each business confirms its coverage, pricing and availability with you.</p><a href="/local-help/">Auto, wraps &amp; real estate →</a></div><p class="service-direct-disclosure">Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. <a href="/how-it-works/">About our business relationships</a>.</p></section>'
     s = s.replace('<section class="wrap explore-hub', direct+'<section class="wrap explore-hub', 1)
+    next_steps = '<nav class="service-next-steps" aria-label="Choose your next step"><a href="/help/"><span>01 · SORT OUT THE PROBLEM</span><strong>Something isn’t working.</strong><small>Find a starting point for the trouble at home.</small></a><a href="/pricing-guide/"><span>02 · GET A HANDLE ON COST</span><strong>What should I budget?</strong><small>Explore planning ranges and what changes the price.</small></a><a href="/project-kit/"><span>03 · MAKE THE FIRST CALL COUNT</span><strong>I’m planning a project.</strong><small>Get the scope and questions ready for your conversation.</small></a></nav>'
+    s = s.replace('<div class="service-choice-grid">', next_steps+'<div class="service-choice-grid">', 1)
     home.write_text(s)
+
+    # Keep business identity and its evidence one click away after service selection.
+    for label, copy, slug, name, profile in services:
+        target = out/'services'/slug/'index.html'
+        content = target.read_text()
+        profile_link = '<section class="wrap service-profile-link"><div><span class="eyebrow">MEET THE BUSINESS</span><h2>'+e(name)+'</h2><p>Read the business profile and its published sources before you get in touch.</p></div><a class="btn outline" href="/businesses/'+profile+'/">View business profile →</a></section>'
+        target.write_text(content.replace('</main>', profile_link+'</main>', 1))
 
     repair = '''<section class="service-decision" aria-labelledby="repair-help-title"><h2 id="repair-help-title">No heat, weak cooling or a system that keeps stopping?</h2><p>Start with a service conversation, not a replacement decision. Tell Middletown HVAC which system is affected, when the problem started and whether the whole home or just one room feels different. A technician needs to evaluate the equipment before recommending a repair.</p><div class="service-decision-grid"><div><h3>Furnace or heat pump not heating</h3><p>Note the thermostat setting, the indoor temperature and any displayed message. Say whether the fan runs and whether any heat reaches the rooms. Do not bypass a safety control or repeatedly reset equipment that shuts down.</p></div><div><h3>AC running without cooling</h3><p>Describe weak airflow, warm air or visible ice from a safe distance. Mention when cooling last worked normally. Refrigerant and electrical testing belong with a qualified technician.</p></div><div><h3>Boiler or radiator trouble</h3><p>Tell the office whether the boiler uses gas or oil, and whether every room or only one area has lost heat. <a href="/services/boilers/">Read about boiler service</a>. Do not open fuel lines or work on hot or pressurized equipment.</p></div><div><h3>One uncomfortable room</h3><p>Describe the room, when it is uncomfortable and how the rest of the house feels. Ask about airflow and system assessment before deciding whether <a href="/services/ductless-mini-splits/">ductless equipment</a> is appropriate.</p></div></div><h3>What to confirm before a service visit</h3><ul><li>Your town and exact service address are covered.</li><li>The diagnostic or visit charge, and whether any credit is conditional on a repair.</li><li>The expected arrival window and how scheduling is confirmed.</li><li>That you receive repair options and pricing before approving extra work.</li></ul><p>For a home in Glen Mills, Media or elsewhere in Delaware County, share the exact address before booking. A nearby listing does not guarantee coverage, emergency availability or same-day service. Chester County and Main Line homeowners should also confirm their address and job type directly.</p><p><strong>Safety first:</strong> if you smell gas, have a carbon monoxide alarm or suspect an immediate hazard, leave the building and call emergency services or the utility from a safe location. Do not wait for a website reply.</p><p class="service-content-source">Service information: <a href="https://www.mtownhvac.com/services/">Middletown HVAC’s published service menu</a>. This page helps prepare the conversation; it does not diagnose your equipment. <a href="/businesses/middletown-hvac/">Business details, published reviews and ownership disclosure →</a></p></section>'''
     target = out/'services/heating-cooling/index.html'
@@ -116,7 +133,7 @@ def add(out, origin, pages, booking):
     for target in out.rglob('*.html'):
         path = '/' if target==home else '/404/' if target.name=='404.html' else '/'+target.parent.relative_to(out).as_posix()+'/'
         s = target.read_text()
-        if path=='/' or target.relative_to(out).as_posix() in paths:
+        if path=='/' or path in ['/services/'+row[2]+'/' for row in services] or target.relative_to(out).as_posix() in paths:
             s = s.replace('</head>','<link rel="stylesheet" href="/assets/service-discovery.css"></head>',1)
         target.write_text(s)
 
