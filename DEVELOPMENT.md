@@ -169,3 +169,9 @@ Production build and site/contact/agent checks pass, including all 109 Node test
 The homepage service choices are full-card links with distinct color accents and SVG service icons. Business names and profile evidence follow the service choice, with a profile link on each of the six main service pages. Three existing destinations cover problem guidance, budgeting and preparing a project conversation. No new pages, delivery routes, tracking or account requirements were added.
 
 Contact search recognizes common problem phrases including no heat, no hot water, AC not cooling, lights not working, a tripping breaker and a clogged drain. Unrecognized searches still show the existing empty state and reset action. These matches select directory contacts; they do not diagnose equipment or promise availability. Regression coverage includes correct recipients, initial URL queries, unknown queries, reset and the service-to-profile paths.
+
+## Plain copy and estimate questions — November 7, 2026
+
+A shared public-copy pass replaces vague headings and production language across the existing 78 pages. Attributed quotations, application code, typed examples, URLs and input attributes are excluded. Illustration descriptions and real project credits remain distinct. Regression checks inspect built page text and accessible labels for retired phrases and generation labels.
+
+The comparison tool now copies unanswered questions separately for each estimate, using the selected trade checklist. It leaves answered fields out, supports a selectable-text fallback, and clears stale copied output after edits or reset. The action sits beside Print and Clear, with a visible status message. Nothing is submitted, stored or sent by this feature.

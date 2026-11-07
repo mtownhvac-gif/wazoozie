@@ -7,6 +7,7 @@ import shutil
 from urllib.parse import parse_qs,urlsplit
 from local_help import PEOPLE
 from image_labels import clean as clean_image_labels
+from plain_language import clean as clean_public_copy
 
 
 def add(out,origin,pages,providers):
@@ -45,7 +46,7 @@ def add(out,origin,pages,providers):
     if catalog:
         directory=out/'home-services/index.html';directory.write_text(directory.read_text().replace('</head>',''.join(catalog)+'</head>',1))
     for target in out.rglob('*.html'):
-        s=clean_image_labels(target.read_text())
+        s=clean_public_copy(clean_image_labels(target.read_text()))
         def identify_organization(match):
             data=json.loads(match.group(1))
             for item in data.get('@graph',[data]):

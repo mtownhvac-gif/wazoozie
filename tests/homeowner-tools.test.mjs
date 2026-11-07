@@ -47,3 +47,20 @@ test('comparison keeps scope across trade changes, identifies unknowns, clears a
   assert.equal(doc.activeElement.id,'compare-name-a');assert.equal(dom.window.localStorage.length,0);assert.equal(requests(),0);
  }finally{dom.window.close();}
 });
+
+test('comparison copies only unanswered questions, safely falls back and clears stale text',async()=>{
+ const {dom,doc,requests}=await page('compare');
+ try{
+  const input=(id,value)=>{const f=doc.querySelector(id);f.value=value;f.dispatchEvent(new dom.window.Event('input',{bubbles:true}));};
+  input('#compare-name-a','<img src=x> Local shop');input('#compare-total-a','8500');input('#compare-scope-a','Replace the Furnace');
+  doc.querySelector('#compare-kind').value='hvac';doc.querySelector('#compare-kind').dispatchEvent(new dom.window.Event('change'));
+  doc.querySelector('#compare-copy-questions').click();await new Promise(r=>setImmediate(r));
+  const fallback=doc.querySelector('#compare-copy-fallback'),text=fallback.value;
+  assert.equal(fallback.hidden,false);assert.match(text,/<img src=x> Local shop/);assert.equal(doc.querySelector('.workbench-open-questions img'),null);
+  const a=text.split('Estimate B')[0];assert.doesNotMatch(a,/What is the full price|What work is included/);assert.match(a,/venting/);assert.match(text.split('Estimate B')[1],/What is the full price/);
+  input('#compare-total-b','10000');assert.equal(fallback.hidden,true);assert.equal(fallback.value,'');
+  let copied='';Object.defineProperty(dom.window.navigator,'clipboard',{value:{writeText:async t=>{copied=t;}}});
+  doc.querySelector('#compare-copy-questions').click();await new Promise(r=>setImmediate(r));assert.match(copied,/QUESTIONS ABOUT THE ESTIMATES/);assert.match(doc.querySelector('#compare-copy-status').textContent,/Nothing has been sent/);
+  doc.querySelector('#compare-clear').click();assert.equal(doc.querySelector('#compare-copy-status').textContent,'');assert.equal(dom.window.localStorage.length,0);assert.equal(requests(),0);
+ }finally{dom.window.close();}
+});

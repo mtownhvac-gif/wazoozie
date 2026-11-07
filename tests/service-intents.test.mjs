@@ -24,7 +24,7 @@ test('four distinct intent pages are crawlable, useful, navigable and retain mat
   assert.match(d.querySelector('footer').textContent,/operated by Bryan Cordy, owner of Middletown HVAC/);
   assert.doesNotMatch(main.textContent,/\b(?:since 19\d\d|since 20\d\d|number one|guaranteed results|instant booking|24\/7 service)\b/i);
   const md=readFileSync(new URL('../dist/agent-content'+path+'index.md',import.meta.url),'utf8');
-  assert.match(md,/Know the connection/);assert.ok(md.includes(d.querySelector('h1').textContent.replace(/\s+/g,' ').trim()) || md.includes('Start with') || md.includes('good questions'));
+  assert.match(md,/About the business relationship/);assert.ok(md.includes(d.querySelector('h1').textContent.replace(/\s+/g,' ').trim()) || md.includes('Start with') || md.includes('good questions'));
   dom.window.close();
  }
  assert.equal(new Set(titles).size,4);

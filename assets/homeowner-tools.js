@@ -81,18 +81,55 @@ export function initHomeownerTools(doc) {
     }
     const total=side=>doc.querySelector('#compare-total-'+side);
     function update(){
+      doc.querySelector('#compare-copy-status').textContent='';
+      const fallback=doc.querySelector('#compare-copy-fallback');fallback.hidden=true;fallback.value='';
       const a=total('a'),b=total('b');const difference=priceDifference(a.value,b.value);
       for(const input of [a,b])input.setAttribute('aria-invalid',String(Boolean(input.value.trim())&&parsePrice(input.value)===null));
       const summary=doc.querySelector('#compare-summary');
       summary.textContent=difference?(difference.cents===0?'Both totals are the same. Check that the included work and terms match.':'The totals differ by '+money(difference.cents)+' ('+difference.percent.toFixed(1)+'% of the lower total). Check the scope and exclusions before deciding.'):[a,b].some(input=>input.getAttribute('aria-invalid')==='true')?'Use a positive total price with up to two decimal places, such as $8,500.00.':'Enter both total prices to see the difference. Compare scope before deciding.';
       let missingA=0,missingB=0;
       rows.querySelectorAll('textarea').forEach(input=>{if(!input.value.trim()){if(input.dataset.side==='a')missingA++;else missingB++;}});
-      doc.querySelector('#compare-gaps').textContent=missingA+missingB?`Still to clarify: ${missingA} scope or term ${missingA===1?'field':'fields'} in A and ${missingB} in B. Use these blanks as questions for the business.`:'You have notes for each scope and term. Check them against the actual written proposals and resolve any differences.';
+      doc.querySelector('#compare-gaps').textContent=missingA+missingB?`Still to clarify: ${missingA} ${missingA===1?'detail':'details'} in A and ${missingB} in B. Ask each business to fill in what’s missing.`:'You have notes for each scope and term. Check them against the actual written proposals and resolve any differences.';
     }
     comparison.addEventListener('input',update);
+    doc.querySelector('#compare-copy-questions').addEventListener('click',async()=>{
+      const lines=['QUESTIONS ABOUT THE ESTIMATES'];
+      const questions={
+        total:'What is the full price, including tax, fees and all required work?',
+        scope:'What work is included in this estimate?',
+        materials:'Which equipment and materials are included? Please list models, quantities, sizes or finishes.',
+        exclusions:'What is excluded? Are any amounts allowances rather than fixed prices?',
+        permits:'Who handles permits and any work needed from other trades?',
+        cleanup:'Does the price cover protecting the house, removal, disposal and cleanup?',
+        schedule:'When could the work start, how long should it take and what could hold it up?',
+        payment:'How much is due up front, at each stage and when the job is finished?',
+        warranty:'What parts and labor warranties apply, and who do I call if there is a problem?'
+      };
+      for(const side of ['a','b']){
+        const name=doc.querySelector('#compare-name-'+side).value.trim()||'Estimate '+side.toUpperCase();
+        lines.push('',name);
+        let count=0;
+        for(const row of rows.querySelectorAll('tr')){
+          const field=row.querySelector('[data-side="'+side+'"]');
+          if(!field || (field.dataset.field==='total'?parsePrice(field.value)!==null:Boolean(field.value.trim())))continue;
+          lines.push('• '+(questions[field.dataset.field]||'Please confirm these job details: '+row.querySelector('small').textContent));count++;
+        }
+        if(!count)lines.push('• Please check my notes against your written estimate and confirm any corrections.');
+      }
+      lines.push('','Before I approve, please confirm anything excluded, what could change the price and how extra work would be approved.');
+      const text=lines.join('\n'),status=doc.querySelector('#compare-copy-status');
+      try{
+        if(!win.navigator.clipboard?.writeText)throw Error('Clipboard unavailable');
+        await win.navigator.clipboard.writeText(text);status.textContent='Questions copied. Paste them into your notes or a message. Nothing has been sent.';
+      }catch{
+        const fallback=doc.querySelector('#compare-copy-fallback');fallback.value=text;fallback.hidden=false;fallback.focus();fallback.select();
+        status.textContent='Select and copy the questions below. Nothing has been sent.';
+      }
+    });
     doc.querySelector('#compare-kind').addEventListener('change',event=>{
       const [title,hint]=TRADE_PROMPTS[event.target.value];const row=rows.querySelector('[data-compare-row="trade"]');row.querySelector('strong').textContent=title;row.querySelector('small').textContent=hint;
       row.querySelectorAll('textarea').forEach(input=>input.setAttribute('aria-label',title+' for estimate '+input.dataset.side.toUpperCase()));
+      update();
     });
     doc.querySelector('#compare-clear').addEventListener('click',()=>{comparison.querySelectorAll('input,textarea').forEach(input=>{input.value='';if(input.tagName==='TEXTAREA')resize(input);});update();doc.querySelector('#compare-name-a').focus();});
     update();
