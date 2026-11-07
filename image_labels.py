@@ -12,7 +12,7 @@ def clean(content):
             return ''
         return match.group(0)
     content=re.sub(r'<figcaption\b[^>]*>(.*?)</figcaption>',caption,content,flags=re.S)
-    content=re.sub(r'<p class="(?:brand-image-note|homepage-image-note|match-caption)"[^>]*>.*?</p>','',content,flags=re.S)
+    content=re.sub(r'<p class="(?:brand-image-note|homepage-image-note|match-caption)"[^>]*>.*?</p>',lambda m:'' if re.search(r'\bAI[- ](?:created|generated)\b',m.group(0),re.I) else m.group(0),content,flags=re.S)
     content=re.sub(r'<span class="grand-illustration-note"[^>]*>.*?</span>','',content,flags=re.S)
     content=re.sub(r'<small>AI[- ](?:created|generated).*?</small>','',content,flags=re.S|re.I)
     content=content.replace('Wazoozie AI-created editorial image; fictional people and scenes','Wazoozie editorial illustration')
