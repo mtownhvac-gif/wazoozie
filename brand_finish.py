@@ -122,7 +122,7 @@ def add(out, origin, pages):
     target = out/'pricing-guide/index.html'
     content = target.read_text()
     a,b = div_range(content, '<div class="buying-intro">')
-    content = content[:a]+'<div class="brand-cover brand-cost-cover">'+content[a:b]+art('clay-window-renovation','A fictional family discussing a window project with an installer',True)+'</div>'+content[b:]
+    content = content[:a]+'<div class="brand-cover brand-cost-cover">'+content[a:b]+art('clay-fine-print-pitchman','Fictional clay-style pitchman with a $49 ticket and add-on slips',True)+'</div>'+content[b:]
     target.write_text(content)
 
     hvac_intents = {'heating-cooling':'comfort','ductless-mini-splits':'comfort','water-heaters':'water','boilers':'boiler','maintenance':'maintenance','replacement-estimates':'replacement','oil-to-gas-conversion':'replacement','second-opinion':'secondopinion'}
@@ -166,7 +166,7 @@ def add(out, origin, pages):
     target.write_text(content)
 
     # Consistent navigation, active states and share imagery across destinations.
-    image_by_route = {'/':'clay-family-painting','/services/':'clay-family-shelving','/local-help/':'brand-family-porch','/home-services/':'clay-hot-water','/explore/':'clay-family-shelving','/pricing-guide/':'clay-window-renovation','/project-kit/':'brand-family-planning','/home-care-reminder/':'clay-gutter-care','/for-contractors/':'clay-local-pro','/before-you-say-yes/':'clay-fine-print-pitchman','/auto-mechanics/':'clay-auto-pickup','/real-estate-agents/':'clay-home-keys'}
+    image_by_route = {'/':'clay-family-painting','/services/':'clay-family-shelving','/local-help/':'brand-family-porch','/home-services/':'clay-hot-water','/explore/':'clay-family-shelving','/pricing-guide/':'clay-fine-print-pitchman','/project-kit/':'brand-family-planning','/home-care-reminder/':'clay-gutter-care','/for-contractors/':'clay-local-pro','/before-you-say-yes/':'clay-fine-print-pitchman','/auto-mechanics/':'clay-auto-pickup','/real-estate-agents/':'clay-home-keys'}
     from clay_storytelling import SCENES
     for name, (_, routes) in SCENES.items():
         for route in routes:

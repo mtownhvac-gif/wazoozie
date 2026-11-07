@@ -5,13 +5,16 @@ import {JSDOM} from 'jsdom';
 const page=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8'));
 test('general cost ranges keep sources, scopes and estimator referrals distinct',()=>{
  const dom=page('/pricing-guide/'),doc=dom.window.document;
- assert.equal(doc.querySelectorAll('.price-card').length,21);
+ assert.equal(doc.querySelectorAll('.price-card').length,25);
  assert.doesNotMatch(doc.querySelector('.buying-intro').textContent,/Middletown|local bid survey|fair or unfair|guaranteed available offer/);
  assert.match(doc.querySelector('.buying-intro').textContent,/U.S. planning ranges/);
  assert.match(doc.querySelector('.buying-intro').textContent,/Delco, Chester County and the Main Line/);
  for(const card of doc.querySelectorAll('.price-card')){
-  assert.ok(card.querySelector('a[href^="https://"]'));assert.match(card.textContent,/NATIONAL PLANNING REFERENCE/);assert.match(card.textContent,/Source checked November 6, 2026/);
+  assert.ok(card.querySelector('a[href^="https://"]'));if(card.dataset.priceBasis==='owner-estimate'){assert.match(card.textContent,/LOCAL OWNER PLANNING ESTIMATE/);assert.match(card.querySelector('h3').textContent,/\$12[05]\+/);}else{assert.match(card.textContent,/NATIONAL PLANNING REFERENCE/);assert.match(card.textContent,/Source checked November 6, 2026/);}
  }
+ assert.doesNotMatch(doc.querySelector('#directory-prices').textContent,/\$30–\$100|\$50–\$80 \/ hour/);
+ assert.match(doc.querySelector('#directory-prices').textContent,/Replace a standard 120V outlet/);
+ assert.match(doc.querySelector('#directory-prices').textContent,/Hang an interior slab door/);
  assert.match(doc.querySelector('#hvac').textContent,/\$5,000–\$11,000/);
  assert.match(doc.querySelector('#hvac').textContent,/\$2,500–\$6,000/);
  assert.match(doc.querySelector('#vehicle-wraps').textContent,/\$2,000–\$10,000/);
