@@ -17,12 +17,12 @@ Open http://localhost:8000. Serve **dist/**, not the repository root. Builds are
 
 ## Current experience
 
-- 26 generated pages covering home services, business profiles, homeowner guides, the Delaware Valley, and trust/privacy information.
+- Generated pages covering home services, business profiles, homeowner guides, the Delaware Valley, and trust/privacy information.
 - Heating and cooling is the initial directory selection. HVAC, Boiler, Water Heater, maintenance, and replacement paths connect to Middletown HVAC.
 - Direct phone links and Middletown's existing Housecall Pro booking link. Outbound web/booking links include referral parameters, without form entries.
 - Pennsylvania, New Jersey, and Delaware browsing. Coverage is confirmed per address; NJ and DE provider coverage is not confirmed.
-- Ryan Dugan Electric LLC, Liberator Service Company, and Cooke Carpentry & Construction, LLC are directory listings. Participation still needs confirmation. No fabricated reviews or verification badges.
-- Email requests remain **email drafts**, not automatic delivery. No Wazoozie lead database or lead tracking is configured. Never send test requests to real businesses.
+- The home-service network includes Middletown HVAC, Ryan Dugan Electric, Liberator Service Company, Cooke Carpentry & Construction, Hart Builders and Rolled Right Painting. Bryan selects and recommends the businesses; profiles identify the relationship and published sources.
+- Direct calls and available booking links remain usable without an account. Callback options appear only for a matching provider enabled by the live capability endpoint. Saved briefs and email drafts are distinguished from delivered requests. Never send test requests to real businesses.
 
 ## Search indexing and launch
 
@@ -104,8 +104,8 @@ Routing is explicit in `assets/problem-config.mjs`, using shared intent IDs from
 collects no contact information. `/before-you-approve/` supplies a printable,
 eight-point proposal conversation checklist; selections stay in the open page.
 
-Business profiles distinguish published business/review sources from credential
-and insurance documents not recorded in this directory. Editorial inclusion is
+Business profiles identify the owner’s recommendation, published business/review
+sources and available direct contact routes. Editorial inclusion is
 not a credential check, ranking or guarantee. No operating-history claims are
 added. The evidence record date describes this profile revision only.
 

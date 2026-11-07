@@ -5,6 +5,9 @@ import re
 import shutil
 
 METADATA = {
+    '/about/': ('Trusted Local Businesses, Chosen by Bryan Cordy', 'Meet the trusted local home-service network selected by Bryan Cordy, owner of Middletown HVAC. Read the relationships, business profiles and ways to make contact.'),
+    '/how-it-works/': ('How Wazoozie Works | Choose, Meet & Connect', 'Choose your project, meet a trusted local business, then call, book or use an available callback option. Understand recipients, saved notes and what happens next.'),
+    '/our-standards/': ('Our Standard for Trusted Local Introductions', 'Understand Wazoozie’s owner-selected local recommendations, business relationships, published sources and direct contact choices.'),
     '/': ('Local Services in Delco & the Main Line', 'Find local HVAC, plumbing, electrical, painting and home-repair businesses in Delco, Chester County and the Main Line. Call your chosen business directly.'),
     '/home-services/': ('Home Services in Delco & Chester County', 'Compare named local contacts for heating, cooling, plumbing, electrical work, painting and home repairs. Read profiles and confirm your address with the business.'),
     '/local-help/': ('Local Businesses in Delco, Chester County & the Main Line', 'Explore local home services, auto care and real estate contacts. Read the business profiles and choose who you contact. Each business confirms its service area.'),

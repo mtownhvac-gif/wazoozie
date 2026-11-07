@@ -16,6 +16,6 @@ test('Middletown requests stay relevant and mixed imagery retains clear source l
  const intents={'heating-cooling':'comfort','ductless-mini-splits':'comfort','water-heaters':'water','boilers':'boiler','maintenance':'maintenance','replacement-estimates':'replacement','oil-to-gas-conversion':'replacement','second-opinion':'secondopinion'};
  for(const [slug,intent] of Object.entries(intents))assert.ok(doc('/services/'+slug+'/').querySelector('main a[href="/start/?intent='+intent+'"]'));
  for(const path of ['/auto-mechanics/','/real-estate-agents/','/vehicle-wraps/'])assert.equal(doc(path).querySelector('main a[href*="mtownhvac.com/ductless-estimator"]'),null);
- const home=doc('/');assert.equal(home.querySelector('main').children.length,5);assert.ok(home.querySelector('main img[src="/assets/valley-stone-home.webp"]'));assert.equal(home.querySelector('.brand-comfort-callout'),null);assert.ok(doc('/services/ductless-mini-splits/').querySelector('a[href*="mtownhvac.com/ductless-estimator"]'));
+ const home=doc('/');assert.ok(home.querySelector('.network-intro')); assert.ok(home.querySelector('main img[src="/assets/valley-stone-home.webp"]'));assert.equal(home.querySelector('.brand-comfort-callout'),null);assert.ok(doc('/services/ductless-mini-splits/').querySelector('a[href*="mtownhvac.com/ductless-estimator"]'));
  const local=doc('/local-help/');assert.ok(local.querySelector('main img[src="/assets/clay-family-porch.webp"]'));assert.doesNotMatch(local.querySelector('main').textContent,/AI-created/);
 });
