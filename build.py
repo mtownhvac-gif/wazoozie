@@ -303,6 +303,8 @@ from service_intents import add as add_service_intents
 add_service_intents(OUT, PUBLIC, PAGES, PROVIDERS, BOOKING)
 from network_strength import add as strengthen_local_network
 strengthen_local_network(OUT, PUBLIC, PAGES, PROVIDERS)
+from playground import add as add_playground
+add_playground(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata
