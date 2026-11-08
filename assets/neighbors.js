@@ -33,6 +33,18 @@ document.querySelector('#copyNeighbor').addEventListener('click',async()=>{
 });
 document.querySelector('#shareNeighbor').addEventListener('click',async()=>{
   if(!link||typeof navigator.share!=='function')return;
-  try{await navigator.share({title:'A little local help from Wazoozie',text:'For the next thing on your home’s list: meet local businesses and choose who you contact.',url:link});}
+  try{await navigator.share({title:'A little local help from Wazoozie',text:'If you need heating, cooling or hot-water help, you can find Middletown HVAC here. Tell their office I sent you before booking (or share this link). I may earn a $25 service credit after your first qualifying job is completed and paid. Your choice, no pressure.',url:link});}
   catch(failure){if(failure.name!=='AbortError')document.querySelector('#neighborStatus').textContent='You can copy the link instead.';}
+});
+document.querySelector('#copyNeighborNote').addEventListener('click',async()=>{
+  if(!link)return;
+  const text=`Hey! If you need heating, cooling or hot-water help, here’s Middletown HVAC through Wazoozie: ${link}\nTell their office I sent you before booking (or share this link). I may earn a $25 service credit after your first qualifying job is completed and paid. Your choice, no pressure. Offer details: https://wazoozie.com/neighbors/#reward-terms`;
+  try{await navigator.clipboard.writeText(text);document.querySelector('#neighborStatus').textContent='Message copied. Review it and share it yourself. Nothing has been sent.';}
+  catch{document.querySelector('#neighborNoteLabel').hidden=false;const field=document.querySelector('#neighborNote');field.value=text;field.focus();field.select();document.querySelector('#neighborStatus').textContent='Copy the selected message and share it yourself. Nothing has been sent.';}
+});
+
+const simpleText = 'Hey! If you need heating, cooling or hot-water help, take a look at Middletown HVAC: https://wazoozie.com/businesses/middletown-hvac/\nTell their office I sent you before booking. I may earn a $25 service credit after your first qualifying job is completed and paid. Your choice, no pressure. Terms: https://wazoozie.com/neighbors/#reward-terms';
+document.querySelector('#copySimpleReferral').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(simpleText); document.querySelector('#simpleReferralStatus').textContent = 'Copied. Add your name so your friend knows who to mention, then send it yourself. Nothing has been sent.'; }
+  catch { document.querySelector('#simpleReferralFallback').hidden = false; const field=document.querySelector('#simpleReferralText'); field.value=simpleText; field.focus(); field.select(); document.querySelector('#simpleReferralStatus').textContent = 'Copy this text, add your name, and send it yourself. Nothing has been sent.'; }
 });
