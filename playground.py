@@ -1,0 +1,30 @@
+"""A private-by-default collection of playful homeowner tools."""
+import shutil
+from editorial import write_editorial_page
+
+
+def add(out, origin, pages):
+    body = '''<div class="wrap playground">
+<section class="play-cover"><div><p class="eyebrow">THE HOMEOWNER PLAYGROUND</p><h1>A little play.<br><em>A better plan.</em></h1><p class="lede">Meet your home personality, sort that someday list, and catch a few home-project myths.</p><p>No account. No email. Answers stay on this open page and disappear when you reload.</p><nav aria-label="Choose an activity"><a class="btn primary" href="#personality">Find my home personality →</a><a class="btn outline" href="#priority">Sort my someday list</a><a class="btn outline" href="#myths">Flip a myth</a></nav></div><div class="play-poster" aria-hidden="true"><span>YOUR HOME.</span><strong>YOUR<br>RULES.</strong><span>A SMALL BREAK FROM THE TO-DO LIST.</span><div>✦</div></div></section>
+<section id="personality" class="play-panel" aria-labelledby="quiz-title"><p class="eyebrow">01 / THE TWO-MINUTE QUIZ</p><h2 id="quiz-title">What’s your home personality?</h2><p>Five everyday choices. No wrong answers. Just a little perspective on what matters to you.</p><div id="personality-quiz"></div><noscript><p>Turn on JavaScript to take the quiz. The myth cards below work without it, and the <a href="/project-kit/">project kit</a> can help you plan.</p></noscript></section>
+<section id="priority" class="play-panel" aria-labelledby="priority-title"><p class="eyebrow">02 / THE SOMEDAY SHUFFLE</p><h2 id="priority-title">If you could tackle just three…</h2><p>Pick three in the order you care about them. Tap a picked card to remove it; the others move up. This is your preference list, not a safety assessment or a price estimate.</p><div id="priority-options" class="play-grid"></div><div id="priority-result" class="play-reveal" role="status" aria-live="polite">Your top three start here.</div><button id="priority-reset" class="btn outline" type="button">Clear my picks</button></section>
+<section id="myths" class="play-panel" aria-labelledby="myths-title"><p class="eyebrow">03 / WAIT, IS THAT TRUE?</p><h2 id="myths-title">Flip the script.</h2><p>Pick a claim. Open the card for the detail that changes the conversation.</p><div class="play-grid myth-grid">
+<details><summary>“The biggest system is the best system.”<span>Reveal the catch ↗</span></summary><p>Bigger is not automatically better. Ask how the contractor will assess the home’s heating and cooling load before selecting equipment.</p><a href="/services/heating-cooling/">Explore home comfort →</a></details>
+<details><summary>“The lowest estimate wins.”<span>Reveal the catch ↗</span></summary><p>First compare what is included: equipment, labor, permits, removal, exclusions, and warranty terms. A lower total can cover a different job.</p><a href="/compare/">Compare the actual scope →</a></details>
+<details><summary>“Tankless means no maintenance.”<span>Reveal the catch ↗</span></summary><p>Tankless Water Heaters still need care. Ask about the manufacturer’s maintenance requirements and how your water conditions affect the service plan.</p><a href="/services/water-heaters/">Plan a hot-water conversation →</a></details>
+<details><summary>“A directory listing guarantees availability.”<span>Reveal the catch ↗</span></summary><p>A profile is a starting point. Confirm the business’s current service area, availability, credentials, and written scope directly.</p><a href="/how-it-works/">See how Wazoozie works →</a></details>
+<details><summary>“A room addition is only a building project.”<span>Reveal the catch ↗</span></summary><p>Added space can affect heating, cooling, electrical work, and permits. Ask who coordinates each trade before work begins.</p><a href="/project-kit/">Build a project sheet →</a></details>
+<details><summary>“A callback promise covers everything.”<span>Reveal the catch ↗</span></summary><p>Ask for written parts and labor coverage, exclusions, registration requirements, and who handles a claim. The details matter more than the headline.</p><a href="/before-you-say-yes/">Read the fine print together →</a></details>
+</div></section><section class="play-next"><h2>Ready to put one good idea to work?</h2><p>Choose a business, confirm the details, and decide who you want to contact.</p><a class="btn primary" href="/local-help/">Find local help →</a><a class="btn outline" href="/good-call-club/">Play the daily five →</a></section></div>'''
+    write_editorial_page(out, origin, pages, '/play/', 'Homeowner Playground: Quiz, Project Picks & Myth Cards', 'Find your home personality in five questions, pick your next three projects, and reveal six home-project myths. Free, with no account or email required.', body)
+    target = out / 'play/index.html'
+    target.write_text(target.read_text().replace('</head>', '<link rel="stylesheet" href="/assets/playground.css"></head>').replace('</body>', '<script type="module" src="/assets/playground.js"></script></body>'))
+    for name in ('playground.css', 'playground.js'):
+        shutil.copy(out.parent / 'assets' / name, out / 'assets' / name)
+    promo = '<section class="wrap play-promo" aria-labelledby="play-promo-title"><div><p class="eyebrow">A LITTLE PLAY. A BETTER PLAN.</p><h2 id="play-promo-title">What’s your home personality?</h2><p>Take the new quiz, shuffle your project priorities, and flip a few homeowner myths.</p></div><a class="btn primary" href="/play/">Visit the playground →</a></section>'
+    home = out / 'index.html'
+    home.write_text(home.read_text().replace('</head>', '<link rel="stylesheet" href="/assets/playground.css"></head>').replace('</main>', promo + '</main>', 1))
+    for path in ('explore/index.html', 'good-call-club/index.html'):
+        target = out / path
+        if target.exists():
+            target.write_text(target.read_text().replace('</main>', '<section class="wrap project-inline"><h2>More ways to play.</h2><p>Try the new home personality quiz, project picks, and myth cards in the <a href="/play/">Homeowner Playground →</a></p></section></main>', 1))
