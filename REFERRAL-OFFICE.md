@@ -1,0 +1,13 @@
+# Middletown HVAC referral service credit
+
+Authorized by Bryan on November 8, 2026: $25 toward future Middletown HVAC service after a referred friend's first qualifying completed and paid job. Public terms: /neighbors/#reward-terms. This offer is separate from Good Call Club points and other businesses' listings.
+
+The office verifies and maintains the credit in its private customer system. Wazoozie is an attribution aid, not a credit ledger. No credit has been issued merely by deploying this page. Do not place customer names, job details, invoices, contact information or reward balances in this repository, public site or logs.
+
+1. Before booking, record the referrer name or submitted Wazoozie referral link and date in the referred household's private customer notes. For a personal link, match it to the referrer in existing protected referral records. For a name-based introduction, confirm the referrer’s identity privately; distinguish people with the same name. A web form is not required. Confirm the referrer is 18 or older and from a different household. Never disclose the referred person's project or invoice to the referrer.
+2. Check that this household has not previously paid for Middletown HVAC work, any personal link was reported within 90 days of creation, and no earlier referrer was recorded. Keep the private office record before Wazoozie's roughly 90-day cleanup. An expired/unverifiable link or disputed duplicate needs owner review; do not guess.
+3. Once the first service, maintenance or installation job is complete and paid in full, check it was not canceled, free or fully refunded. Record one $25 earned credit on the referrer's private customer account, with the qualifying job ID and verification date, so a repeat request cannot award it twice.
+4. On a future invoice, apply at most one $25 referral credit. Never exceed the invoice amount; retain any unused credit privately. Record the amount applied, invoice ID, date and remaining balance. No cash payout, transfer, prior-invoice adjustment or expiry of earned credit.
+5. Referrer inquiries and redemption go to the Middletown office via the existing business profile. Link creation, saved-brief receipts, email acceptance and website analytics do not establish an earned credit. No automated invitations or notifications are added by this release.
+
+If a referred job finishes after Wazoozie's retention period, use the timely recorded office referral and job evidence. Do not extend website data retention or recreate deleted personal records from public sources. Changes to the offer must preserve commitments already earned under these terms.

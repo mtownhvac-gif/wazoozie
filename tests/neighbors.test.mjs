@@ -73,6 +73,40 @@ test('neighbor form creates a copyable code without placing contact details in t
   assert.ok(!env.doc.querySelector('#neighborReceipt').textContent.includes('referrer@example.invalid'));
   let copied;Object.defineProperty(env.dom.window.navigator,'clipboard',{value:{writeText:async value=>{copied=value;}},configurable:true});
   env.doc.querySelector('#copyNeighbor').click();await new Promise(resolve=>setImmediate(resolve));assert.equal(copied,neighborLink(code));
+  env.doc.querySelector('#copyNeighborNote').click();await new Promise(resolve=>setImmediate(resolve));
+  assert.match(copied,/I may earn a \$25 service credit/);assert.match(copied,/completed and paid/);assert.match(copied,/before booking/);assert.match(copied,/reward-terms/);
+  assert.match(env.doc.querySelector('#neighborStatus').textContent,/Nothing has been sent/);
+  Object.defineProperty(env.dom.window.navigator,'clipboard',{value:{writeText:async()=>{throw Error('blocked');}},configurable:true});
+  env.doc.querySelector('#copyNeighborNote').click();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(env.doc.querySelector('#neighborNoteLabel').hidden,false);assert.match(env.doc.querySelector('#neighborNote').value,/I may earn a \$25/);
+ }finally{env.close();}
+});
+
+test('Middletown reward terms distinguish verified paid referrals from attribution and other providers',async()=>{
+ const dom=new JSDOM(await readFile(new URL('../dist/neighbors/index.html',import.meta.url),'utf8'));
+ try{
+  const terms=dom.window.document.querySelector('#reward-terms').textContent;
+  for(const phrase of ['18 or older','different household','before booking','90 days','paid in full','office','One $25 referral credit per invoice','Earned credits do not expire','does not receive a discount','No other listed business'])assert.ok(terms.includes(phrase),phrase);
+  assert.match(dom.window.document.querySelector('#neighborReceipt').textContent,/not earned yet/);
+  assert.doesNotMatch(dom.window.document.querySelector('#neighborReceipt').textContent,/no reward or discount promised/);
+  const home=await readFile(new URL('../dist/index.html',import.meta.url),'utf8');assert.match(home,/referral-promo-title/);assert.match(home,/Refer a friend\. Earn \$25/);
+ }finally{dom.window.close();}
+});
+
+test('simple referral shares without a form, account, stored identity or network request',async()=>{
+ const env=await domPage('neighbors');
+ try{
+  globalThis.fetch=()=>assert.fail('Sharing a text must not submit any data');
+  let copied='';Object.defineProperty(env.dom.window.navigator,'clipboard',{value:{writeText:async value=>{copied=value;}},configurable:true});
+  await import(`../dist/assets/neighbors.js?simple=${Date.now()}`);
+  env.doc.querySelector('#copySimpleReferral').click();await new Promise(resolve=>setImmediate(resolve));
+  assert.match(copied,/Tell their office I sent you before booking/);assert.match(copied,/I may earn a \$25 service credit/);assert.match(copied,/businesses\/middletown-hvac/);
+  assert.match(env.doc.querySelector('#simpleReferralStatus').textContent,/Nothing has been sent/);
+  assert.equal(env.doc.querySelector('#neighborForm').closest('details').open,false);
+  assert.equal(env.dom.window.localStorage.length,0);
+  Object.defineProperty(env.dom.window.navigator,'clipboard',{value:{writeText:async()=>{throw Error('blocked');}},configurable:true});
+  env.doc.querySelector('#copySimpleReferral').click();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(env.doc.querySelector('#simpleReferralFallback').hidden,false);assert.equal(env.doc.querySelector('#simpleReferralText').value,copied);
  }finally{env.close();}
 });
 test('project planner offers removable neighbor credit and keeps door requests with Hart',async()=>{
