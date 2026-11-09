@@ -1,7 +1,7 @@
+import {PLANNING_HAZARD as EMERGENCY,PLANNING_SAFETY} from '../assets/planning-safety.mjs';
 import {INTENTS,BUSINESSES,PROJECT_QUESTIONS} from '../project-config.mjs';
 export const GUIDE_MODEL='@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex','X-Content-Type-Options':'nosniff'}});
-const EMERGENCY=/\b(?:smell(?:s|ing)?\s+(?:of\s+)?gas|gas\s+(?:smell|odor|leak)|carbon\s+monoxide|co\s+alarm|sparking|on\s+fire|smoke\s+from|burning\s+smell)\b/i;
 const SCHEMA={type:'object',properties:{summary:{type:'string',maxLength:700},questions:{type:'array',minItems:1,maxItems:3,items:{type:'string',maxLength:180}},prepare:{type:'array',minItems:1,maxItems:3,items:{type:'string',maxLength:200}}},required:['summary','questions','prepare'],additionalProperties:false};
 const safeString=(x,max)=>typeof x==='string'&&x.trim()&&x.length<=max&&!/https?:|www\.|\b(?:call|text)\s+\d|\$\s*\d|\b\d[\d,.]*\s*(?:dollars?|usd)\b|\b(?:one|two|three|four|five|six|seven|eight|nine|ten)\s+(?:hundred|thousand|dollars)\b/i.test(x)?x.trim():null;
 export function validateGuide(value){
@@ -28,7 +28,7 @@ export async function handleAskWazoozie(request,env){
  if(!env.AI||!env.PROJECT_INBOX)return json({error:'The project helper is resting. You can still use the project checklist and contact businesses directly.'},503);
  let input;try{input=await readBounded(request);}catch{return json({error:'Keep your question under 1,800 characters.'},400);}
  if(typeof input.question!=='string'||!input.question.trim()||input.question.length>1800||!['plan','prepare','estimate'].includes(input.mode)||!Object.hasOwn(INTENTS,input.intent)||input.consent!==true)return json({error:'Choose a project, add a short question and confirm how it will be used.'},400);
- if(EMERGENCY.test(input.question))return json({emergency:true,summary:'If there may be a gas leak, Carbon Monoxide, smoke, fire or electrical arcing, leave the affected area. Contact emergency services or your utility from a safe location. Do not reset equipment or re-enter until the appropriate professionals say it is safe.',questions:[],prepare:[],business:null});
+ if(EMERGENCY.test(input.question))return json({emergency:true,summary:PLANNING_SAFETY,questions:[],prepare:[],business:null});
  const today=new Date().toISOString().slice(0,10);const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(today+'|'+(request.headers.get('CF-Connecting-IP')||'anonymous')));const client=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
  let quota;try{quota=await env.PROJECT_INBOX.getByName('guide-budget:v1').consumeGuideQuota(client,Date.now());}catch{return json({error:'The helper is temporarily unavailable. Your project checklist and direct contacts still work.'},503);}
  if(!quota.allowed)return json({error:quota.reason==='cooldown'?'Give the helper a few seconds before asking again.':'The helper has reached its daily limit. Use the project checklist or contact the business directly; try again tomorrow.'},429);
