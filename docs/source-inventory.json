@@ -473,8 +473,8 @@
     },
     {
       "path": "assets/model-lab.js",
-      "bytes": 11390,
-      "sha256": "4dd121d7f93dce5b88fb45d23dd980fc39ac63b35bcb1b8b621e1f231efacfab"
+      "bytes": 11941,
+      "sha256": "d72d77d350142a21ca959811c14c8a512c3d04a9eb9f471286678ffd05615892"
     },
     {
       "path": "assets/neighborhood-feed.css",
@@ -758,8 +758,8 @@
     },
     {
       "path": "docs/MODEL_LAB.md",
-      "bytes": 2778,
-      "sha256": "df07a28b0e5ee9ca19360096c4984466d74e2ba553c08079b89e15af13df9f49"
+      "bytes": 3342,
+      "sha256": "a158b1c5f0667760d5b0b68f58e2fdd776a763bab1f5f17b2910b0237ae3467e"
     },
     {
       "path": "editorial.py",
@@ -993,8 +993,8 @@
     },
     {
       "path": "server/model-lab.mjs",
-      "bytes": 5634,
-      "sha256": "e257612b061b16ee7cc4a6786c55c7c5593e54026d5fd5f6a7267fea82b76781"
+      "bytes": 5936,
+      "sha256": "385ac3aef92fefab4fc49688db8f6d17c0dae2ec4565d6a50874fee87c327d08"
     },
     {
       "path": "server/neighbor-validation.mjs",
@@ -1043,8 +1043,8 @@
     },
     {
       "path": "src/model-lab/index.html",
-      "bytes": 5290,
-      "sha256": "9c636de23a385c745df85af634880e8ea90da28dbb0f749a0485612b60803108"
+      "bytes": 5722,
+      "sha256": "09cd7e9d48b2f73b8e6b07d8aa47bd6d342caecf6e96685c4ce6a139ed7318a4"
     },
     {
       "path": "templates/contractors.html",
@@ -1153,8 +1153,8 @@
     },
     {
       "path": "tests/model-lab.test.mjs",
-      "bytes": 7465,
-      "sha256": "0ad48d1579641dd171c41ec73ea660292d75bc050064673c06ea4c512ad0fd05"
+      "bytes": 8267,
+      "sha256": "8eb6d03797cd3bd0221f2523b2b4db72024227d4fce2f64dca100dda5612decf"
     },
     {
       "path": "tests/neighborhood-feed.test.mjs",

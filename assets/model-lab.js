@@ -15,7 +15,7 @@ const node=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.classNa
 function status(text){$('lab-status').textContent=text;}
 function promptChanged(){ $('prompt-count').textContent=`${$('lab-prompt').value.length.toLocaleString()} / 3,000 characters`;document.querySelectorAll('.scenario').forEach((b,i)=>b.setAttribute('aria-pressed',String($('lab-prompt').value===scenarios[i][1]))); }
 scenarios.forEach(([label,text])=>{const b=node('button','scenario',label);b.type='button';b.setAttribute('aria-pressed','false');b.onclick=()=>{$('lab-prompt').value=text;promptChanged();};$('scenario-buttons').append(b);});
-Object.entries(LAB_MODELS).forEach(([id,title],i)=>{const label=node('label','pick');const input=node('input');input.type='checkbox';input.value=id;input.checked=i!==2;const span=node('span','',title);span.append(node('small','',id));label.append(input,span);$('model-picks').append(label);});
+Object.entries(LAB_MODELS).forEach(([id,title],i)=>{const label=node('label','pick');const input=node('input');input.type='checkbox';input.value=id;input.checked=i<4&&i!==2;const span=node('span','',title);span.append(node('small','',id),node('small','',id.startsWith('@cf/')?'Eligible for shared daily free allowance':'Paid third-party inference'));label.append(input,span);$('model-picks').append(label);});
 $('lab-prompt').value=scenarios[0][1];promptChanged();$('lab-context').textContent=LAB_SYSTEM;
 $('lab-prompt').oninput=promptChanged;
 $('show-context').onclick=()=>{const open=$('lab-context').hidden;$('lab-context').hidden=!open;$('show-context').setAttribute('aria-expanded',String(open));};
@@ -27,7 +27,7 @@ function names(){records.forEach((r,i)=>{r.title.textContent=blind?`Answer ${Str
 function renderCard(model,i,manual){
  const r={model,state:manual?'manual':'pending',text:'',elapsedMs:null,usage:null,ratings:{},notes:'',returnedModel:null};
  const card=node('article','result-card');const top=node('header','result-top');r.stateNode=node('span','result-state',manual?'MANUAL COMPARISON':'WAITING');r.title=node('h3','',LAB_MODELS[model]);r.modelNode=node('small','',model);top.append(r.stateNode,r.title,r.modelNode);r.metrics=node('div','metrics');r.metrics.append(node('span','','No run yet'));r.answer=node('pre','answer',manual?'':'Waiting for the model…');r.warning=node('p','warning');r.warning.hidden=true;
- const actions=node('div','result-actions');r.providerLink=node('a','doc-link','Open model in Cloudflare ↗');r.providerLink.href='https://dash.cloudflare.com/3ad8f68ca56ff4def783a772157a9012/ai/models/'+model;r.providerLink.target='_blank';r.providerLink.rel='noreferrer';actions.append(r.providerLink);
+ const actions=node('div','result-actions');r.providerLink=node('a','doc-link','Open model in Cloudflare ↗');r.providerLink.href=model.startsWith('@cf/')?'https://developers.cloudflare.com/workers-ai/models/'+model.slice(4)+'/':'https://dash.cloudflare.com/3ad8f68ca56ff4def783a772157a9012/ai/models/'+model;r.providerLink.target='_blank';r.providerLink.rel='noreferrer';actions.append(r.providerLink);
  const scorecard=node('section','scorecard');const grid=node('div','scores');r.total=node('strong','score-total','Not rated');
  for(const [key,label] of Object.entries({usefulness:'Useful next steps',questions:'Relevant questions',safety:'Safe guidance',honesty:'Honesty & scope'})){
   const wrap=node('label','',label);const select=node('select');select.setAttribute('aria-label',`${label} for answer ${i+1}`);select.append(new Option('Not rated',''));for(let n=1;n<=5;n++)select.append(new Option(`${n} / 5`,String(n)));select.onchange=()=>{if(select.value)r.ratings[key]=Number(select.value);else delete r.ratings[key];const values=Object.values(r.ratings);r.total.textContent=values.length===4?`${values.reduce((a,b)=>a+b,0)} / 20 · your score`:`${values.length} of 4 categories rated`;};wrap.append(select);grid.append(wrap);
@@ -51,6 +51,7 @@ async function execute(r,token,id){
 }
 $('run-models').onclick=async()=>{
  const models=[...document.querySelectorAll('.pick input:checked')].map(x=>x.value);const prompt=$('lab-prompt').value.trim();const manual=$('lab-mode').value==='manual';const token=$('lab-token').value.trim();
+ if(models.length>4){status('Choose up to four models for one comparison.');return;}
  if(!prompt||!models.length){status('Enter a question and choose at least one model.');return;}
  if(!manual&&!/^[A-Za-z0-9_-]{20,256}$/.test(token)){status('Enter a scoped Cloudflare token, or choose Paste answers to compare without model calls.');$('lab-token').focus();return;}
  if(!manual&&!$('lab-consent').checked){status('Confirm the fictional test details and model charges before running.');$('lab-consent').focus();return;}
@@ -68,3 +69,5 @@ $('export-results').onclick=()=>{
  if(!run)return;const data={workbench:'Wazoozie model comparison',version:1,...run,results:records.map(({model,state,text,elapsedMs,usage,ratings,notes,returnedModel,finishReason,error})=>({model,state,text,elapsedMs,usage,ratings,notes,returnedModel,finishReason,error,cost:null}))};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=node('a');a.href=url;a.download=`wazoozie-model-test-${new Date().toISOString().slice(0,10)}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Comparison downloaded. It contains the test question, answers and your notes, never the token.');
 };
+
+$('free-baseline').onclick=()=>{document.querySelectorAll('.pick input').forEach(x=>x.checked=x.value.startsWith('@cf/'));status('Free-allowance baseline selected. It shares the account’s daily allowance; usage beyond it depends on your plan.');};

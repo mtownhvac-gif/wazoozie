@@ -15,3 +15,7 @@ The token is sent in the Authorization header to the same-origin Worker, then Cl
 Full-response time is reported from the proxy (or marked as unmeasured), not first-token time. Token counts appear only when the provider reports them; cost is unknown, never guessed. Scores are explicit reviewer ratings, not model-generated rankings. Exports distinguish requested and reported model identifiers, incomplete answers, errors and manual entries. This bench does not use tools, send leads, book work, change estimates or process real customer records.
 
 Reference: https://developers.cloudflare.com/ai-gateway/usage/rest-api/ (authentication, model naming, chat completions and per-request headers).
+
+## Free-allowance baseline
+
+`@cf/meta/llama-3.3-70b-instruct-fp8-fast` is an optional baseline. It uses the direct Workers AI model endpoint and `max_tokens` rather than the third-party chat-completions endpoint. Eligible models share 10,000 free Neurons daily; account plan/limits apply beyond that. It is not an unlimited free model, and a token is still required. No paid gateway routing header is attached to this path. See https://developers.cloudflare.com/workers-ai/platform/pricing/ and https://developers.cloudflare.com/workers-ai/get-started/rest-api/.

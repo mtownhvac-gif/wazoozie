@@ -37,3 +37,8 @@ test('manual comparisons never call a provider; ratings, blind names, export and
 test('live UI requires consent and token; returned markup stays text and reports measured speed',async()=>{
  const e=await lab();try{await e.$('run-models').onclick();assert.equal(e.calls(),0);e.$('lab-token').value=token;await e.$('run-models').onclick();assert.equal(e.calls(),0);e.$('lab-consent').checked=true;await e.$('run-models').onclick();assert.equal(e.calls(),3);assert.equal(e.dom.window.document.querySelectorAll('.answer img').length,0);assert.match(e.dom.window.document.querySelector('.answer').textContent,/<img/);assert.match(e.dom.window.document.querySelector('.metrics').textContent,/1.23s/);assert.equal(e.$('run-models').disabled,false);}finally{e.dom.window.close();}
 });
+test('free-allowance baseline uses the direct hosted model endpoint and parses its real response',async()=>{
+ const model='@cf/meta/llama-3.3-70b-instruct-fp8-fast';let target,body;
+ const result=await handleModelLab(request({model}),{},async(url,options)=>{target=url;body=JSON.parse(options.body);assert.equal(options.headers['cf-aig-gateway-id'],undefined);return Response.json({success:true,result:{response:'A direct hosted-model answer.',usage:{prompt_tokens:30,completion_tokens:12}}});});
+ assert.match(target,/\/ai\/run\/@cf\/meta\/llama-3.3-70b-instruct-fp8-fast$/);assert.equal(body.max_tokens,1024);assert.equal(body.model,undefined);const data=await result.json();assert.equal(data.text,'A direct hosted-model answer.');assert.equal(data.usage.output,12);assert.equal(data.cost,null);
+});
