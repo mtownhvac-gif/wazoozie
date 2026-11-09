@@ -307,6 +307,8 @@ from playground import add as add_playground
 add_playground(OUT, PUBLIC, PAGES)
 from referral_rewards import add as add_referral_rewards
 add_referral_rewards(OUT)
+from contact_upgrade import add as add_contact_upgrade
+add_contact_upgrade(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata

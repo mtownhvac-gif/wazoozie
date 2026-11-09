@@ -1,0 +1,1220 @@
+{
+  "description": "SHA-256 of every source file in this release except this inventory. Generated build output and private configuration are excluded.",
+  "files": [
+    {
+      "path": ".github/workflows/verify.yml",
+      "bytes": 670,
+      "sha256": "1d2913dc4fde138b374d880d8d8173bf88e4a11fd63402c7a6f6bdc9013781cb"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 64,
+      "sha256": "f35987659e2af668756061e4c137e71d22f7f5952394022625207e357d5ca09c"
+    },
+    {
+      "path": "DEVELOPMENT.md",
+      "bytes": 33463,
+      "sha256": "caf60a233cf7564e8a080404a0bba6545894ff80ceca9e667a773af28badc31e"
+    },
+    {
+      "path": "EMAIL_DELIVERY.md",
+      "bytes": 1583,
+      "sha256": "88f30e3ec08f058be1cf093bc97790695eb01306a96c3a22e4b9ea49c73aaead"
+    },
+    {
+      "path": "PRICE_SOURCES.md",
+      "bytes": 3109,
+      "sha256": "1818d6ea84b627a7fac7c7ff25d036431bf3fbd3ac34e4dd7599d976a3d6fa95"
+    },
+    {
+      "path": "README.md",
+      "bytes": 17172,
+      "sha256": "d0c9487bdb0be9c05d50722f099df5a82da92314edadd3672370dd35a0274c1c"
+    },
+    {
+      "path": "REFERRAL-OFFICE.md",
+      "bytes": 2642,
+      "sha256": "7b349887d7e58f473184cd7086a577fbcd52f714b91319ce92afa7229a855648"
+    },
+    {
+      "path": "SEO_SERVICE_CONTACT.md",
+      "bytes": 3724,
+      "sha256": "8881217b51d11d34c112a04116689a81875d8ac231aa7d55d2fae4f024b12702"
+    },
+    {
+      "path": "SOURCE_MAP.md",
+      "bytes": 3096,
+      "sha256": "35f2f63ab26046c28162c927915142666214bd40ab5d684812ccfa4bdb22a66b"
+    },
+    {
+      "path": "accounts.py",
+      "bytes": 9463,
+      "sha256": "98bf35a68f998ad22aa37f8344d0315946f671fd812a9d8d2072fb5ab2b91302"
+    },
+    {
+      "path": "activity-config.mjs",
+      "bytes": 2244,
+      "sha256": "eb5180d81e37f36d9675f356e2bfbae74547f08473edcb5b95254fb060596acf"
+    },
+    {
+      "path": "agent_content.py",
+      "bytes": 4899,
+      "sha256": "81343cca7a2561d9878b55771a05d602f9cfc47f66a874e7be8d33354745d7c7"
+    },
+    {
+      "path": "archives/sites-preview-v3/.gitignore",
+      "bytes": 29,
+      "sha256": "fa40415ff09ba32ef87d4debd5ceaead93ae08e3e8ccfbd904deb03e87ead756"
+    },
+    {
+      "path": "archives/sites-preview-v3/.openai/hosting.json",
+      "bytes": 106,
+      "sha256": "49d6d00b9e59742f4dad8eae62bfac08df0e5ff3d7d0264051655ee57db729d3"
+    },
+    {
+      "path": "archives/sites-preview-v3/DEVELOPMENT.md",
+      "bytes": 1102,
+      "sha256": "2dbde8824d21256eb9f75d3e5211220ffbb63fa33180c0703583a886bd1ada29"
+    },
+    {
+      "path": "archives/sites-preview-v3/README.md",
+      "bytes": 3055,
+      "sha256": "84ae4544f8862968d99ebe26ef790c1dd1d64cd1ab57001c710c04ad6c1e1ba8"
+    },
+    {
+      "path": "archives/sites-preview-v3/assets/refinement.css",
+      "bytes": 13022,
+      "sha256": "9c525300b7150447474a978d1b7b47c2c01b78ca6c149def384391c915c8f5b5"
+    },
+    {
+      "path": "archives/sites-preview-v3/build.py",
+      "bytes": 71080,
+      "sha256": "7c4bfa02f2f2ca7cd7e38c7c564541ac367feb35643a023a441ec7842c23c2ef"
+    },
+    {
+      "path": "archives/sites-preview-v3/check_site.py",
+      "bytes": 2712,
+      "sha256": "c8a9222ed1a159dafa44deff98f9cd4ee36596853315e35027d872a8b63564b6"
+    },
+    {
+      "path": "archives/sites-preview-v3/hero-home.jpg",
+      "bytes": 781628,
+      "sha256": "2672b038e23935c92f1ae2376a068402e8bdfc1a2bf49fbd7a872fd83c5acbed"
+    },
+    {
+      "path": "archives/sites-preview-v3/hero-home.png",
+      "bytes": 3158502,
+      "sha256": "9bb3b755e20f0f3b812a450060803ad4501c8d8c495b6de48123abe6bbbc126a"
+    },
+    {
+      "path": "archives/sites-preview-v3/src/home.html",
+      "bytes": 76943,
+      "sha256": "f1b4764d85f288838846f606056d32cd0a192e42bb598860bd91574c58b2680d"
+    },
+    {
+      "path": "archives/sites-preview-v3/wrangler.jsonc",
+      "bytes": 477,
+      "sha256": "31cf823dd6da6e4b1e5e947f31d476faeaf15c245aa58c9a9f02b32bbd2f1214"
+    },
+    {
+      "path": "assets/accounts.css",
+      "bytes": 7784,
+      "sha256": "7ada4885ec3f8ec34b726fbd46883b6c6e847283719b8587fe54e8f5183ec530"
+    },
+    {
+      "path": "assets/accounts.js",
+      "bytes": 8948,
+      "sha256": "d20596216028ec72146055e2c2883d8ac25f17c4294df610ba9a4e97e226ecf4"
+    },
+    {
+      "path": "assets/action-icons.js",
+      "bytes": 2184,
+      "sha256": "b27680245360bbbc0b4813fdaa8aa01478423a8e51c393c5eb59f74f1a02d731"
+    },
+    {
+      "path": "assets/audit-finish.css",
+      "bytes": 7092,
+      "sha256": "03cba46223350aed31bda07a309dd527d12cbdd5fdbf9c2f5854d6cd0535ea18"
+    },
+    {
+      "path": "assets/audit-image-manifest.json",
+      "bytes": 1149,
+      "sha256": "d0d58c3b3883188bb50cf3bdb7d41894d45aad1373a69305510fb818f90b32ff"
+    },
+    {
+      "path": "assets/booking.js",
+      "bytes": 3219,
+      "sha256": "2d85867e32d5ebf581ddb202915442ab8555e3f12ee3deb40f053e47e7827784"
+    },
+    {
+      "path": "assets/brand-family-planning.webp",
+      "bytes": 122634,
+      "sha256": "8eb4c70e0879b8f789d891d373efde777946d2b2388f8e68c72e778a933793e4"
+    },
+    {
+      "path": "assets/brand-family-porch.webp",
+      "bytes": 178504,
+      "sha256": "16611c9064f2b2ef87b1ecdb908297977ff95507762d8db5dc0cd1da33723e4c"
+    },
+    {
+      "path": "assets/brand-finish.css",
+      "bytes": 12440,
+      "sha256": "d3be05d7cf07524bef1e116b92bf3a368a13255234e87a46aa960dc46a4f8d9c"
+    },
+    {
+      "path": "assets/brand-image-manifest.json",
+      "bytes": 4024,
+      "sha256": "6ee5c967fbc9489c21cc65035627ee78e2c9b82e41f496eace4c2ca4d65f70da"
+    },
+    {
+      "path": "assets/buyer-edge.css",
+      "bytes": 5813,
+      "sha256": "fc6bb530d496cf6e348a176af6c33f176fe0e7f3920e574bf8b1c3c356e14a6b"
+    },
+    {
+      "path": "assets/buying.css",
+      "bytes": 3924,
+      "sha256": "fdc14756f73ff22aefde892d2a5f21588f8e2c5af56f0a34bd6fe472305a0f2e"
+    },
+    {
+      "path": "assets/care-reminder.js",
+      "bytes": 2797,
+      "sha256": "48cc2699329d1a11d4d6eabbdc33c8aa5dadc7b782d448bd39323db222bcea7c"
+    },
+    {
+      "path": "assets/carpentry.jpg",
+      "bytes": 223546,
+      "sha256": "75b510eab9ddc997672b104d0e383ddfb0dde5d815eaa1c3e71808d91c44893f"
+    },
+    {
+      "path": "assets/clay-auto-pickup.webp",
+      "bytes": 147496,
+      "sha256": "b5f131ece6e2413b4c624dd2fbebce84896e537ec797a45c5ba15f7e9bd6fc94"
+    },
+    {
+      "path": "assets/clay-door-replacement.webp",
+      "bytes": 140590,
+      "sha256": "089646cfb856c19242b614a02241948fcf26bc8b1055ca32df2e0d00dcca8ce9"
+    },
+    {
+      "path": "assets/clay-ductless-comfort.webp",
+      "bytes": 128668,
+      "sha256": "2b3e710707ae0125b561d3c6748ff312fab2af11a555e5a8fb957917c7b3085f"
+    },
+    {
+      "path": "assets/clay-dusty-filter.webp",
+      "bytes": 130542,
+      "sha256": "95fb12e05a6b60b8431f2506d95c95034649d7cfa28a8c7cb4a660ffa75105de"
+    },
+    {
+      "path": "assets/clay-electrical-help.webp",
+      "bytes": 108452,
+      "sha256": "e26d2214f36965575aae7201f784826feab447efe2c6addd2aba2ab53787e818"
+    },
+    {
+      "path": "assets/clay-family-painting.webp",
+      "bytes": 135066,
+      "sha256": "45e6803ad68386b6ee7edff0d185f9c87bb493ade13f73f846d5ff8279ce069c"
+    },
+    {
+      "path": "assets/clay-family-porch.webp",
+      "bytes": 179282,
+      "sha256": "36eece1088d667484be85a6acb4b8c93ae344bca6b7fe7f302842f1eb42ba961"
+    },
+    {
+      "path": "assets/clay-family-shelving.webp",
+      "bytes": 112978,
+      "sha256": "4f7af334280e0d48bce6aaa0f6032e8175886f5416eda96e8d51e6de37c515b4"
+    },
+    {
+      "path": "assets/clay-fine-print-pitchman.webp",
+      "bytes": 147066,
+      "sha256": "d87c747d62a2f0b3f76649fcd3baf7938c9c6ecaf48c6d9aa6543a5ca1064e37"
+    },
+    {
+      "path": "assets/clay-gutter-care.webp",
+      "bytes": 182340,
+      "sha256": "34db12f60b3d3704388fe57d157ec2e0c9df56db02d0f72391b96a0b2c9762f6"
+    },
+    {
+      "path": "assets/clay-home-keys.webp",
+      "bytes": 180640,
+      "sha256": "9ae816c55e245f5fcd6812124a3c696e783add05e7c6f3e2a17ad35b3013e962"
+    },
+    {
+      "path": "assets/clay-hot-water.webp",
+      "bytes": 117328,
+      "sha256": "a2a8c6785f8ea0d6c3b3c1b598fca7d4ae9cb096301bc81fa6d6975f6d482f46"
+    },
+    {
+      "path": "assets/clay-hvac-family.webp",
+      "bytes": 183890,
+      "sha256": "3ee1fd8f2aac530a560e2dc522cc12051b31fdb2a68e325b0c2382bc8b6d8b21"
+    },
+    {
+      "path": "assets/clay-image-manifest.json",
+      "bytes": 17836,
+      "sha256": "109f2bacb59eda425795d69072113ade5f3d6cba1624aa0c12390e5cc2a736eb"
+    },
+    {
+      "path": "assets/clay-local-pro.webp",
+      "bytes": 188998,
+      "sha256": "0b849e08be63ed5c271b9ac1bc9cf63b9666f69244119d47c06b7cd83f783fe5"
+    },
+    {
+      "path": "assets/clay-outdoor-lighting.webp",
+      "bytes": 166572,
+      "sha256": "4feb1feaa33b3a12af7d76e50f0dcce2585a7976554bb609a60cfe6a9ed70f15"
+    },
+    {
+      "path": "assets/clay-plumbing-leak.webp",
+      "bytes": 98710,
+      "sha256": "33d0f2021720d3901b0c3b0dc8587a0bad371a84ae47957dc2938efd88423656"
+    },
+    {
+      "path": "assets/clay-tankless-bath.webp",
+      "bytes": 97954,
+      "sha256": "c0945ca574f33e25862670ca362df3d39da5c7a64c666f000bdb764e40febbd7"
+    },
+    {
+      "path": "assets/clay-vehicle-wraps.webp",
+      "bytes": 185444,
+      "sha256": "57b268e9f6d1b552797a93b7a55edf3628eaec765e2b7904ea2ec5a9ac5b6b0a"
+    },
+    {
+      "path": "assets/clay-window-renovation.webp",
+      "bytes": 102074,
+      "sha256": "6104ee5b154c01a6d3a442da851f4eae70e23dbee22f0d8ee92709cd280a0d38"
+    },
+    {
+      "path": "assets/contact-activity.js",
+      "bytes": 832,
+      "sha256": "7cd64a6842a3afd8c1f1820a7cc37020a7555159635a16b8372346e8db2eda23"
+    },
+    {
+      "path": "assets/contact-desk.css",
+      "bytes": 1830,
+      "sha256": "89853958f378c51a0949664525d6b060ff1ff2582c32409348cbef93724f6404"
+    },
+    {
+      "path": "assets/contact.css",
+      "bytes": 9004,
+      "sha256": "c7a2df8b06bf47f85270c8866daa433b6a3b45242ed6d9dd773f97f526931c65"
+    },
+    {
+      "path": "assets/contractors.css",
+      "bytes": 1758,
+      "sha256": "8f8f89fb03f8389808e984a22a2588a24b619df7ee443b73e2c16606d5e248fd"
+    },
+    {
+      "path": "assets/contractors.js",
+      "bytes": 3562,
+      "sha256": "da1b8a8f5babd25a05d97a7db06b3f2e1d47fa08f17c4b119aeb87afe1730548"
+    },
+    {
+      "path": "assets/decisions.js",
+      "bytes": 646,
+      "sha256": "874cd86bb9249645b56c052c9565e2d2e393de782e54569750f6b7ac8d4fa0bc"
+    },
+    {
+      "path": "assets/editorial-image-manifest.json",
+      "bytes": 3816,
+      "sha256": "7f52fc079dd1e45032cce23b07df0b59a52a4278fe2b7775a261ef16462915c5"
+    },
+    {
+      "path": "assets/electrical-outlet.jpg",
+      "bytes": 111993,
+      "sha256": "1eceb54d851b607e2225f96980647bf083d85ef240ab7b64366565b9fd7e390f"
+    },
+    {
+      "path": "assets/established.css",
+      "bytes": 12728,
+      "sha256": "70949331c9c39f82d7d5760e4ae230357e00def8d26c5323eff132534de8b70e"
+    },
+    {
+      "path": "assets/evergreen-installed.jpg",
+      "bytes": 124439,
+      "sha256": "78eef7396867101dc041741655da6ad768b13258f30620e49ea90cf6787ab107"
+    },
+    {
+      "path": "assets/family-at-home.jpg",
+      "bytes": 206125,
+      "sha256": "20190f8a5b4371c842d0f07b3b9539756e919637948dca85f2234fc6109f1aa4"
+    },
+    {
+      "path": "assets/fine-print-stage.webp",
+      "bytes": 76586,
+      "sha256": "17d9357617d61db4544723fd2ec9d18d7ab32068868728d1e08037f1e3c305c4"
+    },
+    {
+      "path": "assets/front-door.webp",
+      "bytes": 104220,
+      "sha256": "091f4817db1c14b01849e83e02ae29e13a3600263102fd29b6e8da5a51334e64"
+    },
+    {
+      "path": "assets/garden-fountain.jpg",
+      "bytes": 245029,
+      "sha256": "40f21ca585a94011d15e257129e8f7908f36c995eae7940300e01922ff8e0c66"
+    },
+    {
+      "path": "assets/good-call-club.css",
+      "bytes": 3622,
+      "sha256": "85f554ec5dac198dd301e9cd7184a5a8d1fc415a651d435f2791ab5f73f2cf96"
+    },
+    {
+      "path": "assets/good-call-club.js",
+      "bytes": 21187,
+      "sha256": "64a78d792ea8c5d30433d6dd0daed9f0b72cf1b0f0c0ee589af6a13065949207"
+    },
+    {
+      "path": "assets/good-call-club.webp",
+      "bytes": 129218,
+      "sha256": "21fde867c3a0486d44e8a802e12d849c0ae94c279bd2e02c34029422dfb2bb7c"
+    },
+    {
+      "path": "assets/grand.css",
+      "bytes": 5049,
+      "sha256": "46df0bf47084219ab62c75a80c057a3140cd74e8c17f8ee14b5ea0fd4a3053dd"
+    },
+    {
+      "path": "assets/growth.css",
+      "bytes": 2788,
+      "sha256": "6daef326e34251bd211255e7cf6d787b966ca9b9780795ae3eb9a2b8d8f5c941"
+    },
+    {
+      "path": "assets/growth.js",
+      "bytes": 2664,
+      "sha256": "07870fa636dd155353669ddb2a99be4fc4320a088818f4474ae2bbd3b18eab2c"
+    },
+    {
+      "path": "assets/home-match.css",
+      "bytes": 3710,
+      "sha256": "4e410e60e53b402fafbd53d5aa9d0abed4280f19b15021409c24d4caf18ecb9c"
+    },
+    {
+      "path": "assets/home-match.js",
+      "bytes": 10001,
+      "sha256": "950569d9de819b1bf9c8f90bbe2297af5361b724c60b6c773d51f7be80e46bb0"
+    },
+    {
+      "path": "assets/homeowner-tools.css",
+      "bytes": 13210,
+      "sha256": "59aeb99e672c2df4d247150a9026dd7f2b7ad29a372173e3f29de990a7d9bfb3"
+    },
+    {
+      "path": "assets/homeowner-tools.js",
+      "bytes": 11926,
+      "sha256": "8616bcda1ec4bd547b99ef45052b4ddc74716f0e829929123d0e9c3484d4d907"
+    },
+    {
+      "path": "assets/homepage-layout.css",
+      "bytes": 13960,
+      "sha256": "24bc3299917336b19a66ac161216ecd47efa22bd6c1e8eb23f03533e9ff0e9f8"
+    },
+    {
+      "path": "assets/hvac-clay-manifest.json",
+      "bytes": 3089,
+      "sha256": "425eec2bf53ddee0a2d588cbaa5b232b06e13ea6ebf861312dd858ec44c34c78"
+    },
+    {
+      "path": "assets/hvac-comfort.webp",
+      "bytes": 109794,
+      "sha256": "d5d070de98e8fc2d726531e2fee255b520bb422ad65b5b878afcddf04aac7fc8"
+    },
+    {
+      "path": "assets/hvac-image-prompt.txt",
+      "bytes": 1165,
+      "sha256": "3edd43547820da397a91396762f9a49e0cf45747a9451e7f624bc56843046652"
+    },
+    {
+      "path": "assets/journal.css",
+      "bytes": 7862,
+      "sha256": "b83ecf54088a0d2e16ee7c72ea66b087cf7e8c403b82228fb1e80d9dc3303430"
+    },
+    {
+      "path": "assets/journal.js",
+      "bytes": 2260,
+      "sha256": "309c623f6f82fb4a961b7c0d5afe4cac5e97590caa33be58f89bfc77f8dd10ef"
+    },
+    {
+      "path": "assets/local-help.css",
+      "bytes": 3495,
+      "sha256": "66d7e95fb9bec0d1e77f0e5bc8afdac5ca64ed175483277e48128487e730bbea"
+    },
+    {
+      "path": "assets/middletown-conventional-project.jpg",
+      "bytes": 123584,
+      "sha256": "c32e3cbee1872d6170770bddb08ba2ff08407865d9a538020452dc6e348531d0"
+    },
+    {
+      "path": "assets/middletown-conversion-project.jpg",
+      "bytes": 323401,
+      "sha256": "0fbfea25cf89ac75ec099752c3f3f4553741914658026221327824458971ea37"
+    },
+    {
+      "path": "assets/middletown-ductless-project.jpg",
+      "bytes": 44132,
+      "sha256": "541a6413182ecd01c7b3573d223f6e6ee43046976df849e869c2ebd6b369e7a2"
+    },
+    {
+      "path": "assets/middletown-outdoor-project.jpg",
+      "bytes": 227169,
+      "sha256": "b7a0386115a8d8cdee901b5b48ded9c647443accd73e4547cdaa9b632ba72c97"
+    },
+    {
+      "path": "assets/middletown-tankless-project.jpg",
+      "bytes": 275072,
+      "sha256": "fc94dbf0bdc2dbba7fd5d3e9c4775f76734f4b08be41856ef2d153f2668de6a3"
+    },
+    {
+      "path": "assets/neighborhood-feed.css",
+      "bytes": 3568,
+      "sha256": "b76f60050a238fc7537daa63223ae7a9f056486f25e98d4cbdf402e659db1928"
+    },
+    {
+      "path": "assets/neighborhood-feed.js",
+      "bytes": 1227,
+      "sha256": "9b3cc72bf2204596c454d9bc4fb8a5df4475b1c60a340f4f6ebb72460bd40ac8"
+    },
+    {
+      "path": "assets/neighbors.js",
+      "bytes": 4941,
+      "sha256": "f89edc69d0e9b523e017df4c83c9c62fccc512824746f0df9dc3b036371c2904"
+    },
+    {
+      "path": "assets/network-contact.js",
+      "bytes": 1632,
+      "sha256": "3f0ad39e30e3f0d3571e62a74a1c361bdfe96fb577898582a4f9a88a0a198d10"
+    },
+    {
+      "path": "assets/network-strength.css",
+      "bytes": 2195,
+      "sha256": "36e2a2dcef682cb54dae7fe6395a9658b5b5054b9930b62ff66e6a48f10178f7"
+    },
+    {
+      "path": "assets/offer-decoder.js",
+      "bytes": 3951,
+      "sha256": "3d94b8f8890d85881e9ca66e19fee2ce982bb1aabbbb1938e02a1bd53178aa9f"
+    },
+    {
+      "path": "assets/outdoor-lighting.jpg",
+      "bytes": 280630,
+      "sha256": "ad405fac924a69a32006e6de6958526ffd33ea03a867969cee810ccd6dadb491"
+    },
+    {
+      "path": "assets/playground.css",
+      "bytes": 4036,
+      "sha256": "ff12428966f40a7d20442cc918b6433a5bd76a786c39b015e92b0ffa5d63292e"
+    },
+    {
+      "path": "assets/playground.js",
+      "bytes": 8969,
+      "sha256": "a7ae7a495b0a579b30c59730e73d0c8049f1dea6860fc95c70d8b6ec555ebdff"
+    },
+    {
+      "path": "assets/porch-homeowners.jpg",
+      "bytes": 198187,
+      "sha256": "992c7867d560f80cf08c20e8160d717e1f3845caa5c2e77b0ad813627be3e281"
+    },
+    {
+      "path": "assets/price-notebook.webp",
+      "bytes": 84834,
+      "sha256": "bf640b2d91d6a71c564f14c79937dd251a1e934ec22643dca4c7bf03155bb07f"
+    },
+    {
+      "path": "assets/problem-config.json",
+      "bytes": 5999,
+      "sha256": "1e1f48287fe93e92e55b133b21ad62e4e5e0496804a6b69426f5de68f6bd8b4c"
+    },
+    {
+      "path": "assets/problem-guide.js",
+      "bytes": 2476,
+      "sha256": "ba9f93472148b5959db5a3c743ed623c26021de87c2396df982217fff9395a21"
+    },
+    {
+      "path": "assets/project-concierge.css",
+      "bytes": 10975,
+      "sha256": "256bb03493143717cc09b2b8c0937e3ef49e80e88cee4d66be38a1135902de07"
+    },
+    {
+      "path": "assets/project-concierge.js",
+      "bytes": 10217,
+      "sha256": "77bd9a35d97a247b14938138cf84c865d0f1ed75f31196333f21d3067bf6dafd"
+    },
+    {
+      "path": "assets/project.js",
+      "bytes": 18901,
+      "sha256": "224b0bf6064fbb2faed07217b847e83231e13daae0afcf1f895e18b339be864a"
+    },
+    {
+      "path": "assets/public-discovery.js",
+      "bytes": 3005,
+      "sha256": "fb7af5b1a37eb9fcaa8b157f6730bcf194f378b365ad457576930de86e8acef8"
+    },
+    {
+      "path": "assets/refinement.css",
+      "bytes": 13022,
+      "sha256": "9c525300b7150447474a978d1b7b47c2c01b78ca6c149def384391c915c8f5b5"
+    },
+    {
+      "path": "assets/request-context.js",
+      "bytes": 466,
+      "sha256": "a662fdd952c16d0d742193744ff62497f65bd5a4e80e3fc6ec7ef5347309bb35"
+    },
+    {
+      "path": "assets/service-discovery.css",
+      "bytes": 5858,
+      "sha256": "9a9b70347eaa160fdc46af752ba2fe54e295410d0cf5250381d69fc453babb6f"
+    },
+    {
+      "path": "assets/service-intents.css",
+      "bytes": 6782,
+      "sha256": "ce106fa4de5e25f98cb5017bc9a96e3516a94ccbd94247d7914bfeaf538a9a3d"
+    },
+    {
+      "path": "assets/sink.jpg",
+      "bytes": 143885,
+      "sha256": "49cd33655c6c8089b5bb3282d800c8c9883841bacb47f7c487ef3da29f98acff"
+    },
+    {
+      "path": "assets/situation-guides.css",
+      "bytes": 2086,
+      "sha256": "1949e7a7166debe88362f00efcb49f21462678c5b6cda7d47e338ae479dcab1d"
+    },
+    {
+      "path": "assets/situation-guides.js",
+      "bytes": 651,
+      "sha256": "48768f5eac19d6ff512ebf8e7aaee86b7059920ce1b846f8fc3c86db42d9ca08"
+    },
+    {
+      "path": "assets/sound-wraps-project.webp",
+      "bytes": 97836,
+      "sha256": "1196ec3cab361c4bc73e94261b6fe6ec6b5959d0a582013716e5d5dee0a3e218"
+    },
+    {
+      "path": "assets/tankless.jpg",
+      "bytes": 115145,
+      "sha256": "e5d307a850202b7555070cb31c17995ce54ad96637bcea93f5e639f00bf594bb"
+    },
+    {
+      "path": "assets/tempstar-ion-angled.jpg",
+      "bytes": 236734,
+      "sha256": "0f05db71b77625c477100dffd1eaa828e73221c2d4dce9f4deeb04ab63ff3945"
+    },
+    {
+      "path": "assets/tempstar-ion-risers.jpg",
+      "bytes": 244760,
+      "sha256": "8c51893ec800e82b23d4e8ce10c7f6fd7204566b3e9b48da1466f2fcd5daf713"
+    },
+    {
+      "path": "assets/valley-colonial-home-small.webp",
+      "bytes": 94484,
+      "sha256": "a2920cdcb089686d976adcbe028db6f7854709b2d0f71c77286d9742fda0d8e1"
+    },
+    {
+      "path": "assets/valley-colonial-home.jpg",
+      "bytes": 300141,
+      "sha256": "76ed5d2484091bea18c5f197adf3a32dcbc6d0306a61bab93e8edc35c63f1cd1"
+    },
+    {
+      "path": "assets/valley-colonial-home.webp",
+      "bytes": 201996,
+      "sha256": "4724a5552e6f44cc61c8b5cfac3a488da76e5911825c3eb2a3473453dfce0d5f"
+    },
+    {
+      "path": "assets/valley-family-kitchen.webp",
+      "bytes": 108440,
+      "sha256": "e68b1a352d847a803beff5333059ec472c73afd660779e3976c9e7d9aae5dcde"
+    },
+    {
+      "path": "assets/valley-living-room.webp",
+      "bytes": 167940,
+      "sha256": "6642d47883dde08a620f0b928711441502686742c69320d2730c7745c04b91af"
+    },
+    {
+      "path": "assets/valley-stone-home-small.webp",
+      "bytes": 75246,
+      "sha256": "8d6aeb8d61acef6da9acc983b1cb99fbb58f4a303ea428944223ebb5fd6ce35a"
+    },
+    {
+      "path": "assets/valley-stone-home.jpg",
+      "bytes": 230695,
+      "sha256": "3806ad49035441d990d90ed006c268b621bafcd035a9bd3f29bc7da16c10323f"
+    },
+    {
+      "path": "assets/valley-stone-home.webp",
+      "bytes": 149886,
+      "sha256": "0ddd3f04967ca8f0dc25a6bcb8d06c893833b62c5823360a31e0cfe2f34272c1"
+    },
+    {
+      "path": "assets/vinyl-road.webp",
+      "bytes": 78380,
+      "sha256": "acb30d1adb56e05709ac22fefa3436415da441de7468208deebc199dc182f5f7"
+    },
+    {
+      "path": "assets/visual-refresh-manifest.json",
+      "bytes": 3764,
+      "sha256": "be5eb65f195b834fa88db7d87ed4f5efd4ca602c184c5b6ec64f88a15bce8df5"
+    },
+    {
+      "path": "assets/water-heaters.css",
+      "bytes": 2136,
+      "sha256": "a47520ee11345d2125f666cbf08b3b16775290c7137175e38a8fc9734857828c"
+    },
+    {
+      "path": "assets/weil-mclain-evergreen.jpg",
+      "bytes": 5682,
+      "sha256": "0888a06621b99c870b5f91bf905bf1199fbbc7cd8d28cb18aeb343beec04b865"
+    },
+    {
+      "path": "assets/window-framing.jpg",
+      "bytes": 166543,
+      "sha256": "1275cb40cad56eb13e5d33a4ae801777d8fff2759db18976684a328a6ca00f85"
+    },
+    {
+      "path": "audit_finish.py",
+      "bytes": 12782,
+      "sha256": "6317905490f4f94c29fdc1eaefa12928471b1a507414897334ae81cd3a44aa64"
+    },
+    {
+      "path": "brand_finish.py",
+      "bytes": 19947,
+      "sha256": "54e7abed814868e58757bd5c6baa144190b9916a0300be68fea773e8b4a81bd4"
+    },
+    {
+      "path": "build.py",
+      "bytes": 75733,
+      "sha256": "2c60af21e1d588030930f343ca753b0377fe21179449ba267e4029f8c27aa81c"
+    },
+    {
+      "path": "buyer_edge.py",
+      "bytes": 7114,
+      "sha256": "5a14d33a697b7511155bd74e8c3e436cdbb6c5dc9942f91d503c4092c6cccb87"
+    },
+    {
+      "path": "check_agent.mjs",
+      "bytes": 2533,
+      "sha256": "f655cf37dbea253ff2e49480e3d14431b411277fc8298fa90ee9f3a973c89e9b"
+    },
+    {
+      "path": "check_contact.py",
+      "bytes": 2840,
+      "sha256": "cfa2a4f272200b7e73d024b3c49a1c03e39069fc1b6aa148689ad8f8e5aa21d5"
+    },
+    {
+      "path": "check_site.py",
+      "bytes": 2762,
+      "sha256": "a1c58a4e3b3b71f101c51564fef045cc7bed0a76d8df8045fbb989d119fa91bf"
+    },
+    {
+      "path": "clay_storytelling.py",
+      "bytes": 6808,
+      "sha256": "ea2ae954a523503aa5fb35595b54356f0e8195b457a83d40ad91607922f631a3"
+    },
+    {
+      "path": "contact_measurement.py",
+      "bytes": 2901,
+      "sha256": "7fa05f61e04d606d10f073f2654d14f889501142bbecf44de348e79837c1a419"
+    },
+    {
+      "path": "contact_upgrade.py",
+      "bytes": 4261,
+      "sha256": "6d681d32917cfa2eeb6b7380ca6f5d2df32b50fa7f36e0321d45261d2330c39f"
+    },
+    {
+      "path": "contractor-config.mjs",
+      "bytes": 771,
+      "sha256": "cfc4f3c36871ff65478daca0eff9fb0d8bf224707784b84fc97467f58699c17d"
+    },
+    {
+      "path": "contractors.py",
+      "bytes": 3543,
+      "sha256": "b7ca31419c015739d601d7f0a7b23d40f1d2c1411483e2c05bce78b5d0605553"
+    },
+    {
+      "path": "conversion.py",
+      "bytes": 20310,
+      "sha256": "a95c3fad0c968642925bc0ccdda8dae7eef571a984c9b91da6c56c17d40ab80e"
+    },
+    {
+      "path": "cost_ranges.py",
+      "bytes": 16782,
+      "sha256": "199c5df7f3f7e3764fb2f7a940d91e294252b134e0f0df8410b8b5b30f569a05"
+    },
+    {
+      "path": "discovery.py",
+      "bytes": 11639,
+      "sha256": "6e5df4fa457080292301e5d3a541d9d7ffea02d209e7bf9ea1ea8c3e34a0208a"
+    },
+    {
+      "path": "editorial.py",
+      "bytes": 2430,
+      "sha256": "a01420700e313ea5de2fddbc26e5a416756a7ca8c6af5394e47c781e5984aba0"
+    },
+    {
+      "path": "emblems.py",
+      "bytes": 943,
+      "sha256": "235e092922a70c5ed4720ad59c87b04bb14bcf9563bca68919d9f8c0394fb83f"
+    },
+    {
+      "path": "entry.mjs",
+      "bytes": 147,
+      "sha256": "d1bb5c382462dba865e050baeb3b13c5fd2a67ea80205df817fcd174f12978a3"
+    },
+    {
+      "path": "estimator.py",
+      "bytes": 2754,
+      "sha256": "a3aada28bc915fe2656090db01b455a0c70751f87cbe377eb803ef6e2767f494"
+    },
+    {
+      "path": "good_call_club.py",
+      "bytes": 5412,
+      "sha256": "1d9f1df87f946f2f6372eb0c014061f48e143a49cc7d4a58f3079d21be310721"
+    },
+    {
+      "path": "grand.py",
+      "bytes": 4520,
+      "sha256": "c81192a8c8f4721834b1aadc9e4a147b20f1d7d4cc1471f78a23d3ccf349be04"
+    },
+    {
+      "path": "growth.py",
+      "bytes": 14176,
+      "sha256": "5faa65e1d7d4ae5b4ff419840edadf8899c69f39344def25b0fcb83ff598985c"
+    },
+    {
+      "path": "hero-home.jpg",
+      "bytes": 397697,
+      "sha256": "07364d1523a8d923eca4df3ccfbf3b5cf70fa9b2b6867c592a1e438fd7b08748"
+    },
+    {
+      "path": "hero-home.png",
+      "bytes": 3158502,
+      "sha256": "9bb3b755e20f0f3b812a450060803ad4501c8d8c495b6de48123abe6bbbc126a"
+    },
+    {
+      "path": "home_match.py",
+      "bytes": 4639,
+      "sha256": "4643895d7d41410160f6581d1deaaad1c4022387b4fbe624ef42b7b5145a8812"
+    },
+    {
+      "path": "homeowner_experience.py",
+      "bytes": 15439,
+      "sha256": "d8a1a3fc9fe6c5b2fabaab5a3c39ccd9fbce8aba844b232341d9274921424ed1"
+    },
+    {
+      "path": "homeowner_tools.py",
+      "bytes": 12301,
+      "sha256": "49b82e8cfa5f587b7fd5caf2316e1e3dd83f0d5c6efb6a0943d1394d0cd3f7cf"
+    },
+    {
+      "path": "homepage_layout.py",
+      "bytes": 13928,
+      "sha256": "3982991494de9c2495b91e82e0768d0a50cf503f2fb0d3f1af2bc26b3d6f3923"
+    },
+    {
+      "path": "image_labels.py",
+      "bytes": 1235,
+      "sha256": "eac44308107918e162c0b4289d8cf1f8e4ffe48b22967160c049bd1dbc29a89e"
+    },
+    {
+      "path": "indexnow-config.json",
+      "bytes": 84,
+      "sha256": "f2645ac029ca96901c163dab7fce70d1a844003598e5d23416bdfeb03f8d7e79"
+    },
+    {
+      "path": "launch_finish.py",
+      "bytes": 3601,
+      "sha256": "6efad82702a406df89896222522ae1a98eabe9723ddfabadb61d380dd8e6c5db"
+    },
+    {
+      "path": "lead-context.mjs",
+      "bytes": 962,
+      "sha256": "930588a8d2844f807617c789328626f17e91a9511f90cc6cd72ef947eb196985"
+    },
+    {
+      "path": "local_help.py",
+      "bytes": 19358,
+      "sha256": "1ceee7c54c4ba7d2393a8cf6b6065c2388947b274975298377b218124cf5325c"
+    },
+    {
+      "path": "local_partners.py",
+      "bytes": 8245,
+      "sha256": "51d328637d50975c0de675b044f84135417d50d3b7cfa538000bb6de2b3df4f4"
+    },
+    {
+      "path": "magazine.py",
+      "bytes": 15533,
+      "sha256": "35cbe307cd11eb07ef171b8cadd58bf605caa12a48d066f1a9471be9371772d9"
+    },
+    {
+      "path": "neighbor-config.mjs",
+      "bytes": 355,
+      "sha256": "4bab12133b45c4ff37f8bcafd48b82a9a9f3fdc7ce00d8d59227418fcdd53aac"
+    },
+    {
+      "path": "neighborhood_feed.py",
+      "bytes": 6295,
+      "sha256": "410422a55073d0a4e518f71698170b2fe727c25e6b02d468750a031f2893bf5f"
+    },
+    {
+      "path": "neighbors.py",
+      "bytes": 3972,
+      "sha256": "5dd7a9c8c0986d8e5ef2aad6ce43e2060e750ec6c9d3547739cc919114c64522"
+    },
+    {
+      "path": "network_strength.py",
+      "bytes": 11366,
+      "sha256": "515a872d6d6b997c7309e18afaea61fc06bb02518f1a696a3ebb139c60ef6ed6"
+    },
+    {
+      "path": "optimize.py",
+      "bytes": 9489,
+      "sha256": "1648d36bd1535ae110831041ea2260f31c51726527238c0bfa7a6381ebbad134"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 83623,
+      "sha256": "3d5726a81d6f4c4f933e0a7bcab96bc0981c502b0704ba951f1bd18ac5cd1a3a"
+    },
+    {
+      "path": "package.json",
+      "bytes": 735,
+      "sha256": "74701824f02e038755571b95de4b7dbc88dd135a4fdfe53e3aa89dc16abf39d8"
+    },
+    {
+      "path": "plain_language.py",
+      "bytes": 6586,
+      "sha256": "66f2449c3b549be86eedfc27d4641e37a68fc643d09bd4466b73a8b0a4d1f7d1"
+    },
+    {
+      "path": "playground.py",
+      "bytes": 6190,
+      "sha256": "037c5a479c33995523dbc0551a8c4b362853b8ab8e00f6cb8ab44c22779dc275"
+    },
+    {
+      "path": "pricing.py",
+      "bytes": 13883,
+      "sha256": "940c35db8df3ba92ca121e41dc9b60aa50870768cb47bb17e84c1dd99f206a11"
+    },
+    {
+      "path": "project-config.mjs",
+      "bytes": 7146,
+      "sha256": "11b4dc3b079e3edba4eb41f1f8a4a77fd017b18f7f60c770755b8c0b05ee1cca"
+    },
+    {
+      "path": "project_concierge.py",
+      "bytes": 9205,
+      "sha256": "26f828dae3d5a7d1743bbac4a0f3e1b653ca9a47738f0e8f373eeec099c72695"
+    },
+    {
+      "path": "project_experience.py",
+      "bytes": 10328,
+      "sha256": "3825617cca8340d70af49728d7726f688b11943099f0e52d799d7f1cef3c4fbd"
+    },
+    {
+      "path": "project_next_steps.py",
+      "bytes": 5237,
+      "sha256": "933614d735007d52a09ce7edfef3f958aa3e8a379d00e56735227d70fa9012e8"
+    },
+    {
+      "path": "referral_rewards.py",
+      "bytes": 1999,
+      "sha256": "3b55234af8ec0b7db13ac035735469506e49787a3737249def19e36295fff780"
+    },
+    {
+      "path": "scripts/dev.mjs",
+      "bytes": 746,
+      "sha256": "27c484261418c7d5108ae337d6b1afaf60044b3f45395526157be81a8dbc93eb"
+    },
+    {
+      "path": "scripts/submit_indexnow.py",
+      "bytes": 2439,
+      "sha256": "ff6cd54cdc883b04a6ca4a6f79b75ea130f7a1e9119e99ebf940b3351b56bbb3"
+    },
+    {
+      "path": "search_foundations.py",
+      "bytes": 2487,
+      "sha256": "343716ad4a09f7b3081f3248bd940c0faddfb60e6cb7c75ab5aee6ad9167ad0b"
+    },
+    {
+      "path": "search_submission.py",
+      "bytes": 1595,
+      "sha256": "b4b1588c8448f06f8ba2c97d7f1125c32609036bd9a20269a9bd22f7d759dd1b"
+    },
+    {
+      "path": "seo.py",
+      "bytes": 8834,
+      "sha256": "fc8f4c5147a537be74ddeb8e3a466a219962df7324af0135b3bd41faf956ad02"
+    },
+    {
+      "path": "server/account-http.mjs",
+      "bytes": 3619,
+      "sha256": "ac98cfe068106f85b567349fc907ad4327748b8d5ef0b2b9c10743cb7e9df7ad"
+    },
+    {
+      "path": "server/accounts.mjs",
+      "bytes": 11214,
+      "sha256": "f2340c09cf5e50e38cc6c64a8983b03e99370055174d8463716fdfd3a4f256ec"
+    },
+    {
+      "path": "server/application-validation.mjs",
+      "bytes": 2569,
+      "sha256": "7e4647cf5c3b2df3677b99c278ffa40e59f21121174d3b46c3b1709713d1e830"
+    },
+    {
+      "path": "server/brief-validation.mjs",
+      "bytes": 3810,
+      "sha256": "d2a7d24ecad23dc4bfe02a3ef58d92abf06ec6a30bc9ccfffaaf453ec35e739d"
+    },
+    {
+      "path": "server/intake.mjs",
+      "bytes": 7342,
+      "sha256": "156eeb6d147499631966ac411b349e60cba6c03bec2ac206561cb01b551b2744"
+    },
+    {
+      "path": "server/neighbor-validation.mjs",
+      "bytes": 1568,
+      "sha256": "b2b9f1b2473d53ce27e3380e8e2dfb0367609ba86e66c468ae430e428b9afe7d"
+    },
+    {
+      "path": "server/project-store.mjs",
+      "bytes": 12349,
+      "sha256": "cb16f9b2c00ba0d5d7473718c6f82caa47f4ac34172f8d316567e5d84afffa06"
+    },
+    {
+      "path": "server/provider-email.mjs",
+      "bytes": 1945,
+      "sha256": "1764fe2020bbecdcfd0640f57d73b98dd9ba6b622c50c933870e443914e19db9"
+    },
+    {
+      "path": "service_discovery.py",
+      "bytes": 18258,
+      "sha256": "f6eafa557eb98fe73fc410e7ad9c7bb3ce13739439b2e243841a02a65f8bc954"
+    },
+    {
+      "path": "service_expansion.py",
+      "bytes": 8181,
+      "sha256": "940be203e46af04156a160caac7dd09dd2d152b35341c3dbf55ee12c02b7e521"
+    },
+    {
+      "path": "service_intents.py",
+      "bytes": 32888,
+      "sha256": "1c425b6e46844c51cdc7af9c9824ce8f2b2cff9ac34f2650cdb36b634f6b83ee"
+    },
+    {
+      "path": "service_photos.py",
+      "bytes": 2904,
+      "sha256": "bb4e0751022467e02ed501c1f9860888e9a2a5edfcf65624c5c6bca6b20d616d"
+    },
+    {
+      "path": "situation_guides.py",
+      "bytes": 11461,
+      "sha256": "c26ba119fc0192bddd73cd64b390cd4b597ab85d8ee2b108b7aa4c8febfbfd6b"
+    },
+    {
+      "path": "src/home.html",
+      "bytes": 76686,
+      "sha256": "f485b29bb3b2582e66a2ba5b03236902af0f3435137dd8d5f06ee4d199fdcba4"
+    },
+    {
+      "path": "templates/contractors.html",
+      "bytes": 7636,
+      "sha256": "40a463c24a6454c550855a287036d4a123d342ff75f738e83e95ebe30a9b6acf"
+    },
+    {
+      "path": "templates/neighbors.html",
+      "bytes": 7533,
+      "sha256": "d37ac25308bef247895a6daca7fecabd051d39e4a8a19728379237fbdfe827a1"
+    },
+    {
+      "path": "templates/problem-guide.html",
+      "bytes": 1360,
+      "sha256": "e0fba6985c1c667f19f4c3cc205eadb41d09cff6bfe8a0971082512939295054"
+    },
+    {
+      "path": "templates/project-start.html",
+      "bytes": 7359,
+      "sha256": "19468e0039bdefb8b3c12d97d6a6c6dbd1714bc9a2362a6c7307e4769153e647"
+    },
+    {
+      "path": "tests/accounts-ui.test.mjs",
+      "bytes": 4436,
+      "sha256": "3b842005757286e6299192ad2c52806297f04507390865ba6c44d9072eea066b"
+    },
+    {
+      "path": "tests/accounts.test.mjs",
+      "bytes": 8979,
+      "sha256": "8651e8dd5fea7eefdd7a1e86b55df72da3f4d1c4080ea6d28ffbd591cf3d27ad"
+    },
+    {
+      "path": "tests/activity.test.mjs",
+      "bytes": 3126,
+      "sha256": "c1f0fcedf9721ed8683defb245e057d9fcfe9b43907307abaa34ef30a4013f6e"
+    },
+    {
+      "path": "tests/applications.test.mjs",
+      "bytes": 2541,
+      "sha256": "9a9e73087322faeb50c72ed05e7379828a3fc602af13c2db2019ce0a88fef5f3"
+    },
+    {
+      "path": "tests/booking.test.mjs",
+      "bytes": 3552,
+      "sha256": "049ebd8edad03d309a6c449f04b776b687bd3022caa9e67712116df5ff502b09"
+    },
+    {
+      "path": "tests/brand-finish.test.mjs",
+      "bytes": 2283,
+      "sha256": "4b8f4c9b61cd9997c30e7ee21585a654024a11161aa20185827afc46e4086dfd"
+    },
+    {
+      "path": "tests/buying.test.mjs",
+      "bytes": 6341,
+      "sha256": "f7c50d8e073890adf751bed055663c7a2ebedfa218c529118789977eef39983f"
+    },
+    {
+      "path": "tests/discovery.test.mjs",
+      "bytes": 2194,
+      "sha256": "be80d2f6fb43386b8e63fbd05169e5ace48855c4b2ab5c744e1fa06001246cf2"
+    },
+    {
+      "path": "tests/good-call-club.test.mjs",
+      "bytes": 6349,
+      "sha256": "e785a756021820c10d24b6476fb93c00a478c50315747f8bdfd1f2c370b02fa3"
+    },
+    {
+      "path": "tests/growth.test.mjs",
+      "bytes": 2288,
+      "sha256": "8760fe7d5de52d9a9fad663f7f7474b7439119348fbeaa0599dcf8be889091e2"
+    },
+    {
+      "path": "tests/home-match.test.mjs",
+      "bytes": 5124,
+      "sha256": "5d637b85b4a166ea62331823203255101110166d227c3425aae8570938b45dc5"
+    },
+    {
+      "path": "tests/homeowner-tools.test.mjs",
+      "bytes": 5752,
+      "sha256": "7252e261c02b68516e3a4ad0ee73b9212f6f2e9220d6618e31b542b792ecd06f"
+    },
+    {
+      "path": "tests/homeowner.test.mjs",
+      "bytes": 16867,
+      "sha256": "ce80e2b4a160df3859d80678603b31c9a69bb081f670675e80bca3de42813b69"
+    },
+    {
+      "path": "tests/intake.test.mjs",
+      "bytes": 3871,
+      "sha256": "b0665315793aa3b88ed67409eba157571880b4ec86451ac8ae3c467a2d79794e"
+    },
+    {
+      "path": "tests/journal.test.mjs",
+      "bytes": 2187,
+      "sha256": "8ebc2fb772bd705e9c8ef56b37c1541349cba4321a4c63ed6c2307fc74eb781c"
+    },
+    {
+      "path": "tests/lead-context.test.mjs",
+      "bytes": 3303,
+      "sha256": "5b9b7cab8a006e5498f857d2f152e01296d6a9ed6db486f2c3c3e00f16c7f888"
+    },
+    {
+      "path": "tests/local-help.test.mjs",
+      "bytes": 2760,
+      "sha256": "d51fcfee10b74e10a2c5210bdb3dcd5baba803ca39c74722d5e8644f1f0803cb"
+    },
+    {
+      "path": "tests/neighborhood-feed.test.mjs",
+      "bytes": 1514,
+      "sha256": "6710275b9e13414396b6269faf213a706dcb575d286634e60ad211d6be4fce23"
+    },
+    {
+      "path": "tests/neighbors.test.mjs",
+      "bytes": 11987,
+      "sha256": "a7bddc6987d197ba61b803f5bdfdc2d04f2adba18ef749b40f2f4c96d77960c3"
+    },
+    {
+      "path": "tests/network-strength.test.mjs",
+      "bytes": 4503,
+      "sha256": "f4c26115448245ae437603a01e5468ab47f143d2bcd44f1dccfbdd39562740e8"
+    },
+    {
+      "path": "tests/offer-decoder.test.mjs",
+      "bytes": 3170,
+      "sha256": "e0e6e78e60fb7bceeb993b9a61a3c6182e24ae83835af96ad58484d9f2379ecd"
+    },
+    {
+      "path": "tests/plain-language.test.mjs",
+      "bytes": 1845,
+      "sha256": "e2c4c7d5adbe3d5078ae3d3a065a0532646447c5b495887a5f72004b6766cb32"
+    },
+    {
+      "path": "tests/playground.test.mjs",
+      "bytes": 4474,
+      "sha256": "025e18c60416e2f837a8642478e87849dc3588140a84e1d74ac2a442f62d4021"
+    },
+    {
+      "path": "tests/project-concierge.test.mjs",
+      "bytes": 5782,
+      "sha256": "7a434e851ff428af5f450b05552963c38c0f5622cfc278f2b7663a7d014f16dc"
+    },
+    {
+      "path": "tests/project-next-steps.test.mjs",
+      "bytes": 1827,
+      "sha256": "1c7cc0c12681ba0294a11c3e14544e4817a53b4b20e53642e9d45d4691a35df6"
+    },
+    {
+      "path": "tests/provider-email.test.mjs",
+      "bytes": 3874,
+      "sha256": "1a9346245e67b2ccbd39182a090a5e37ad841980a0d54630d317b1ebb2b9557f"
+    },
+    {
+      "path": "tests/public-discovery.test.mjs",
+      "bytes": 2980,
+      "sha256": "01cbf7d9afe1cb2c0c91a1448daca4308123142a0ec42a987ea4c1bbe104b62b"
+    },
+    {
+      "path": "tests/service-discovery.test.mjs",
+      "bytes": 8165,
+      "sha256": "5cb6fc749a0daa306e6614a7156b7c5326a8d933320d233622b733be60881ccc"
+    },
+    {
+      "path": "tests/service-intents.test.mjs",
+      "bytes": 7234,
+      "sha256": "4c2c32ce263fc339f44c5b67bba71df7dc990228f165dd69879e9b196dd67061"
+    },
+    {
+      "path": "tests/situation-guides.test.mjs",
+      "bytes": 1783,
+      "sha256": "e392e4ff073b1d2552a9a28720ce554fd5e6537e59b736543faa991375327e2a"
+    },
+    {
+      "path": "tests/store.test.mjs",
+      "bytes": 8138,
+      "sha256": "4249e34149007739b9530724b6138763d428860bac5f7f0c39fed4f90a5975a4"
+    },
+    {
+      "path": "tests/test_search_submission.py",
+      "bytes": 1557,
+      "sha256": "7833739818d9f481d46ecaa67ed89bd96d792ac588af07f45305561e91e3169b"
+    },
+    {
+      "path": "trade_reviews.json",
+      "bytes": 1422,
+      "sha256": "3c4b2381d63146510d1e0a6e7663aa234374898bd03865309e6ef8e603f2bc66"
+    },
+    {
+      "path": "water_heater_presentation.py",
+      "bytes": 2817,
+      "sha256": "77d2fb6f6aacab0ce7dcad751585b22f5364dcfbbdbdf8bbea9372969c9d1c62"
+    },
+    {
+      "path": "worker.mjs",
+      "bytes": 3073,
+      "sha256": "9a4782ea6c496a42701d052daf841c76ec83334e72937367a1401d578fd2d7b1"
+    },
+    {
+      "path": "wrangler.jsonc",
+      "bytes": 1052,
+      "sha256": "20a33b9c71d24026ba9fb835b5312d23a9c31d337d664aa93f04e70051aa9324"
+    }
+  ]
+}
