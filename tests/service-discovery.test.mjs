@@ -75,7 +75,7 @@ test('Middletown profile and contact page support requests without changing othe
   const d=doc('/businesses/'+slug+'/');assert.ok(d.querySelector('main a[href="tel:'+tel+'"]'),slug);assert.equal(d.querySelector('.service-attribution'),null);d.defaultView.close();
  }
  const md=readFileSync(new URL('../dist/agent-content/index.md',import.meta.url),'utf8');
- assert.match(md,/What needs a hand/);assert.match(md,/Wazoozie and Middletown HVAC are related businesses/);
+ assert.match(md,/What needs a hand/);assert.doesNotMatch(md,/Wazoozie and Middletown HVAC are related businesses/);
 });
 
 test('standards distinguish consented Middletown delivery from saved briefs and email drafts',()=>{

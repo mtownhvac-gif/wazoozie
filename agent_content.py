@@ -28,7 +28,7 @@ class Markdown(HTMLParser):
         if self.in_main and not self.skip:self.parts.append(re.sub(r'\s+',' ',data))
 
 def generate(out,origin):
-    disclosure = 'Wazoozie provides local recommendations and public business information for home services, automotive care and real estate. New referral profiles identify owner recommendations and linked public sources; those are not independent credential inspections. Wazoozie and Middletown HVAC are related businesses. You choose who to contact and agree on services directly.'
+    disclosure = 'Wazoozie provides local recommendations and public business information for home services, automotive care and real estate. New referral profiles identify owner recommendations and linked public sources; those are not independent credential inspections. You choose who to contact and agree on services directly.'
     delivery = 'Optional Middletown project-request submission supports email delivery through the configured Zapier integration after explicit consent. Saving alone and preparing an email draft do not send email. Other businesses and professionals are contacted directly. An accepted email request does not confirm inbox receipt or book an appointment.'
     directory = out / 'llms.txt'
     if directory.exists():

@@ -80,7 +80,7 @@ COPY = {
     'The dream needs a change-order process.': 'Agree on how extra work gets approved.',
     'Comfort has a scope.': 'Heating and cooling costs.',
     'From small fixes to bigger ideas.': 'Repairs and remodeling costs.',
-    'Know the connection.': 'About the business relationship.',
+    'Know the connection.': 'Contact details and context.',
     'Before the keys change hands.': 'Before you book the car in.',
     'A little clarity.': 'Home projects.',
     'A better decision.': 'Questions worth asking.',
