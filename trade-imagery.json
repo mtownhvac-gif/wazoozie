@@ -1,0 +1,93 @@
+{
+  "images": [
+    {
+      "key": "plumbing",
+      "file": "trade-plumbing-2026.webp",
+      "alt": "Clay-style plumber inspecting a kitchen sink drain",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Black woman plumber in navy overalls checking a sink P-trap with a flashlightNo text, logos, watermark or implied documented project. Stocky middle-aged Latino male plumber with salt-and-pepper hair and mustache in navy coveralls inspecting a tidy under-sink P-trap with a flashlight."
+    },
+    {
+      "key": "electrical",
+      "file": "trade-electrical-2026.webp",
+      "alt": "Clay-style electrician checking a detached porch lantern",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Older East Asian electrician in an amber shirt inspecting an unpowered lantern at a stone-house porch"
+    },
+    {
+      "key": "carpentry",
+      "file": "trade-carpentry-2026.webp",
+      "alt": "Clay-style carpenter measuring a built-in wooden bookshelf",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Clean-shaven blond carpenter in green workwear measuring a built-in bookshelf"
+    },
+    {
+      "key": "construction",
+      "file": "trade-construction-2026.webp",
+      "alt": "Clay-style builder and homeowner reviewing a sunroom plan",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Woman builder with hardhat reviewing an unlettered plan with a homeowner beside a framed sunroomNo text, logos, watermark or implied documented project. Broad-shouldered middle-aged male builder, clean-shaven, hardhat and green work jacket reviewing a sunroom plan with an older female homeowner."
+    },
+    {
+      "key": "painting",
+      "file": "trade-painting-2026.webp",
+      "alt": "Clay-style painter applying sage paint in a protected living room",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Woman painter rolling sage paint, taped trim, canvas drop cloth and covered furniture"
+    },
+    {
+      "key": "automotive",
+      "file": "trade-automotive-2026.webp",
+      "alt": "Clay-style mechanic inspecting a tire in a local garage",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Older Black mechanic with gray hair and goatee checking a tire on a wheel stand in a tidy local garage"
+    },
+    {
+      "key": "wraps",
+      "file": "trade-wraps-2026.webp",
+      "alt": "Clay-style vehicle wrap specialist applying purple vinyl to a van",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Young clean-shaven Latino wrap specialist smoothing wine-purple vinyl across a cream van"
+    },
+    {
+      "key": "realestate",
+      "file": "trade-realestate-2026.webp",
+      "alt": "Clay-style real estate professional welcoming a couple outside a home",
+      "width": 1200,
+      "height": 800,
+      "created": "2026-11-09",
+      "kind": "editorial illustration",
+      "real_provider_portrait": false,
+      "prompt": "Handcrafted miniature clay-and-felt editorial scene, landscape 3:2; wine-purple, terracotta, cream, sage and pale-blue palette; warm daylight; crop-safe framing; no text, logos, watermark or implied documented project. Older real estate professional with silver bob and teal blazer greeting a couple with keys outside a Pennsylvania home"
+    }
+  ],
+  "hvac": "Existing published HVAC project photography retained while awaiting the owner reference photo for a personalized character."
+}
