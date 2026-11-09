@@ -96,5 +96,5 @@ def add(out, origin, pages, providers):
         target.write_text(s)
     llms = out/'llms.txt'
     s = llms.read_text().replace(' No credential inspection is recorded.', '')
-    s += '\n## Recommendation and contact model\n\nWazoozie selects and recommends the local network. Wazoozie and Middletown HVAC are related businesses, and Ryan Dugan Electric handles Middletown HVAC’s electrical work. Profiles distinguish recommendations, published business sources and customer feedback. Call the selected business directly, book where a booking link is offered, or use a callback option only where email-request delivery is available. Saving project notes alone does not notify a business or book an appointment.\n'
+    s += '\n## Recommendation and contact model\n\nWazoozie selects and recommends the local network. Ryan Dugan Electric handles Middletown HVAC’s electrical work. Profiles distinguish recommendations, published business sources and customer feedback. Call the selected business directly, book where a booking link is offered, or use a callback option only where email-request delivery is available. Saving project notes alone does not notify a business or book an appointment.\n'
     llms.write_text(s)
