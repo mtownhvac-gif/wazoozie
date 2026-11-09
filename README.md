@@ -288,3 +288,7 @@ their results; inclusion is decided by each engine. No paid submission service
 is required. Protocol reference: https://www.indexnow.org/documentation.html.
 Run `python3 -m unittest discover -s tests -p 'test_search_submission.py'` for the
 submission validation checks.
+
+## Complete source and exports
+
+See [SOURCE_MAP.md](SOURCE_MAP.md) for all production files, the complete original Sites source archive, build instructions and downloadable GitHub Actions artifacts.
