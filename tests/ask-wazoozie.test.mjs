@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {JSDOM} from 'jsdom';
-import {handleAskWazoozie,validateGuide,GUIDE_MODEL} from '../server/ask-wazoozie.mjs';
+import {handleAskWazoozie,validateGuide,GUIDE_MODEL,planningQuestion} from '../server/ask-wazoozie.mjs';
 import {INTENTS,BUSINESSES} from '../project-config.mjs';
 import {takeAskHandoff,ASK_HANDOFF_KEY} from '../assets/ask-handoff.mjs';
 const answer={summary:'Prepare a clear description of which rooms feel different.',questions:['Which rooms are affected?','What changed recently?'],prepare:['Gather visible equipment labels without opening equipment.']};
@@ -37,3 +37,5 @@ async function page(){const html=await readFile(new URL('../dist/ask/index.html'
 test('visitor controls sending, safe notes rendering, explicit local save, deletion and no hidden request submission',async()=>{
  const e=await page();try{assert.equal(e.calls(),0);e.$('ask-intent').value='painting';e.$('ask-question').value='A fictional painting project.';e.$('ask-consent').checked=true;await e.$('ask-form').onsubmit({preventDefault(){}});assert.equal(e.calls(),1);assert.equal(e.dom.window.document.querySelectorAll('#ask-result img').length,0);assert.match(e.$('ask-result').textContent,/<img/);assert.ok(e.$('ask-result').querySelector('a[href="/businesses/rolled-right-painting/"]'));assert.ok(!e.$('ask-result').querySelector('a[href="https://evil.invalid/"]'));const save=[...e.$('ask-result').querySelectorAll('button')].find(b=>b.textContent==='Save on this browser');save.click();assert.equal(JSON.parse(e.dom.window.localStorage.getItem('wazoozie.planning-notes.v1')).length,1);assert.equal(e.calls(),1);e.$('ask-delete-all').click();assert.equal(e.dom.window.localStorage.getItem('wazoozie.planning-notes.v1'),null);e.$('ask-question').dispatchEvent(new e.dom.window.Event('input'));assert.equal(e.$('ask-result').hidden,true);assert.equal(e.$('ask-consent').checked,false);}finally{e.dom.window.close();}
 });
+
+test('quote preparation omits money amounts but preserves equipment counts and project dimensions',()=>{const text=planningQuestion('Quote $4,000, 300 USD, or five thousand dollars; two coats on a 12 by 14 room.');assert.ok(!text.includes('$4,000'));assert.ok(!text.includes('300 USD'));assert.ok(!text.includes('five thousand'));assert.match(text,/two coats on a 12 by 14 room/);});

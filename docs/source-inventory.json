@@ -778,8 +778,8 @@
     },
     {
       "path": "docs/ASK_WAZOOZIE.md",
-      "bytes": 3435,
-      "sha256": "459b8bf3ac1d6e62f3874e4205957a6339ebe5ce51ec3e30b6adf869005f6b4e"
+      "bytes": 3547,
+      "sha256": "c213db813e1e1602b64819a4f4bffc6fad0b223722555440e1c0b8777d661bad"
     },
     {
       "path": "docs/LIVE_MODEL_CHECKS.md",
@@ -1013,8 +1013,8 @@
     },
     {
       "path": "server/ask-wazoozie.mjs",
-      "bytes": 6812,
-      "sha256": "6dd22a5c77fb103748db64f128929938be302d6310c406e12ea8f6fd02f12a30"
+      "bytes": 7358,
+      "sha256": "fcc838f388530242b782fbfee34215858ac3522408b6373ca5592b0596fa230d"
     },
     {
       "path": "server/brief-validation.mjs",
@@ -1123,8 +1123,8 @@
     },
     {
       "path": "tests/ask-wazoozie.test.mjs",
-      "bytes": 8539,
-      "sha256": "ee21eeecca33d5272ba5beb81e5fe587355a6a350f4a6f21ef9829543f794c72"
+      "bytes": 8941,
+      "sha256": "e6ed178ff0a0450fd4c85dd7296371883fdec105afe9e4602f96ee8c1294d4a1"
     },
     {
       "path": "tests/booking.test.mjs",
