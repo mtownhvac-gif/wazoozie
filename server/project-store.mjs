@@ -27,6 +27,21 @@ export class ProjectInbox extends DurableObject {
     ctx.storage.sql.exec("CREATE TABLE IF NOT EXISTS contractor_applications(id TEXT PRIMARY KEY, created_at INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'awaiting_review', business_name TEXT NOT NULL, contact_name TEXT NOT NULL, email TEXT NOT NULL, phone TEXT NOT NULL, website TEXT, town TEXT NOT NULL, state TEXT NOT NULL, coverage TEXT NOT NULL, registration TEXT, insurance TEXT NOT NULL, services TEXT NOT NULL, interest TEXT NOT NULL, notes TEXT, consent_version TEXT NOT NULL, fingerprint TEXT NOT NULL)");
   }
 
+  async consumeGuideQuota(client, now) {
+    if(!/^[a-f0-9]{64}$/.test(client)||!Number.isFinite(now))return {allowed:false,reason:'invalid'};
+    const day=new Date(now).toISOString().slice(0,10);
+    return this.ctx.storage.transactionSync(()=>{
+      this.ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS guide_limits(key TEXT PRIMARY KEY, day TEXT NOT NULL, count INTEGER NOT NULL, last_at INTEGER NOT NULL)');
+      this.ctx.storage.sql.exec('DELETE FROM guide_limits WHERE day<>?',day);
+      const global=this.ctx.storage.sql.exec("SELECT count FROM guide_limits WHERE key='global'").toArray()[0];
+      const local=this.ctx.storage.sql.exec('SELECT count,last_at FROM guide_limits WHERE key=?',client).toArray()[0];
+      if((global?.count||0)>=40||(local?.count||0)>=5)return {allowed:false,reason:'daily'};
+      if(local&&now-local.last_at<10000)return {allowed:false,reason:'cooldown'};
+      for(const key of ['global',client])this.ctx.storage.sql.exec('INSERT INTO guide_limits(key,day,count,last_at) VALUES(?,?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1,last_at=excluded.last_at',key,day,now);
+      return {allowed:true};
+    });
+  }
+
   async saveBrief(brief, fingerprint, client, now) {
     let status = 201;
     let referralAttributed=Boolean(brief.neighborCode);
