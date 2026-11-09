@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {initBooking} from '../assets/booking.js';
+import {initBooking} from '../dist/assets/booking.js';
 import {initActionIcons} from '../assets/action-icons.js';
 test('every listed business has a scheduling route and category filtering preserves direct contacts',()=>{
  const dom=new JSDOM(readFileSync('dist/book/index.html','utf8'),{url:'https://wazoozie.com/book/'}),d=dom.window.document;initBooking(d);

@@ -1,4 +1,5 @@
 import {INTENTS,BUSINESSES} from '../project-config.mjs';
+import {PROJECT_STAGES} from '../project-progress.mjs';
 export const ORIGIN='https://wazoozie.com',RPID='wazoozie.com',DAY=86400000;
 export const SESSION='__Host-wz_session',FLOW='__Host-wz_flow';
 export const random=()=>Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,'0')).join('');
@@ -9,7 +10,7 @@ export const json=(data,status=200,cookies=[])=>{const h=new Headers({'Cache-Con
 export function validateAccountData(body){
  if(!body||!Number.isSafeInteger(body.version)||body.version<0||!Array.isArray(body.projects)||body.projects.length>14||!Array.isArray(body.favorites)||body.favorites.length>6) return null;
  const seen=new Set(),projects=[];
- for(const item of body.projects){if(!item||!Object.hasOwn(INTENTS,item.intent)||!['planning','calling','done'].includes(item.stage)||seen.has(item.intent))return null;seen.add(item.intent);projects.push({intent:item.intent,stage:item.stage});}
+ for(const item of body.projects){if(!item||!Object.hasOwn(INTENTS,item.intent)||!Object.hasOwn(PROJECT_STAGES,item.stage)||seen.has(item.intent))return null;seen.add(item.intent);projects.push({intent:item.intent,stage:item.stage});}
  if(body.favorites.some(key=>typeof key!=='string'||!Object.hasOwn(BUSINESSES,key))||new Set(body.favorites).size!==body.favorites.length)return null;
  return {projects,favorites:[...body.favorites]};
 }

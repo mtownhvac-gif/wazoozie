@@ -1,4 +1,5 @@
 import {takeAskHandoff} from './ask-handoff.mjs';
+import {receiptTracking} from './receipt-tracking.js';
 import {entryContext} from './lead-context.mjs';
 import {neighborCode} from './neighbor-config.mjs';
 import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS, PROJECT_GROUPS} from './project-config.mjs';
@@ -209,6 +210,7 @@ form.addEventListener('submit', async event => {
     if (provider.booking) $('#receiptActions').append(businessLink('Book online with Middletown ↗', provider.booking, 'btn outline'));
     $('#projectQuickConnect').hidden = true;
     $('#receiptShare').replaceChildren(shareActions(data, true));
+    receiptTracking(document,$('#projectReceipt'),{intent:data.intent,delivery:deliveryStatus});
     $('#projectReceipt').focus();
   } catch (failure) { error(failure.message || 'We could not confirm the save. Your next step is to retry or call directly.'); }
   finally { saving = false; $('#projectSave').disabled = !captureReady; emailChoice(); }

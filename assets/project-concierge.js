@@ -1,7 +1,9 @@
 import {INTENTS, BUSINESSES, PROJECT_QUESTIONS} from './project-config.mjs';
+import {PROJECT_STAGES,PROJECT_NEXT} from './project-progress.mjs';
+import {contactOutcome} from './contact-outcome.js';
 
 export const HOME_LIST_KEY = 'wazoozie.home-list.v1';
-const STAGES = {planning:'Thinking it through', calling:'Ready to talk', done:'Finished'};
+const STAGES = PROJECT_STAGES;
 const SEARCH_WORDS = {
   comfort:'furnace ac air conditioning heat pump ductless mini split heating cooling',
   water:'hot water water heater tankless tank', electrical:'electrician outlet socket lighting circuit panel',
@@ -14,7 +16,7 @@ const SEARCH_WORDS = {
 const normalize = text => String(text).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 export function matchingProjects(query) {
   const tokens=normalize(query).split(' ').filter(Boolean);
-  return Object.keys(INTENTS).filter(key=>{const haystack=normalize(INTENTS[key].label+' '+INTENTS[key].description+' '+SEARCH_WORDS[key]);return tokens.every(token=>token.length<3?haystack.split(' ').includes(token):haystack.includes(token));});
+  return Object.keys(INTENTS).filter(key=>{const words=normalize(INTENTS[key].label+' '+INTENTS[key].description+' '+SEARCH_WORDS[key]).split(' ');return tokens.every(token=>words.some(word=>word===token||(token.length>=4&&word.startsWith(token))));});
 }
 export function sanitizeList(raw) {
   if (!raw || raw.version!==1 || !Array.isArray(raw.items)) return [];
@@ -23,6 +25,15 @@ export function sanitizeList(raw) {
     if (!item || typeof item.intent!=='string' || !Object.hasOwn(INTENTS,item.intent) || !Object.hasOwn(STAGES,item.stage) || seen.has(item.intent)) return false;
     seen.add(item.intent); return true;
   }).map(({intent,stage})=>({intent,stage})).slice(0,Object.keys(INTENTS).length);
+}
+
+// Explicit saving only; no contact data, reference number or request text is stored.
+export function keepProjectStep(storage,intent,stage){
+ if(!Object.hasOwn(INTENTS,intent)||!Object.hasOwn(STAGES,stage))throw Error('Choose a listed project and progress step.');
+ const items=sanitizeList(JSON.parse(storage.getItem(HOME_LIST_KEY)||'null'));
+ const existing=items.some(item=>item.intent===intent);
+ if(!existing)items.push({intent,stage});
+ storage.setItem(HOME_LIST_KEY,JSON.stringify({version:1,items}));return {existing};
 }
 
 export function initConcierge(doc, suppliedStorage) {
@@ -74,11 +85,12 @@ export function initConcierge(doc, suppliedStorage) {
       const label=el('label','Where are you with this?','home-project-stage-label');const select=el('select');select.setAttribute('aria-label','Progress for '+intent.label);
       for(const [key,value] of Object.entries(STAGES)){const option=el('option',value);option.value=key;select.append(option);}select.value=item.stage;
       select.addEventListener('change',()=>{item.stage=select.value;persist();render();doc.querySelector(`[data-project="${item.intent}"] select`)?.focus();});label.append(select);card.append(label);
+      card.append(el('p','Your update · '+PROJECT_NEXT[item.stage],'home-project-next'));
       const details=el('details');details.open=item.stage!=='done';details.append(el('summary','Before the first conversation'));
       const list=el('ul');for(const question of PROJECT_QUESTIONS[item.intent]||PROJECT_QUESTIONS.comfort)list.append(el('li',question));details.append(list);card.append(details);
       const contact=el('div',undefined,'home-project-contact');contact.append(el('strong',business.name),link('Meet the business ↗','/businesses/'+business.slug+'/'));
       const actions=el('div',undefined,'home-project-actions');actions.append(link('Plan this project →','/start/?intent='+item.intent,'btn primary'),link('Call '+business.phone,'tel:'+business.tel),link('Build a project sheet ↗','/project-kit/?intent='+item.intent));contact.append(actions,el('span',business.phone,'home-project-print-phone'));card.append(contact);
-      card.append(el('p','Confirm your address, scope, availability and any visit charge directly. Saving this project does not send an inquiry.','home-project-footnote'));board.append(card);
+      card.append(el('p','Progress is your own record, not a booking or delivery status supplied by the business. Saving a project does not send an inquiry.','home-project-footnote'));contactOutcome(doc,card,intent.provider);board.append(card);
     }
   }
   doc.querySelectorAll('[data-home-save]').forEach(button=>button.addEventListener('click',()=>save(button.dataset.homeSave)));

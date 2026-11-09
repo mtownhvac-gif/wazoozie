@@ -20,6 +20,9 @@ test('browser tools return public matches, validate input and clean up their reg
  const cars=await search.execute({query:'car'});assert.ok(cars.matches.length>0);assert.ok(cars.matches.every(x=>x.category==='auto'));
  const carp=await search.execute({query:'carp'});assert.equal(carp.matches.length,1);assert.match(carp.matches[0].name,/Cooke/);
  const plumber=await search.execute({query:'plumbing'});assert.equal(plumber.matches.length,1);assert.match(plumber.matches[0].name,/Liberator/);
+ const area=await search.execute({town:'Media',publishedCoverageOnly:true});assert.equal(area.matches.length,1);assert.equal(area.matches[0].coverageStatus,'published_match');assert.match(area.matches[0].name,/Middletown/);
+ const unknown=await search.execute({town:'Unrecorded town'});assert.ok(unknown.matches.length>0);assert.ok(unknown.matches.every(x=>x.coverageStatus==='unconfirmed'));
+ await assert.rejects(search.execute({town:'x'.repeat(81)}));await assert.rejects(search.execute({publishedCoverageOnly:'yes'}));
  await assert.rejects(search.execute({query:'x'.repeat(101)}));await assert.rejects(search.execute({category:'private'}));await assert.rejects(search.execute({accountId:'hidden'}));
  const resources=await tools[1].execute({});assert.match(resources.resources.ductless,/ductless-mini-splits/);assert.doesNotMatch(JSON.stringify(auto),/private user note/);
  w.dispatchEvent(new w.Event('pagehide'));assert.equal(signal.aborted,true);w.close();
