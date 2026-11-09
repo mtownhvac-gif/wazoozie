@@ -1,5 +1,5 @@
 import {BUSINESSES} from './project-config.mjs';
-export const CONTACT_ACTIONS = ['call_click', 'booking_click', 'email_draft_click', 'website_click', 'pricing_tool_click'];
+export const CONTACT_ACTIONS = ['call_click', 'booking_click', 'email_draft_click', 'website_click', 'pricing_tool_click', 'reported_reply', 'reported_no_reply', 'reported_not_a_fit', 'reported_appointment'];
 export const PAGE_CONTEXTS = ['home', 'planner', 'help', 'profile', 'service', 'guide', 'other'];
 
 export function validateActivity(input) {

@@ -1,5 +1,7 @@
 import {INTENTS,BUSINESSES} from './project-config.mjs';
 import {HOME_LIST_KEY,sanitizeList} from './project-concierge.js';
+import {PROJECT_STAGES,PROJECT_NEXT} from './project-progress.mjs';
+import {contactOutcome} from './contact-outcome.js';
 export async function initAccounts(doc,api,passkeys){
  const root=doc.querySelector('.account-page');if(!root)return;
  const win=doc.defaultView,$=id=>doc.getElementById(id),status=$('account-status');
@@ -25,8 +27,9 @@ export async function initAccounts(doc,api,passkeys){
   for(const item of account.projects){const intent=INTENTS[item.intent],business=BUSINESSES[intent.provider],card=make('article',undefined,'account-project');
    card.append(make('h3',intent.label),make('p',intent.description));
    const label=make('label','Your progress'),select=make('select');select.setAttribute('aria-label','Progress for '+intent.label);
-   for(const [key,text] of [['planning','Thinking it through'],['calling','Ready to talk'],['done','Finished']]){const opt=make('option',text);opt.value=key;select.append(opt);}select.value=item.stage;
-   select.addEventListener('change',()=>act(async()=>{await save(data=>{data.projects.find(p=>p.intent===item.intent).stage=select.value;});tell('Progress saved to your account.');}));label.append(select);card.append(label);
+   for(const [key,text] of Object.entries(PROJECT_STAGES)){const opt=make('option',text);opt.value=key;select.append(opt);}select.value=item.stage;
+   select.addEventListener('change',()=>act(async()=>{await save(data=>{data.projects.find(p=>p.intent===item.intent).stage=select.value;});tell('Your progress update is saved. No appointment or message was created.');}));label.append(select);card.append(label,make('p','Your update · '+PROJECT_NEXT[item.stage]));
+   contactOutcome(doc,card,intent.provider);
    const actions=make('div',undefined,'account-project-actions');actions.append(link('Build my project sheet ↗','/project-kit/?intent='+item.intent),link('Meet '+business.name,'/businesses/'+business.slug+'/'),link('Call '+business.phone,'tel:'+business.tel));
    const remove=make('button','Remove project');remove.type='button';remove.setAttribute('aria-label','Remove '+intent.label);remove.addEventListener('click',()=>act(async()=>{await save(data=>{data.projects=data.projects.filter(p=>p.intent!==item.intent);});tell('Project removed from your account.');}));actions.append(remove);card.append(actions);board.append(card);
   }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {initHomeMatch,PROJECTS} from '../assets/home-match.js';
-import {initBooking} from '../assets/booking.js';
+import {initBooking} from '../dist/assets/booking.js';
 const documentFor=path=>new JSDOM(readFileSync('dist/'+path+'/index.html','utf8'),{url:'https://wazoozie.com/'+path+'/'});
 test('game accepts retries, scores once per project, finishes six rounds and shares only on request',async()=>{
  const dom=documentFor('who-would-you-call'),d=dom.window.document;let shared=[];initHomeMatch(d,{random:()=>0.5,clipboard:{writeText:async text=>shared.push(text)}});d.getElementById('match-play').click();
