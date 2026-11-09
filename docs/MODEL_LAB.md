@@ -19,3 +19,5 @@ Reference: https://developers.cloudflare.com/ai-gateway/usage/rest-api/ (authent
 ## Free-allowance baseline
 
 `@cf/meta/llama-3.3-70b-instruct-fp8-fast` is an optional baseline. It uses the direct Workers AI model endpoint and `max_tokens` rather than the third-party chat-completions endpoint. Eligible models share 10,000 free Neurons daily; account plan/limits apply beyond that. It is not an unlimited free model, and a token is still required. No paid gateway routing header is attached to this path. See https://developers.cloudflare.com/workers-ai/platform/pricing/ and https://developers.cloudflare.com/workers-ai/get-started/rest-api/.
+
+The hosted Llama baseline is the only model selected by default. Paid third-party options require deliberate selection and the run confirmation.

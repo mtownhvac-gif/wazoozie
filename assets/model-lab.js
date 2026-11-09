@@ -15,7 +15,7 @@ const node=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.classNa
 function status(text){$('lab-status').textContent=text;}
 function promptChanged(){ $('prompt-count').textContent=`${$('lab-prompt').value.length.toLocaleString()} / 3,000 characters`;document.querySelectorAll('.scenario').forEach((b,i)=>b.setAttribute('aria-pressed',String($('lab-prompt').value===scenarios[i][1]))); }
 scenarios.forEach(([label,text])=>{const b=node('button','scenario',label);b.type='button';b.setAttribute('aria-pressed','false');b.onclick=()=>{$('lab-prompt').value=text;promptChanged();};$('scenario-buttons').append(b);});
-Object.entries(LAB_MODELS).forEach(([id,title],i)=>{const label=node('label','pick');const input=node('input');input.type='checkbox';input.value=id;input.checked=i<4&&i!==2;const span=node('span','',title);span.append(node('small','',id),node('small','',id.startsWith('@cf/')?'Eligible for shared daily free allowance':'Paid third-party inference'));label.append(input,span);$('model-picks').append(label);});
+Object.entries(LAB_MODELS).forEach(([id,title],i)=>{const label=node('label','pick');const input=node('input');input.type='checkbox';input.value=id;input.checked=id.startsWith('@cf/');const span=node('span','',title);span.append(node('small','',id),node('small','',id.startsWith('@cf/')?'Eligible for shared daily free allowance':'Paid third-party inference'));label.append(input,span);$('model-picks').append(label);});
 $('lab-prompt').value=scenarios[0][1];promptChanged();$('lab-context').textContent=LAB_SYSTEM;
 $('lab-prompt').oninput=promptChanged;
 $('show-context').onclick=()=>{const open=$('lab-context').hidden;$('lab-context').hidden=!open;$('show-context').setAttribute('aria-expanded',String(open));};

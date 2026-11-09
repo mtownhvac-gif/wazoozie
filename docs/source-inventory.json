@@ -473,8 +473,8 @@
     },
     {
       "path": "assets/model-lab.js",
-      "bytes": 11941,
-      "sha256": "d72d77d350142a21ca959811c14c8a512c3d04a9eb9f471286678ffd05615892"
+      "bytes": 11952,
+      "sha256": "0721eb0b9eda123fd0b0511eabfa482d193ae2aed8e1498d57ea371a4056b9f8"
     },
     {
       "path": "assets/neighborhood-feed.css",
@@ -758,8 +758,8 @@
     },
     {
       "path": "docs/MODEL_LAB.md",
-      "bytes": 3342,
-      "sha256": "a158b1c5f0667760d5b0b68f58e2fdd776a763bab1f5f17b2910b0237ae3467e"
+      "bytes": 3488,
+      "sha256": "f084d4a67a34b56543de862b8c57c4154cbf2871326da3e4a66361704a9f7257"
     },
     {
       "path": "editorial.py",
@@ -1043,8 +1043,8 @@
     },
     {
       "path": "src/model-lab/index.html",
-      "bytes": 5722,
-      "sha256": "09cd7e9d48b2f73b8e6b07d8aa47bd6d342caecf6e96685c4ce6a139ed7318a4"
+      "bytes": 5751,
+      "sha256": "ad0621e3e6434c6c53610a6107c1abc83bdfdbaa025a94ed89f756b7ed6820eb"
     },
     {
       "path": "templates/contractors.html",
@@ -1154,7 +1154,7 @@
     {
       "path": "tests/model-lab.test.mjs",
       "bytes": 8267,
-      "sha256": "8eb6d03797cd3bd0221f2523b2b4db72024227d4fce2f64dca100dda5612decf"
+      "sha256": "9a2acd993daf390ccc66cf7838da6ffe1aee51abf49d9fb67de14fb2f52e7fa5"
     },
     {
       "path": "tests/neighborhood-feed.test.mjs",
