@@ -33,7 +33,7 @@ export async function handleModelLab(request, env={}, transport=fetch) {
   const payload={messages:[{role:'system',content:LAB_SYSTEM},{role:'user',content:body.prompt.trim()}],stream:false};
   if(firstParty)payload.max_tokens=1024;else {payload.model=body.model;payload.max_completion_tokens=1024;}
   const upstream=await transport(endpoint,{
-   method:'POST',redirect:'error',signal:AbortSignal.timeout(60000),headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json','cf-aig-skip-cache':'true','cf-aig-collect-log':'false','cf-aig-max-attempts':'1'},
+   method:'POST',redirect:'manual',signal:AbortSignal.timeout(60000),headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json','cf-aig-skip-cache':'true','cf-aig-collect-log':'false','cf-aig-max-attempts':'1'},
    body:JSON.stringify(payload)
   });
   if(!upstream.ok){await upstream.body?.cancel();const status=upstream.status;return reply({error:status===401||status===403?'Cloudflare rejected this token. Check the account and Workers AI Read permission.':status===402?'Cloudflare requires available credits. No payment was made by this page.':status===429?'Cloudflare rate limit or quota reached. Wait before trying again.':status===400||status===404?'This model or request format is unavailable for this account. Check its Cloudflare model page.':'The model service could not complete this test. Try one model again.',upstreamStatus:status,elapsedMs:Date.now()-started},502);}
@@ -41,5 +41,5 @@ export async function handleModelLab(request, env={}, transport=fetch) {
   const text=typeof content==='string'?content:Array.isArray(content)?content.filter(p=>p.type==='text'&&typeof p.text==='string').map(p=>p.text).join('\n'):'';
   if(!text.trim())return reply({error:'The model returned no displayable answer. No answer or score has been invented.',elapsedMs:Date.now()-started},502);
   return reply({requestedModel:body.model,returnedModel:typeof result.model==='string'?result.model.slice(0,150):null,text:text.replaceAll(token,'[credential removed]').slice(0,24000),elapsedMs:Date.now()-started,finishReason:result.choices?.[0]?.finish_reason??null,usage:{input:finite(result.usage?.prompt_tokens),output:finite(result.usage?.completion_tokens)},cost:null});
- }catch{return reply({error:'The request stopped or timed out after up to 60 seconds. The provider may still bill work already started.',elapsedMs:Date.now()-started},504);}
+ }catch(error){const timedOut=['TimeoutError','AbortError'].includes(error?.name);return reply({error:timedOut?'The request stopped or timed out after up to 60 seconds. The provider may still bill work already started.':'The model connection failed. No answer was received; check the connection before trying again.',elapsedMs:Date.now()-started},timedOut?504:502);}
 }

@@ -993,8 +993,8 @@
     },
     {
       "path": "server/model-lab.mjs",
-      "bytes": 5936,
-      "sha256": "385ac3aef92fefab4fc49688db8f6d17c0dae2ec4565d6a50874fee87c327d08"
+      "bytes": 6130,
+      "sha256": "4bdb33a358dc39f5da158f81375d2465953e9421080c9b6c5b74b1150d48b9e0"
     },
     {
       "path": "server/neighbor-validation.mjs",
@@ -1153,8 +1153,8 @@
     },
     {
       "path": "tests/model-lab.test.mjs",
-      "bytes": 8267,
-      "sha256": "9a2acd993daf390ccc66cf7838da6ffe1aee51abf49d9fb67de14fb2f52e7fa5"
+      "bytes": 9869,
+      "sha256": "d966893edae023691820c3438d668e9fd9d8505e5536706db73e6efb5050d946"
     },
     {
       "path": "tests/neighborhood-feed.test.mjs",
