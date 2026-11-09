@@ -90,14 +90,14 @@
     },
     {
       "key": "hvac",
-      "file": "trade-hvac-clay-working-2026.webp",
+      "file": "trade-hvac-clay-working-v2-2026.webp",
       "alt": "Claymation HVAC technician with a full right-arm tattoo sleeve working on a heat pump service panel",
       "width": 1200,
       "height": 800,
       "created": "2026-11-09",
       "kind": "editorial illustration",
       "real_provider_portrait": false,
-      "prompt": "Handcrafted stop-motion claymation technician loosely inspired by the owner rather than an exact portrait. Rounded sculpted face, bead eyes, carved reddish clay beard, matte plasticine skin with thumbprint texture. Black cap and fitted short-sleeve black shirt, athletic build, full colorful RIGHT-arm sleeve to wrist and LEFT upper-arm half sleeve with bare forearm. Keep tattoos as painted miniature markings. Kneeling and using a nut driver on an open heat-pump service panel, tool bag and screw tray nearby. Preserve Pennsylvania stone cottage, burgundy roof, garden, warm daylight and 3:2 framing. Fully clothed. No sunglasses, logos, text, extra people or implied documented project."
+      "prompt": "Edit ONLY the head/face of the technician in this existing image, preserving the scene and all other details. Give him a slightly narrower, more naturally proportioned clay puppet head, a shorter more neatly trimmed reddish clay beard close to the jaw rather than the current big bushy beard, a less bulbous smaller rounded nose, less protruding ears, softly angular cheeks, and a subtle friendly focused closed-mouth expression. Keep the unmistakable handcrafted stop-motion claymation character style: matte sculpted plasticine skin, simple expressive dark eyes, gentle hand-modeled imperfections, carved clay beard texture. Not photorealistic and not an exact portrait of a real man. Keep the black cap, short reddish hair, and small white ear plug. Everything else MUST remain: full colorful RIGHT-arm tattoo sleeve continuously to wrist on viewer-left arm, LEFT upper-arm half sleeve and bare forearm, fitted black short-sleeve shirt ON, athletic build, tan trousers and boots, kneeling actively using nut driver on the unit's opened side service panel, looking at his work, tool bag, screw tray, heat pump, stone cottage, burgundy roof, garden, warm daylight, camera angle and 3:2 composition. Do not change or remove tattoos. No text/logos/watermarks or extra people."
     }
   ]
 }
