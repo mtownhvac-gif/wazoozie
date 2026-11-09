@@ -320,3 +320,6 @@ if PUBLIC:
 from search_submission import prepare as prepare_search_submission
 prepare_search_submission(OUT, PUBLIC)
 print(f'Built {len(PAGES)} pages. '+('Production origin: '+PUBLIC if PUBLIC else 'Private preview: search indexing disabled.'))
+# Keep the experimental workbench out of public navigation, sitemap and discovery exports.
+from model_lab import add as add_model_lab
+add_model_lab(OUT)

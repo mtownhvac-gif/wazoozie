@@ -43,8 +43,8 @@
     },
     {
       "path": "SOURCE_MAP.md",
-      "bytes": 3096,
-      "sha256": "35f2f63ab26046c28162c927915142666214bd40ab5d684812ccfa4bdb22a66b"
+      "bytes": 3260,
+      "sha256": "a54bfdc31cc954c08af4631907fc596c69c14426e4ab5bb0782997ec153076d6"
     },
     {
       "path": "accounts.py",
@@ -467,6 +467,16 @@
       "sha256": "fc94dbf0bdc2dbba7fd5d3e9c4775f76734f4b08be41856ef2d153f2668de6a3"
     },
     {
+      "path": "assets/model-lab.css",
+      "bytes": 6881,
+      "sha256": "405c6f4d6559931b5bd04b47f31015bbcfa24977de7f00b9d9f670fb630b399f"
+    },
+    {
+      "path": "assets/model-lab.js",
+      "bytes": 11390,
+      "sha256": "4dd121d7f93dce5b88fb45d23dd980fc39ac63b35bcb1b8b621e1f231efacfab"
+    },
+    {
       "path": "assets/neighborhood-feed.css",
       "bytes": 3568,
       "sha256": "b76f60050a238fc7537daa63223ae7a9f056486f25e98d4cbdf402e659db1928"
@@ -683,8 +693,8 @@
     },
     {
       "path": "build.py",
-      "bytes": 75733,
-      "sha256": "2c60af21e1d588030930f343ca753b0377fe21179449ba267e4029f8c27aa81c"
+      "bytes": 75886,
+      "sha256": "6ec8e9d27b9629d22cbe175c31e60a28a3e577a98fc8db6a2c5304166909cd4e"
     },
     {
       "path": "buyer_edge.py",
@@ -698,8 +708,8 @@
     },
     {
       "path": "check_contact.py",
-      "bytes": 2840,
-      "sha256": "cfa2a4f272200b7e73d024b3c49a1c03e39069fc1b6aa148689ad8f8e5aa21d5"
+      "bytes": 2986,
+      "sha256": "d1d53b64cb3deb9a7de4df20505b89f1cad592ca6243ece20a6deed47f598744"
     },
     {
       "path": "check_site.py",
@@ -745,6 +755,11 @@
       "path": "discovery.py",
       "bytes": 11639,
       "sha256": "6e5df4fa457080292301e5d3a541d9d7ffea02d209e7bf9ea1ea8c3e34a0208a"
+    },
+    {
+      "path": "docs/MODEL_LAB.md",
+      "bytes": 2778,
+      "sha256": "df07a28b0e5ee9ca19360096c4984466d74e2ba553c08079b89e15af13df9f49"
     },
     {
       "path": "editorial.py",
@@ -845,6 +860,11 @@
       "path": "magazine.py",
       "bytes": 15533,
       "sha256": "35cbe307cd11eb07ef171b8cadd58bf605caa12a48d066f1a9471be9371772d9"
+    },
+    {
+      "path": "model_lab.py",
+      "bytes": 850,
+      "sha256": "3b836a144372696905c9a133a8728d7c49ed843695f56ad8a589a1215dd7ebb6"
     },
     {
       "path": "neighbor-config.mjs",
@@ -972,6 +992,11 @@
       "sha256": "156eeb6d147499631966ac411b349e60cba6c03bec2ac206561cb01b551b2744"
     },
     {
+      "path": "server/model-lab.mjs",
+      "bytes": 5634,
+      "sha256": "e257612b061b16ee7cc4a6786c55c7c5593e54026d5fd5f6a7267fea82b76781"
+    },
+    {
       "path": "server/neighbor-validation.mjs",
       "bytes": 1568,
       "sha256": "b2b9f1b2473d53ce27e3380e8e2dfb0367609ba86e66c468ae430e428b9afe7d"
@@ -1015,6 +1040,11 @@
       "path": "src/home.html",
       "bytes": 76686,
       "sha256": "f485b29bb3b2582e66a2ba5b03236902af0f3435137dd8d5f06ee4d199fdcba4"
+    },
+    {
+      "path": "src/model-lab/index.html",
+      "bytes": 5290,
+      "sha256": "9c636de23a385c745df85af634880e8ea90da28dbb0f749a0485612b60803108"
     },
     {
       "path": "templates/contractors.html",
@@ -1122,6 +1152,11 @@
       "sha256": "d51fcfee10b74e10a2c5210bdb3dcd5baba803ca39c74722d5e8644f1f0803cb"
     },
     {
+      "path": "tests/model-lab.test.mjs",
+      "bytes": 7465,
+      "sha256": "0ad48d1579641dd171c41ec73ea660292d75bc050064673c06ea4c512ad0fd05"
+    },
+    {
       "path": "tests/neighborhood-feed.test.mjs",
       "bytes": 1514,
       "sha256": "6710275b9e13414396b6269faf213a706dcb575d286634e60ad211d6be4fce23"
@@ -1208,8 +1243,8 @@
     },
     {
       "path": "worker.mjs",
-      "bytes": 3073,
-      "sha256": "9a4782ea6c496a42701d052daf841c76ec83334e72937367a1401d578fd2d7b1"
+      "bytes": 3690,
+      "sha256": "6f4988cf0c88ad7a367c0ad32878125fce121ddc6c3fb46f4f7d84e854e23fd1"
     },
     {
       "path": "wrangler.jsonc",
