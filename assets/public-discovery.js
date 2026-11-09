@@ -17,8 +17,8 @@
     const query=input.query??'',category=input.category??'all';
     if(typeof query!=='string'||query.length>100||!categories.includes(category))throw Error('Use a short search query and a listed category.');
     const words=normalize(query).split(' ').filter(Boolean);
-    const aliases={home:'home house contractor repairs heating cooling hvac plumbing electrical painting carpentry',auto:'auto automotive car mechanic repair tires',realestate:'real estate agent property buying selling home'};
-    const matches=catalog.businesses.filter(item=>(category==='all'||item.category===category)&&words.every(word=>normalize(item.name+' '+item.services+' '+aliases[item.category]).includes(word)));
+    const aliases={home:'home house contractor',auto:'auto automotive car vehicle',realestate:'real estate agent property buying selling home'};
+    const matches=catalog.businesses.filter(item=>{const terms=normalize(item.name+' '+item.services+' '+aliases[item.category]).split(' ');return (category==='all'||item.category===category)&&words.every(word=>terms.some(term=>term===word||(word.length>=4&&term.startsWith(word))));});
     return {matches,note:'Read each profile for its recommendation basis and public sources. Confirm coverage, availability and terms directly.'};
    },annotations:{readOnlyHint:true}},{signal:current.signal});
    await api.registerTool({name:'get_project_planning_resources',description:'Find public Wazoozie checklists, project-preparation tools and home-planning resources.',inputSchema:{type:'object',properties:{},additionalProperties:false},execute:async(input={})=>{

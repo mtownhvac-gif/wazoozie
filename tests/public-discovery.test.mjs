@@ -17,6 +17,9 @@ test('browser tools return public matches, validate input and clean up their reg
  const search=tools.find(t=>t.name==='search_local_businesses');
  const auto=await search.execute({query:'C&J',category:'auto'});assert.equal(auto.matches.length,1);assert.equal(auto.matches[0].phone,'610-485-3103');
  const agent=await search.execute({query:'Caitlin',category:'realestate'});assert.equal(agent.matches[0].name,'Caitlin Kerezsi');
+ const cars=await search.execute({query:'car'});assert.ok(cars.matches.length>0);assert.ok(cars.matches.every(x=>x.category==='auto'));
+ const carp=await search.execute({query:'carp'});assert.equal(carp.matches.length,1);assert.match(carp.matches[0].name,/Cooke/);
+ const plumber=await search.execute({query:'plumbing'});assert.equal(plumber.matches.length,1);assert.match(plumber.matches[0].name,/Liberator/);
  await assert.rejects(search.execute({query:'x'.repeat(101)}));await assert.rejects(search.execute({category:'private'}));await assert.rejects(search.execute({accountId:'hidden'}));
  const resources=await tools[1].execute({});assert.match(resources.resources.ductless,/ductless-mini-splits/);assert.doesNotMatch(JSON.stringify(auto),/private user note/);
  w.dispatchEvent(new w.Event('pagehide'));assert.equal(signal.aborted,true);w.close();
