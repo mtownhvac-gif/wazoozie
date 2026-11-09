@@ -91,13 +91,13 @@
     {
       "key": "hvac",
       "file": "trade-hvac-bryan-2026.webp",
-      "alt": "Clay-style HVAC technician with sunglasses and arm tattoos beside an outdoor heat pump",
+      "alt": "Clay-style HVAC technician in a black work shirt and cap with a full right-arm tattoo sleeve beside a heat pump",
       "width": 1200,
       "height": 800,
       "created": "2026-11-09",
       "kind": "editorial illustration",
       "real_provider_portrait": false,
-      "prompt": "Owner-approved likeness based on the owner-provided reference. Athletic technician with short spiky brown hair, reddish beard, aviator sunglasses, fitted navy short-sleeve shirt, tan work trousers, full left tattoo sleeve and half right sleeve, kneeling beside a heat pump at a Pennsylvania stone home. Handcrafted clay-and-felt illustration, warm daylight, wine-purple roof, sage garden. Fully clothed. No logos, text, other people, or implied documented project."
+      "prompt": "Owner-approved likeness corrected from the owner-provided work photo: reddish beard, black cap and fitted short-sleeve black T-shirt, athletic build, full colorful RIGHT-arm sleeve from shirt to wrist, LEFT upper-arm half sleeve with bare forearm. No sunglasses. Preserve the handcrafted clay-and-felt outdoor heat-pump scene, Pennsylvania stone cottage, warm daylight and 3:2 framing. Fully clothed. No logos, text, other people or implied documented project."
     }
   ]
 }
