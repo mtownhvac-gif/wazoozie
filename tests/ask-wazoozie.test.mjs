@@ -39,3 +39,5 @@ test('visitor controls sending, safe notes rendering, explicit local save, delet
 });
 
 test('quote preparation omits money amounts but preserves equipment counts and project dimensions',()=>{const text=planningQuestion('Quote $4,000, 300 USD, or five thousand dollars; two coats on a 12 by 14 room.');assert.ok(!text.includes('$4,000'));assert.ok(!text.includes('300 USD'));assert.ok(!text.includes('five thousand'));assert.match(text,/two coats on a 12 by 14 room/);});
+
+test('planning summaries keep complete sentences and discard any unfinished model tail',()=>{const result=validateGuide({...answer,summary:'Clarify the written scope. Ask about exclusions. A truncated output tail責'});assert.equal(result.summary,'Clarify the written scope. Ask about exclusions.');assert.equal(validateGuide({...answer,summary:'An unfinished summary'}),null);});
