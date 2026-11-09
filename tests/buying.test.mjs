@@ -20,7 +20,7 @@ test('general cost ranges keep sources, scopes and estimator referrals distinct'
  assert.match(doc.querySelector('#vehicle-wraps').textContent,/\$2,000–\$10,000/);
  assert.doesNotMatch(doc.querySelector('main').textContent,/\$129|\$6,300|Starting at \$3,500/);
  assert.ok(doc.querySelector('.range-next-step a[href^="https://www.mtownhvac.com/install-estimate/"]'));
- assert.match(doc.querySelector('#method').textContent,/owner of Middletown HVAC/);
+ assert.match(doc.querySelector('#method').textContent,/Middletown HVAC’s own planning tools/);
  assert.match(doc.querySelector('#real-estate').textContent,/negotiable/);dom.window.close();
 });
 test('2026 owner prices and local examples do not masquerade as independent national estimates',()=>{
