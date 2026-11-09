@@ -138,6 +138,8 @@ test('whole-home categories start neutral and route doors and painting with rele
   const env=await page('start');
   try{
     await import(`../dist/assets/project.js?balanced=${Date.now()}`);
+    // Let the startup capability request settle before tearing down the DOM.
+    await new Promise(resolve=>setImmediate(resolve));
     assert.equal(env.document.querySelectorAll('#projectChoices input').length,10);
     assert.equal(env.document.querySelectorAll('#projectChoices input:checked').length,0);
     assert.equal(env.document.querySelector('#projectNext1').disabled,true);

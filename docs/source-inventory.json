@@ -1098,8 +1098,8 @@
     },
     {
       "path": "tests/homeowner.test.mjs",
-      "bytes": 16867,
-      "sha256": "ce80e2b4a160df3859d80678603b31c9a69bb081f670675e80bca3de42813b69"
+      "bytes": 17000,
+      "sha256": "dd8abb4b34b2790b217a024f11ed5104cb519232ec4be9483202acc422c98e19"
     },
     {
       "path": "tests/intake.test.mjs",
