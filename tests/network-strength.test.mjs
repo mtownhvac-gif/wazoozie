@@ -16,7 +16,7 @@ test('every home-service recommendation identifies its recipient and keeps usefu
   assert.equal(d.querySelector('.profile-next-step').querySelectorAll('li').length,3);
   assert.ok(!/documents (?:are not|have not been) recorded/i.test(d.querySelector('main').textContent));
   if(key==='ryan')assert.match(d.querySelector('.network-reason').textContent,/Middletown HVAC uses Ryan Dugan Electric/);
-  if(key==='middletown')assert.match(d.querySelector('.network-reason').textContent,/owner of Middletown HVAC/);
+  if(key==='middletown')assert.match(d.querySelector('.network-reason').textContent,/go directly to Middletown HVAC/);
   d.defaultView.close();
  }
 });

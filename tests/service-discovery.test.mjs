@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 const doc=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8'),{url:'https://wazoozie.com'+path}).window.document;
 const schema=d=>[...d.querySelectorAll('script[type="application/ld+json"]')].flatMap(s=>{const x=JSON.parse(s.textContent);return x['@graph']||[x];});
 
-test('homepage offers equal service choices before tools and keeps the operator relationship clear',()=>{
+test('homepage offers equal service choices before tools without an ownership banner',()=>{
  const d=doc('/'),main=d.querySelector('main'),direct=d.querySelector('.service-direct');
  assert.equal(main.children[1],direct);
  assert.equal(d.querySelector('.grand-primary').getAttribute('href'),'/home-services/');
@@ -13,7 +13,7 @@ test('homepage offers equal service choices before tools and keeps the operator 
  assert.equal(direct.querySelector('a[href^="tel:"]'),null);
  assert.equal(direct.querySelector('a[href^="https://book.housecallpro.com/"]'),null);
  assert.ok(direct.querySelector('a[href="/book/"]'));
- assert.match(direct.textContent,/operated by Bryan Cordy, owner of Middletown HVAC/);
+ assert.doesNotMatch(d.querySelector('footer').textContent,/Bryan Cordy|owner of Middletown HVAC|Business relationships/);
  assert.match(direct.textContent,/No Wazoozie account needed/);
  const routes=[['handyman','cooke-carpentry-construction'],['electrical','ryan-dugan-electric'],['heating-cooling','middletown-hvac'],['painting','rolled-right-painting'],['plumbing','liberator-service-company'],['construction-remodeling','hart-builders']];
  for(const [i,[service,slug]] of routes.entries()){
@@ -75,7 +75,7 @@ test('Middletown profile and contact page support requests without changing othe
   const d=doc('/businesses/'+slug+'/');assert.ok(d.querySelector('main a[href="tel:'+tel+'"]'),slug);assert.equal(d.querySelector('.service-attribution'),null);d.defaultView.close();
  }
  const md=readFileSync(new URL('../dist/agent-content/index.md',import.meta.url),'utf8');
- assert.match(md,/What needs a hand/);assert.match(md,/owner of Middletown HVAC/);
+ assert.match(md,/What needs a hand/);assert.match(md,/Wazoozie and Middletown HVAC are related businesses/);
 });
 
 test('standards distinguish consented Middletown delivery from saved briefs and email drafts',()=>{

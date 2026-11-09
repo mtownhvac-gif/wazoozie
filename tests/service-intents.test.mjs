@@ -21,7 +21,7 @@ test('four distinct intent pages are crawlable, useful, navigable and retain mat
   for(const tag of ['description','twitter:description'])assert.ok(d.querySelector('meta[name="'+tag+'"]').content.length>60);
   const crumb=schema(d).find(x=>x['@type']==='BreadcrumbList');
   assert.equal(crumb.itemListElement.length,3);assert.equal(crumb.itemListElement[2].item,'https://wazoozie.com'+path);
-  assert.match(d.querySelector('footer').textContent,/operated by Bryan Cordy, owner of Middletown HVAC/);
+  assert.doesNotMatch(d.querySelector('footer').textContent,/Bryan Cordy|owner of Middletown HVAC|Business relationships/);
   assert.doesNotMatch(main.textContent,/\b(?:since 19\d\d|since 20\d\d|number one|guaranteed results|instant booking|24\/7 service)\b/i);
   const md=readFileSync(new URL('../dist/agent-content'+path+'index.md',import.meta.url),'utf8');
   assert.match(md,/About the business relationship/);assert.ok(md.includes(d.querySelector('h1').textContent.replace(/\s+/g,' ').trim()) || md.includes('Start with') || md.includes('good questions'));
@@ -37,7 +37,7 @@ test('each new page keeps direct contacts and booking with the right business',(
   const phones=[...new Set([...main.querySelectorAll('a[href^="tel:"]')].map(a=>a.getAttribute('href').slice(4)))];
   assert.deepEqual(phones,expected[i]);
   const book=main.querySelector('a[href^="https://book.housecallpro.com/"]');
-  if(i===0){assert.ok(book);const url=new URL(book.href);assert.equal(url.searchParams.get('utm_content'),'services-furnace-repair');assert.ok(main.querySelector('a[href="/start/?intent=comfort"]'));assert.match(main.textContent,/This page promotes his HVAC business/);}
+  if(i===0){assert.ok(book);const url=new URL(book.href);assert.equal(url.searchParams.get('utm_content'),'services-furnace-repair');assert.ok(main.querySelector('a[href="/start/?intent=comfort"]'));assert.match(main.textContent,/This page promotes its HVAC services/);}
   else{assert.equal(book,null);assert.equal(main.querySelector('a[href^="/start/"]'),null);}
   if(i===2){assert.match(main.textContent,/current official website has not been confirmed/i);assert.match(main.textContent,/not an independent credential inspection/);}
   dom.window.close();
