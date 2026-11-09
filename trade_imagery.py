@@ -6,6 +6,7 @@ from html import escape
 from pathlib import Path
 
 ROUTES = {
+    '/services/heating-cooling/': 'hvac',
     '/services/plumbing/': 'plumbing',
     '/services/electrical/': 'electrical',
     '/services/handyman/': 'carpentry',
@@ -32,8 +33,9 @@ def add(out):
         target = out / route.strip('/') / 'index.html'
         html = target.read_text()
         item = images[key]
+        caption = 'Editorial illustration · not a project photo.' if key == 'hvac' else 'Editorial illustration · fictional specialist.'
         if route.startswith('/services/'):
-            html, count = re.subn(r'(<div class="page-art[^"]*">).*?</div>', lambda m: m[1] + '<figure class="clay-editorial trade-category-cover">' + image(item) + '<figcaption>Editorial illustration · fictional specialist.</figcaption></figure></div>', html, count=1, flags=re.S)
+            html, count = re.subn(r'(<div class="page-art[^"]*">).*?</div>', lambda m: m[1] + '<figure class="clay-editorial trade-category-cover">' + image(item) + '<figcaption>' + caption + '</figcaption></figure></div>', html, count=1, flags=re.S)
         else:
             html, count = re.subn(r'<figure class="clay-editorial"><img[^>]*>(?:<figcaption>.*?</figcaption>)?</figure>', lambda _: '<figure class="clay-editorial trade-category-cover">' + image(item) + '<figcaption>Editorial illustration · fictional specialist.</figcaption></figure>', html, count=1, flags=re.S)
         assert count == 1, 'Missing trade hero: ' + route
