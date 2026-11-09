@@ -1,6 +1,7 @@
 import {CATALOG} from './ask-catalog.mjs';
 import {ASK_HANDOFF_KEY} from './ask-handoff.mjs';
 import {quickPlan,projectExample,planText as formatPlan,requestNotes,validPlanExtras,localSafety} from './ask-plan-tools.mjs';
+import {planningResources,describeProject} from './planning-resources.mjs';
 const $=id=>document.getElementById(id);
 const {INTENTS,BUSINESSES}=CATALOG;
 const STORE='wazoozie.planning-notes.v1';
@@ -23,7 +24,7 @@ function count(){$('ask-count').textContent=`${$('ask-question').value.length.to
 function clearAnswer(){answer=null;responses=[];prepared=[];activeSavedId=null;saveButton=null;$('ask-result').hidden=true;$('ask-result').replaceChildren();$('ask-empty').hidden=false;}
 function invalidate(){clearAnswer();$('ask-consent').checked=false;status('Review your question, then choose planning help or a quick checklist.');}
 $('ask-question').oninput=()=>{count();invalidate();};
-$('ask-intent').onchange=invalidate;
+$('ask-intent').onchange=()=>{invalidate();renderDescription();};
 document.querySelectorAll('[data-ask-mode]').forEach(b=>b.onclick=()=>{if(!busy){setMode(b.dataset.askMode);invalidate();}});
 $('ask-example').onclick=()=>{
  if(busy)return;
@@ -31,6 +32,18 @@ $('ask-example').onclick=()=>{
  if(!text){status('Choose the kind of work first so the example fits your project.');$('ask-intent').focus();return;}
  $('ask-question').value=text;count();invalidate();
 };
+const description=make('details',undefined,'ask-description');description.append(make('summary','Help me describe the project'));
+const descriptionFields=make('div');description.append(descriptionFields);$('ask-question-label').before(description);
+function renderDescription(){
+ descriptionFields.replaceChildren();const selected=$('ask-intent').value;
+ if(!Object.hasOwn(INTENTS,selected)){descriptionFields.append(make('p','Choose the kind of work first. These prompts stay in your browser.','ask-small'));return;}
+ descriptionFields.append(make('p','Add only what you can safely observe. Skip anything you do not know. No names, street addresses, contact details or private records.','ask-small'));
+ const questions=CATALOG.PROJECT_QUESTIONS[selected]||[],inputs=[];
+ questions.slice(0,3).forEach(q=>{const label=make('label',q),input=make('input');input.type='text';input.maxLength=160;input.setAttribute('aria-label',q);label.append(input);descriptionFields.append(label);inputs.push(input);});
+ const timingLabel=make('label','When would you like help?'),timing=make('select');timing.setAttribute('aria-label','Preferred timing');for(const value of ['', 'As soon as possible','This week','Planning ahead']){const option=make('option',value||'No preference yet');option.value=value;timing.append(option);}timingLabel.append(timing);descriptionFields.append(timingLabel);
+ const apply=make('button','Add these details to my question','btn outline');apply.type='button';apply.onclick=()=>{if(busy)return;const result=describeProject($('ask-question').value,questions,inputs.map(i=>i.value),timing.value);if(result.error){status(result.error);return;}$('ask-question').value=result.text;count();invalidate();inputs.forEach(i=>i.value='');timing.value='';description.open=false;$('ask-question').focus();status('Details added for you to review. Nothing was sent; choose a checklist or planning help when ready.');};descriptionFields.append(apply);
+}
+renderDescription();
 function edited(){
  const complete=responses.filter(x=>x?.trim()).length;
  const ready=prepared.filter(Boolean).length;
@@ -71,10 +84,13 @@ function show(result,isSaved=false){
   const progress=make('p','','ask-small');progress.id='ask-progress';progress.setAttribute('role','status');root.append(prep,progress);
   const caution=make('p','','ask-local-safety');caution.id='ask-local-safety';caution.hidden=true;caution.setAttribute('role','alert');root.append(caution);
   const trade=INTENTS[intent],business=BUSINESSES[trade.provider];
+  const resources=make('section',undefined,'ask-references');resources.append(make('h3','Useful guides for this project'),make('p','Selected from Wazoozie’s planning guides. These links are separate from the suggested notes.','ask-small'));
+  for(const resource of planningResources(intent,mode))resources.append(link(resource.title+' →',resource.href));root.append(resources);
   const contact=make('section',undefined,'ask-next');contact.id='ask-next-contact';
   const requestLink=link('Take my notes to a request →','/start/?intent='+intent,'btn primary');
   requestLink.onclick=event=>{try{sessionStorage.setItem(ASK_HANDOFF_KEY,JSON.stringify({intent,details:requestNotes(snapshot()),at:Date.now()}));}catch{event.preventDefault();status('This browser could not carry the notes. Copy or download the plan, then use the business contact.');}};
   contact.append(make('span','WHEN YOU’RE READY','eyebrow'),make('h3',business.name),make('p','A directory contact for your selected project. Confirm scope, address coverage, charges and availability directly.'),link('Meet the business →','/businesses/'+business.slug+'/','btn outline'),link('Call '+business.phone,'tel:'+business.tel,'ask-direct-call'),requestLink);root.append(contact);
+  if(/\b(?:urgent|as soon as possible|no heat|no cooling|no hot water)\b/i.test(question))contact.prepend(make('p','Need prompt help? Call the business to check availability. Planning notes and online requests do not confirm service today.','ask-call-first'));
   const actions=make('div',undefined,'ask-result-actions');
   const copy=make('button','Copy my plan','btn outline');copy.type='button';copy.onclick=async()=>{try{await navigator.clipboard.writeText(formatPlan(snapshot(),CATALOG));status('Plan copied with your notes. You decide where to share it.');}catch{const fallback=make('textarea',undefined,'ask-copy-fallback');fallback.value=formatPlan(snapshot(),CATALOG);fallback.readOnly=true;fallback.setAttribute('aria-label','Project notes to copy');root.append(fallback);fallback.focus();fallback.select();status('Copy wasn’t available. Select and copy the notes shown below.');}};
   const download=make('button','Download my plan','btn outline');download.type='button';download.onclick=downloadPlan;
@@ -90,7 +106,7 @@ function renderSaved(){
  if(!saved.length){root.append(make('p','No plans saved on this browser.'));return;}
  saved.forEach(r=>{
   const row=make('article');row.append(make('span',INTENTS[r.intent].label,'eyebrow'),make('h3',r.answer.summary.slice(0,95)+(r.answer.summary.length>95?'…':'')));
-  const open=make('button','Open saved plan →');open.type='button';open.onclick=()=>{if(busy)return;setMode(r.mode);$('ask-intent').value=r.intent;$('ask-question').value=r.question;count();$('ask-consent').checked=false;intent=r.intent;question=r.question;answer=r.answer;responses=[...(r.responses||[])];prepared=[...(r.prepared||[])];activeSavedId=r.id;show(answer,true);status('Saved notes reopened. No new model request or business request was made.');};
+  const open=make('button','Open saved plan →');open.type='button';open.onclick=()=>{if(busy)return;setMode(r.mode);$('ask-intent').value=r.intent;$('ask-question').value=r.question;renderDescription();count();$('ask-consent').checked=false;intent=r.intent;question=r.question;answer=r.answer;responses=[...(r.responses||[])];prepared=[...(r.prepared||[])];activeSavedId=r.id;show(answer,true);status('Saved notes reopened. No new model request or business request was made.');};
   const remove=make('button','Remove');remove.type='button';remove.onclick=()=>{try{const next=saved.filter(x=>x.id!==r.id);if(next.length)localStorage.setItem(STORE,JSON.stringify(next));else localStorage.removeItem(STORE);saved=next;if(activeSavedId===r.id){activeSavedId=null;edited();}renderSaved();$('ask-storage-status').textContent='Saved plan removed.';}catch{$('ask-storage-status').textContent='This browser could not remove the saved plan.';}};
   row.append(open,remove);root.append(row);
  });

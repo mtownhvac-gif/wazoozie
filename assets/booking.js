@@ -43,6 +43,7 @@ export function initBooking(doc=document){
  }
  for(const button of buttons)button.addEventListener('click',()=>filter(button.dataset.bookFilter));
  input?.addEventListener('input',()=>filter());
+ input?.addEventListener('wz-search-choice',event=>filter(event.detail?.category||category));
  townInput?.addEventListener('input',()=>filter());coverageOnly?.addEventListener('change',()=>filter());
  doc.querySelector('.booking-search')?.addEventListener('submit',event=>{event.preventDefault();filter();status?.focus();});
  doc.querySelector('#booking-reset')?.addEventListener('click',()=>{if(input)input.value='';if(townInput)townInput.value='';if(coverageOnly)coverageOnly.checked=false;filter('all');input?.focus();});

@@ -17,6 +17,10 @@ def add(out,origin,pages,providers):
     records=[{'name':p['name'],'category':'home','services':p['trade'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':p['web']} for p in providers.values()]
     records += [{'name':p['name'],'category':'auto' if p['category']=='automotive' else 'realestate','services':p['label'],'phone':p['phone'],'profileUrl':origin+'/businesses/'+p['slug']+'/','officialUrl':None if p.get('website_label') else p['website'],'publicSourceUrl':p['website']} for p in PEOPLE]
     records.sort(key=lambda p:p['name'].casefold())
+    (out/'assets/search-suggestions.json').write_text(json.dumps([{'label':r['name'],'query':r['name'],'category':r['category']} for r in records]))
+    shutil.copy(root/'assets/search-suggestions.js',out/'assets/search-suggestions.js')
+    for page in ('index.html','book/index.html'):
+        target=out/page;target.write_text(target.read_text().replace('</body>','<script type="module" src="/assets/search-suggestions.js"></script></body>',1))
     coverage=json.loads((out/'assets/coverage-evidence.json').read_text())
     for record in records:
         slug=record['profileUrl'].rstrip('/').split('/')[-1]
