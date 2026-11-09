@@ -7,7 +7,7 @@ from editorial import write_editorial_page
 
 def add(out,origin,pages):
     root=out.parent
-    for name in ('ask-wazoozie.css','ask-wazoozie.js','ask-handoff.mjs','ask-plan-tools.mjs'):
+    for name in ('ask-wazoozie.css','ask-wazoozie.js','ask-handoff.mjs','ask-plan-tools.mjs','planning-resources.mjs'):
         shutil.copy(root/'assets'/name,out/'assets'/name)
     shutil.copy(root/'assets/planning-safety.mjs',out/'assets/planning-safety.mjs')
     catalog=json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {INTENTS,BUSINESSES,PROJECT_QUESTIONS} from './project-config.mjs';console.log(JSON.stringify({INTENTS,BUSINESSES,PROJECT_QUESTIONS}));"],cwd=root,text=True))
