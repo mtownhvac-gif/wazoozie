@@ -1,12 +1,10 @@
-"""Keep the related-business note contextual to Middletown HVAC."""
+"""Remove obsolete operator metadata while preserving the public site schema."""
 import json
 import re
 
 def finish(out, origin):
     for target in out.rglob('*.html'):
         content = target.read_text()
-        if target.relative_to(out).as_posix() == 'businesses/middletown-hvac/index.html':
-            content = content.replace('<section class="evidence-panel"', '<div class="wrap"><p class="project-muted">Middletown HVAC is a related Wazoozie business.</p></div><section class="evidence-panel"', 1)
         def update_schema(match):
             data = json.loads(match[1])
             for entity in data.get('@graph', [data]):

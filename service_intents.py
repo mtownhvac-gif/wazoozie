@@ -57,7 +57,7 @@ def add(out, origin, pages, providers, booking):
     booking_url = booking+'&utm_content=services-furnace-repair'
 
     def render(path, title, desc, eyebrow, heading, intro, parent, parent_label, body, contact, trust):
-        trust = trust.replace('Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. This page promotes his HVAC business.', 'Middletown HVAC is a related Wazoozie business. This page promotes its HVAC services.')
+        trust = trust.replace('Wazoozie is operated by Bryan Cordy, owner of Middletown HVAC. This page promotes his HVAC business.', 'This page provides direct contact options for Middletown HVAC.')
         trust = trust.replace(' Wazoozie’s owner, Bryan Cordy, also owns Middletown HVAC.', '')
         crumbs = '<nav class="breadcrumb" aria-label="Breadcrumb">'+link('/local-help/', 'Local help')+'<span>/</span>'+link(parent,parent_label)+'<span>/</span><span>'+E(title.split(' | ')[0])+'</span></nav>'
         content = '<div class="wrap intent-page">'+crumbs+'<section class="intent-hero"><div><span class="eyebrow">'+E(eyebrow)+'</span><h1>'+heading+'</h1><p class="intent-lede">'+intro+'</p><nav class="intent-jumps" aria-label="On this page">'+link('#first-step','Start here')+link('#questions','Common questions')+link('#contact-options','Contact options')+'</nav></div><aside class="intent-hero-note"><span>THE WAZOOZIE WAY</span><p>A useful answer.<br>A real person to call.<br>You choose what happens next.</p></aside></section><div class="intent-layout"><article>'+body+'</article><aside id="contact-options" class="intent-contact-column">'+contact+'<div class="intent-trust"><h2>Know the connection.</h2>'+trust+'<p>'+link('/how-it-works/','How Wazoozie works')+'</p></div></aside></div></div>'
