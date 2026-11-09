@@ -1,3 +1,4 @@
+import {handleModelLab} from './server/model-lab.mjs';
 import {handleAccount} from './server/account-http.mjs';
 import {handleIntake} from './server/intake.mjs';
 // Serve public content consistently; keep project submissions in a separate handler.
@@ -15,6 +16,7 @@ export { prefersMarkdown };
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === '/api/model-lab') return handleModelLab(request, env);
     if (url.pathname.startsWith('/api/account/')) return handleAccount(request, env);
     if (url.pathname.startsWith('/api/')) return handleIntake(request, env);
     if (url.hostname === 'www.wazoozie.com' || /\/index\.html$/.test(url.pathname)) {
@@ -37,6 +39,12 @@ export default {
     }
     response = new Response(response.body, response);
     if (url.pathname.startsWith('/agent-content/')) response.headers.set('X-Robots-Tag', 'noindex');
+    if (url.pathname === '/model-lab/' || url.pathname.startsWith('/model-lab/')) {
+      response.headers.set('Cache-Control','no-store');
+      response.headers.set('X-Robots-Tag','noindex, nofollow');
+      response.headers.set('Referrer-Policy','no-referrer');
+      response.headers.set('Content-Security-Policy', "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+    }
     if (url.pathname === '/account/') {
       response.headers.set('Cache-Control','no-store');
       response.headers.set('X-Robots-Tag','noindex');

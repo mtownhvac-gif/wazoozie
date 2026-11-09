@@ -10,6 +10,7 @@ The complete current production source lives in [mtownhvac-gif/wazoozie](https:/
 | `assets/` | Site artwork, fonts, styles and browser scripts |
 | `entry.mjs`, `worker.mjs`, `server/`, root JavaScript modules | Worker routes, project inbox and account services |
 | `wrangler.jsonc` | Cloudflare bindings, migrations and production domains |
+| `src/model-lab/`, `assets/model-lab.*`, `server/model-lab.mjs`, `model_lab.py` | Unlisted model comparison workbench; connection details in `docs/MODEL_LAB.md` |
 | `tests/`, `check_*.py`, `check_agent.mjs` | Site and service verification |
 | `package.json`, `package-lock.json`, `scripts/` | Reproducible dependencies and development tools |
 | `archives/sites-preview-v3/` | All 11 tracked files from the original Sites preview, preserving original paths |

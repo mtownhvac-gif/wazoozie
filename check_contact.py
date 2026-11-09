@@ -17,6 +17,8 @@ class Inspect(HTMLParser):
     def handle_endtag(self,tag):
         if tag=='script':self.script=False
 for f in ROOT.rglob('*.html'):
+    # The isolated, unlisted model bench has no homeowner service dock.
+    if f.relative_to(ROOT).as_posix() == 'model-lab/index.html': continue
     text=f.read_text();p=Inspect();p.feed(text)
     assert p.docks==1,f'{f}: one mobile contact dock required'
     hvac='/services/' in str(f) and any(x in str(f) for x in ('heating-cooling','boilers','water-heaters','maintenance','replacement-estimates','second-opinion')) or '/businesses/middletown-hvac/' in str(f) or '/contact/' in str(f)
