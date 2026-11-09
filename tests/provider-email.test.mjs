@@ -18,7 +18,7 @@ test('delivery capability is advertised only for a complete Zapier hook',async()
  const {handleIntake}=await import('../server/intake.mjs');
  for(const [hook,enabled] of [[undefined,false],['not-a-url',false],['https://hooks.zapier.com/hooks/catch/123/test/',true]]){
   const response=await handleIntake(new Request('https://wazoozie.com/api/project-capabilities'),{PROJECT_INBOX:{},MIDDLETOWN_ZAPIER_WEBHOOK:hook});
-  assert.deepEqual((await response.json()).emailProviders,enabled?['middletown']:[]);
+  const capability=await response.json();assert.equal(capability.capabilityVersion,2);assert.deepEqual(capability.emailProviders,enabled?['middletown']:[]);
  }
 });
 test('durable email outbox saves before sending, retries failures and does not resend accepted duplicates',async()=>{

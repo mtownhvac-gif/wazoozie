@@ -36,7 +36,7 @@ async function readJSON(request, limit = 16384) {
 export async function handleIntake(request, env) {
   const url = new URL(request.url);
   if (url.pathname === '/api/project-capabilities') {
-    return request.method === 'GET' ? respond({captureReady: Boolean(env.PROJECT_INBOX), emailProviders: validWebhook(env.MIDDLETOWN_ZAPIER_WEBHOOK) ? ['middletown'] : []}) : respond({error: 'Method not allowed.'}, 405);
+    return request.method === 'GET' ? respond({capabilityVersion: 2, captureReady: Boolean(env.PROJECT_INBOX), emailProviders: validWebhook(env.MIDDLETOWN_ZAPIER_WEBHOOK) ? ['middletown'] : []}) : respond({error: 'Method not allowed.'}, 405);
   }
   const neighbor = url.pathname === '/api/neighbor-referrals';
   const activity = url.pathname === '/api/contact-activity';
