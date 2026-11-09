@@ -314,6 +314,8 @@ add_ask_wazoozie(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 from trust_followthrough import add as add_trust_followthrough
 add_trust_followthrough(OUT, PUBLIC, PAGES, PROVIDERS)
+from trade_imagery import add as add_trade_imagery
+add_trade_imagery(OUT)
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata
 finalize_service_metadata(OUT, PUBLIC)
