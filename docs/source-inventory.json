@@ -43,8 +43,8 @@
     },
     {
       "path": "SOURCE_MAP.md",
-      "bytes": 3260,
-      "sha256": "a54bfdc31cc954c08af4631907fc596c69c14426e4ab5bb0782997ec153076d6"
+      "bytes": 3425,
+      "sha256": "4a49d5f42bbf5bb8e1b47fa30295f3cba2168e81bc4589d4398dcaa615bfb0dc"
     },
     {
       "path": "accounts.py",
@@ -117,6 +117,11 @@
       "sha256": "31cf823dd6da6e4b1e5e947f31d476faeaf15c245aa58c9a9f02b32bbd2f1214"
     },
     {
+      "path": "ask_wazoozie.py",
+      "bytes": 9186,
+      "sha256": "13653df07c3f4380b322f3d2653634e927fb8d0d830d8593d9138e608a42a699"
+    },
+    {
       "path": "assets/accounts.css",
       "bytes": 7784,
       "sha256": "7ada4885ec3f8ec34b726fbd46883b6c6e847283719b8587fe54e8f5183ec530"
@@ -130,6 +135,21 @@
       "path": "assets/action-icons.js",
       "bytes": 2184,
       "sha256": "b27680245360bbbc0b4813fdaa8aa01478423a8e51c393c5eb59f74f1a02d731"
+    },
+    {
+      "path": "assets/ask-handoff.mjs",
+      "bytes": 488,
+      "sha256": "d923dfa59c189318c94f3f6abbcc6be3a896feba594d77c45b1429c6ab79d091"
+    },
+    {
+      "path": "assets/ask-wazoozie.css",
+      "bytes": 8068,
+      "sha256": "1caf67f8c461642b0e5edd7c0e90e123016f04c3c1f86497db9f275aa840a20d"
+    },
+    {
+      "path": "assets/ask-wazoozie.js",
+      "bytes": 11554,
+      "sha256": "0db7df477bd8fadd79de05fdb01409bb827e35725720cad56dcb956ad5ca7511"
     },
     {
       "path": "assets/audit-finish.css",
@@ -553,8 +573,8 @@
     },
     {
       "path": "assets/project.js",
-      "bytes": 18901,
-      "sha256": "224b0bf6064fbb2faed07217b847e83231e13daae0afcf1f895e18b339be864a"
+      "bytes": 19376,
+      "sha256": "45b21393c35de074706bbc54e3e50fd3bbbbf4bd9b1d6beafae62eb56d1aae45"
     },
     {
       "path": "assets/public-discovery.js",
@@ -693,8 +713,8 @@
     },
     {
       "path": "build.py",
-      "bytes": 75886,
-      "sha256": "6ec8e9d27b9629d22cbe175c31e60a28a3e577a98fc8db6a2c5304166909cd4e"
+      "bytes": 75972,
+      "sha256": "b6a969de065a7305f8541bf3d85565156f81ff379fcf82b1106029f047fd7b04"
     },
     {
       "path": "buyer_edge.py",
@@ -755,6 +775,16 @@
       "path": "discovery.py",
       "bytes": 11639,
       "sha256": "6e5df4fa457080292301e5d3a541d9d7ffea02d209e7bf9ea1ea8c3e34a0208a"
+    },
+    {
+      "path": "docs/ASK_WAZOOZIE.md",
+      "bytes": 3435,
+      "sha256": "459b8bf3ac1d6e62f3874e4205957a6339ebe5ce51ec3e30b6adf869005f6b4e"
+    },
+    {
+      "path": "docs/LIVE_MODEL_CHECKS.md",
+      "bytes": 1973,
+      "sha256": "4e487824e29dcef9dee8a60fb60824c69452f8a1dbbf63639bc25dd4871a7f52"
     },
     {
       "path": "docs/MODEL_LAB.md",
@@ -843,8 +873,8 @@
     },
     {
       "path": "lead-context.mjs",
-      "bytes": 962,
-      "sha256": "930588a8d2844f807617c789328626f17e91a9511f90cc6cd72ef947eb196985"
+      "bytes": 1001,
+      "sha256": "dba5c3db474eda972a19b2559cdc2c49578696e81cd052ace6b330883ff5ac55"
     },
     {
       "path": "local_help.py",
@@ -982,6 +1012,11 @@
       "sha256": "7e4647cf5c3b2df3677b99c278ffa40e59f21121174d3b46c3b1709713d1e830"
     },
     {
+      "path": "server/ask-wazoozie.mjs",
+      "bytes": 6812,
+      "sha256": "6dd22a5c77fb103748db64f128929938be302d6310c406e12ea8f6fd02f12a30"
+    },
+    {
       "path": "server/brief-validation.mjs",
       "bytes": 3810,
       "sha256": "d2a7d24ecad23dc4bfe02a3ef58d92abf06ec6a30bc9ccfffaaf453ec35e739d"
@@ -1003,8 +1038,8 @@
     },
     {
       "path": "server/project-store.mjs",
-      "bytes": 12349,
-      "sha256": "cb16f9b2c00ba0d5d7473718c6f82caa47f4ac34172f8d316567e5d84afffa06"
+      "bytes": 13507,
+      "sha256": "cd6563eb678e9142b2d2ea38145f630b4a4e6e3c6fa5d233ac10060a350dbb1c"
     },
     {
       "path": "server/provider-email.mjs",
@@ -1085,6 +1120,11 @@
       "path": "tests/applications.test.mjs",
       "bytes": 2541,
       "sha256": "9a9e73087322faeb50c72ed05e7379828a3fc602af13c2db2019ce0a88fef5f3"
+    },
+    {
+      "path": "tests/ask-wazoozie.test.mjs",
+      "bytes": 8539,
+      "sha256": "ee21eeecca33d5272ba5beb81e5fe587355a6a350f4a6f21ef9829543f794c72"
     },
     {
       "path": "tests/booking.test.mjs",
@@ -1243,13 +1283,13 @@
     },
     {
       "path": "worker.mjs",
-      "bytes": 3690,
-      "sha256": "6f4988cf0c88ad7a367c0ad32878125fce121ddc6c3fb46f4f7d84e854e23fd1"
+      "bytes": 3837,
+      "sha256": "1cf715ef1b72dcf576f8c884e6dd65738fdc7606824d6ea88f8d941e17541d44"
     },
     {
       "path": "wrangler.jsonc",
-      "bytes": 1052,
-      "sha256": "20a33b9c71d24026ba9fb835b5312d23a9c31d337d664aa93f04e70051aa9324"
+      "bytes": 1087,
+      "sha256": "594401981f8924a0d9ea7e63ab099b33ddb9065eefbac11c5d0e264fdfa3ac7d"
     }
   ]
 }

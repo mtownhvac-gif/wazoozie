@@ -1,3 +1,4 @@
+import {takeAskHandoff} from './ask-handoff.mjs';
 import {entryContext} from './lead-context.mjs';
 import {neighborCode} from './neighbor-config.mjs';
 import {BUSINESSES, INTENTS, CONSENT_VERSION, PROJECT_QUESTIONS, PROJECT_GROUPS} from './project-config.mjs';
@@ -129,6 +130,7 @@ $('#projectServiceDetail').addEventListener('change', event => {
 });
 
 showBusiness();
+if(params.get('entry')==='ask'&&selected){const carried=takeAskHandoff(sessionStorage,selected);if(carried){form.elements.details.value=carried;form.elements.consent.checked=false;const notice=make('p','Your planning notes were brought over from Ask Wazoozie. Review and edit them before you choose to send a request. Nothing has been sent.','project-muted');form.elements.details.insertAdjacentElement('afterend',notice);}}
 form.addEventListener('input',()=>{if(!$('#projectStep3').hidden)review(values());});
 $('#projectNext1').addEventListener('click', () => { if (selected) showStep(2); });
 for (const button of document.querySelectorAll('[data-back]')) button.addEventListener('click', () => showStep(Number(button.dataset.back)));

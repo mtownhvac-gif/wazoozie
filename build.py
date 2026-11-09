@@ -309,6 +309,8 @@ from referral_rewards import add as add_referral_rewards
 add_referral_rewards(OUT)
 from contact_upgrade import add as add_contact_upgrade
 add_contact_upgrade(OUT, PUBLIC, PAGES)
+from ask_wazoozie import add as add_ask_wazoozie
+add_ask_wazoozie(OUT, PUBLIC, PAGES)
 from optimize import add as add_optimization
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata

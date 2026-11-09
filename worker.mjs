@@ -1,3 +1,4 @@
+import {handleAskWazoozie} from './server/ask-wazoozie.mjs';
 import {handleModelLab} from './server/model-lab.mjs';
 import {handleAccount} from './server/account-http.mjs';
 import {handleIntake} from './server/intake.mjs';
@@ -16,6 +17,7 @@ export { prefersMarkdown };
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === '/api/ask-wazoozie') return handleAskWazoozie(request, env);
     if (url.pathname === '/api/model-lab') return handleModelLab(request, env);
     if (url.pathname.startsWith('/api/account/')) return handleAccount(request, env);
     if (url.pathname.startsWith('/api/')) return handleIntake(request, env);
