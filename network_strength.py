@@ -7,7 +7,7 @@ import subprocess
 
 
 REASONS = {
-    'middletown': ('A related Wazoozie business.', 'Heating, cooling and hot-water inquiries you choose to send here go directly to Middletown HVAC.'),
+    'middletown': ('Direct to Middletown HVAC.', 'Heating, cooling and hot-water inquiries you choose to send here go directly to Middletown HVAC.'),
     'ryan': ('The electrician Middletown calls.', 'Middletown HVAC uses Ryan Dugan Electric for its own electrical work. That working relationship is why Wazoozie recommends Ryan here.'),
     'liberator': ('A trusted plumbing contact.', 'Selected for the local network for plumbing and drain inquiries. Start with the fixture, leak or blockage that needs attention.'),
     'cooke': ('The smaller jobs deserve good work, too.', 'Selected for carpentry and home-repair inquiries, including trim, shelving and finishing details.'),
