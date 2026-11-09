@@ -33,3 +33,25 @@ test('ordinary problem descriptions find the relevant contact without silently b
  d.querySelector('#booking-reset').click();assert.equal(visible().length,13);assert.equal(input.value,'');
  dom.window.close();
 });
+
+test('short words do not match inside other words, while service and business prefixes remain useful',()=>{
+ const dom=new JSDOM(readFileSync('dist/book/index.html','utf8'),{url:'https://wazoozie.com/book/?q=car'}),d=dom.window.document;initBooking(d);
+ const input=d.querySelector('#booking-query'),cards=[...d.querySelectorAll('.booking-card')],visible=()=>cards.filter(c=>!c.hidden).map(c=>c.dataset.business);
+ assert.deepEqual(visible(),['authority-auto-repair-glenolden','c-and-j-automotive-upper-chichester','trans-man-transmissions-eddystone']);
+ const search=q=>{input.value=q;input.dispatchEvent(new dom.window.Event('input'));};
+ for(const [q,expected] of [['carp','cooke-carpentry-construction'],['cook','cooke-carpentry-construction'],['AC','middletown-hvac'],['electric','ryan-dugan-electric']]){search(q);assert.deepEqual(visible(),[expected],q);assert.equal(d.querySelector('.booking-card:not([hidden]) .booking-match').hidden,false);}
+ search('art');assert.deepEqual(visible(),[]);assert.equal(d.querySelector('#booking-empty').hidden,false);
+ search('car');d.querySelector('[data-book-filter="home"]').click();assert.deepEqual(visible(),[]);
+ d.querySelector('#booking-reset').click();assert.equal(visible().length,13);assert.ok(cards.every(c=>c.querySelector('.booking-match').hidden));
+ dom.window.close();
+});
+
+test('each contact has source access, a useful preparation checklist and a correction draft',()=>{
+ const dom=new JSDOM(readFileSync('dist/book/index.html','utf8'),{url:'https://wazoozie.com/book/'}),d=dom.window.document;
+ for(const card of d.querySelectorAll('.booking-card')){
+  const detail=card.querySelector('.booking-checklist');assert.ok(detail);assert.equal(detail.open,false);assert.equal(detail.querySelectorAll('li').length,3);
+  assert.equal(detail.querySelector('a').getAttribute('href'),'/businesses/'+card.dataset.business+'/');
+  const correction=card.querySelector('.booking-correction');assert.equal(new URL(correction.href).pathname,'hello@wazoozie.com');assert.match(decodeURIComponent(correction.href),/Listing correction:/);
+ }
+ dom.window.close();
+});
