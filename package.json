@@ -6,6 +6,7 @@
     "build": "python3 build.py",
     "build:production": "PUBLIC_SITE_URL=https://wazoozie.com python3 build.py",
     "check": "python3 check_site.py && python3 check_contact.py && node check_agent.mjs && node --test tests/*.test.mjs",
+    "check:live-alerts": "node scripts/check_live_alerts.mjs",
     "dev": "node scripts/dev.mjs",
     "deploy": "npm run build:production && npm run check && wrangler deploy --keep-vars",
     "notify:search": "python3 scripts/submit_indexnow.py --submit"
