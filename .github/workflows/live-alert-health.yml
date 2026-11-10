@@ -1,0 +1,25 @@
+name: Check live office alert capability
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-office-alert-capability
+  cancel-in-progress: true
+
+jobs:
+  verify-live-alerts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify private capture and Middletown routing
+        run: node scripts/check_live_alerts.mjs
