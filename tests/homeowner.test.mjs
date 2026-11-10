@@ -57,7 +57,8 @@ test('direct contact is offered before form entry and an unsaved brief can be em
     env.document.querySelector('#projectNext2').click();
     assert.equal(env.document.querySelector('#projectStep3').hidden,false);
     const email=env.document.querySelector('#reviewConnections a[href^="mailto:"]');
-    assert.ok(email.href.startsWith('mailto:service@mtownhvac.com?'));
+    assert.ok(email.href.startsWith('mailto:wazooziehelp@gmail.com?'));
+    assert.match(env.document.querySelector('#reviewConnections').textContent,/Wazoozie reviews your request/);
     const body=new URLSearchParams(email.href.split('?')[1]).get('body');
     assert.ok(body.includes(values.details));
     assert.ok(body.includes('Prepared in the homeowner’s browser'));
@@ -244,6 +245,6 @@ test('optional planner reaches review without personal details and only submits 
   const booking=new URL(d.querySelector('#reviewConnections a[href^="https://book.housecallpro.com/"]').href);
   assert.equal(booking.searchParams.has('name'),false);assert.equal(booking.searchParams.has('phone'),false);assert.equal(booking.searchParams.has('email'),false);
   form.dispatchEvent(new d.defaultView.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
-  const posts=env.requests.filter(r=>r.options?.method==='POST');assert.equal(posts.length,1);assert.equal(JSON.parse(posts[0].options.body).notifyProvider,true);
+  const posts=env.requests.filter(r=>r.options?.method==='POST');assert.equal(posts.length,1);assert.equal(JSON.parse(posts[0].options.body).notifyProvider,false);
  }finally{env.close();}
 });

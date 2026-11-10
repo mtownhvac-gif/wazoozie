@@ -51,7 +51,7 @@ test('each contact has source access, a useful preparation checklist and a corre
  for(const card of d.querySelectorAll('.booking-card')){
   const detail=card.querySelector('.booking-checklist');assert.ok(detail);assert.equal(detail.open,false);assert.equal(detail.querySelectorAll('li').length,3);
   assert.equal(detail.querySelector('a').getAttribute('href'),'/businesses/'+card.dataset.business+'/');
-  const correction=card.querySelector('.booking-correction');assert.equal(new URL(correction.href).pathname,'hello@wazoozie.com');assert.match(decodeURIComponent(correction.href),/Listing correction:/);
+  const correction=card.querySelector('.booking-correction');assert.equal(new URL(correction.href).pathname,'wazooziehelp@gmail.com');assert.match(decodeURIComponent(correction.href),/Listing correction:/);
  }
  dom.window.close();
 });
