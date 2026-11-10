@@ -21,7 +21,6 @@ export function validateBrief(data, now = Date.now()) {
   }
   if(data.entryContext!==undefined&&(typeof data.entryContext!=='string'||data.entryContext.length>32))return {error:'Invalid request context.'};
   if (data.notifyProvider !== undefined && typeof data.notifyProvider !== 'boolean') return {error:'Invalid email choice.'};
-  if (data.notifyProvider && data.provider !== 'middletown') return {error:'Email delivery is not available for this business.'};
   const brief = {
     id: data.id, ...(entryContext(data.entryContext)!=='direct'?{entryContext:entryContext(data.entryContext)}:{}), provider: data.provider, intent: data.intent, notifyProvider: data.notifyProvider === true,
     name: text(data.name, 100), phone: text(data.phone, 35), email: text(data.email, 180),

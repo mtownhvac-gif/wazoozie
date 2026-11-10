@@ -8,7 +8,7 @@ import {validWebhook,emailPayload} from '../server/provider-email.mjs';
 const valid=()=>({id:crypto.randomUUID(),startedAt:Date.now()-5000,provider:'middletown',intent:'comfort',name:'Synthetic <Homeowner>',phone:'202-555-0100',email:'synthetic@example.invalid',town:'Media',zip:'19063',state:'PA',details:'Synthetic <script>alert(1)</script> request only.',timing:'Planning ahead',role:'Homeowner',property:'House',equipment:'',source:'start-page',consent:true,consentVersion:CONSENT_VERSION,notifyProvider:true});
 test('email requires a separate boolean choice for Middletown; secrets and HTML stay bounded',()=>{
  assert.ok(validateBrief({...valid(),notifyProvider:'true'}).error);
- assert.ok(validateBrief({...valid(),provider:'hart',intent:'doors'}).error);
+ assert.ok(validateBrief({...valid(),provider:'hart',intent:'doors'}).brief);
  assert.equal(validateBrief({...valid(),notifyProvider:false}).brief.notifyProvider,false);
  assert.ok(validWebhook('https://hooks.zapier.com/hooks/catch/123/test/'));
  for(const u of ['https://evil.invalid/hooks/catch/123/test/','http://hooks.zapier.com/hooks/catch/123/test/','https://hooks.zapier.com/hooks/catch/123/test/?x=1'])assert.equal(validWebhook(u),false);
@@ -18,7 +18,7 @@ test('delivery capability is advertised only for a complete Zapier hook',async()
  const {handleIntake}=await import('../server/intake.mjs');
  for(const [hook,enabled] of [[undefined,false],['not-a-url',false],['https://hooks.zapier.com/hooks/catch/123/test/',true]]){
   const response=await handleIntake(new Request('https://wazoozie.com/api/project-capabilities'),{PROJECT_INBOX:{},MIDDLETOWN_ZAPIER_WEBHOOK:hook});
-  const capability=await response.json();assert.equal(capability.capabilityVersion,2);assert.deepEqual(capability.emailProviders,enabled?['middletown']:[]);
+  const capability=await response.json();assert.equal(capability.capabilityVersion,2);assert.deepEqual(capability.emailProviders,enabled?['middletown','hart','rolledright','ryan','liberator','cooke']:[]);
  }
 });
 test('durable email outbox saves before sending, retries failures and does not resend accepted duplicates',async()=>{
