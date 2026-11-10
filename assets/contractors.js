@@ -38,6 +38,7 @@ form.addEventListener('submit',async event=>{
     if(result.status!=='awaiting_review'||result.reference!==id||result.published!==false||result.charged!==false)throw new Error('We could not confirm your application reference. Retry the same details.');
     form.hidden=true;document.querySelector('#applicationReceipt').hidden=false;
     document.querySelector('#applicationReference').textContent=`Reference WZ-B-${id.slice(0,8).toUpperCase()}`;
+    deskNote.textContent=result.officeDelivery==='automation_accepted'?'Your application was saved and the email service accepted the notification to wazooziehelp@gmail.com. Inbox delivery is not confirmed. Wazoozie will review it before any listing is published.':'Your application was saved. The office notification is not confirmed; use the email draft below to notify wazooziehelp@gmail.com directly.';
     document.querySelector('#applicationReceipt').focus();
   }catch(failure){showError(failure.message||'We could not confirm a save. Please retry.');}
   finally{submitting=false;button.disabled=!ready;button.textContent='Submit business application →';}

@@ -36,7 +36,7 @@ async function readJSON(request, limit = 16384) {
 export async function handleIntake(request, env) {
   const url = new URL(request.url);
   if (url.pathname === '/api/project-capabilities') {
-    return request.method === 'GET' ? respond({capabilityVersion: 2, captureReady: Boolean(env.PROJECT_INBOX), emailProviders: validWebhook(env.MIDDLETOWN_ZAPIER_WEBHOOK) ? ['middletown'] : []}) : respond({error: 'Method not allowed.'}, 405);
+    return request.method === 'GET' ? respond({capabilityVersion: 2, captureReady: Boolean(env.PROJECT_INBOX), emailProviders: validWebhook(env.MIDDLETOWN_ZAPIER_WEBHOOK) ? Object.keys(BUSINESSES) : []}) : respond({error: 'Method not allowed.'}, 405);
   }
   const neighbor = url.pathname === '/api/neighbor-referrals';
   const activity = url.pathname === '/api/contact-activity';
@@ -80,7 +80,9 @@ export async function handleIntake(request, env) {
       if(status===429)return respond({error:'Application limit reached. Please try again another day.'},429);
       if(status===409)return respond({error:'This reference has different details. Reopen the application for a new reference.'},409);
       if(![200,201].includes(status))throw new Error('Application not confirmed');
-      return respond({reference:application.id,status:'awaiting_review',published:false,charged:false},status);
+      let officeDelivery='pending';
+      try {officeDelivery=await inbox.deliverBrief(application.id);} catch {}
+      return respond({reference:application.id,status:'awaiting_review',published:false,charged:false,officeDelivery},status);
     }catch{return respond({error:'We could not confirm a save. Retry the same application details.'},503);}
   }
   if (activity) {

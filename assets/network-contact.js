@@ -15,7 +15,7 @@ export async function initNetworkContact(doc,{fetcher=globalThis.fetch}={}){
   const link=doc.createElement('a');link.className='btn outline';link.href='/start/?intent='+encodeURIComponent(intent);link.textContent='Request a callback';
   slot.replaceChildren(link);
   const status=panel.querySelector('[data-callback-status]');
-  if(status)status.textContent=`Callback requests are addressed to ${business.name}. Review your details and consent before sending. For urgent help, call directly.`;
+  if(status)status.textContent=`Selected business: ${business.name}. Requests are emailed to wazooziehelp@gmail.com for review and forwarding. Review your details and consent before sending. For urgent help, call directly.`;
  }
 }
 if(typeof document!=='undefined')initNetworkContact(document);

@@ -29,9 +29,9 @@ function emailChoice() {
   const allowed = selected && emailProviders.includes(INTENTS[selected].provider);
   $('#projectSave').textContent = allowed ? 'Submit request →' : 'Save my project brief →';
   const heading=$('#projectContactHeading'),note=$('#projectContactNote');
-  if(heading)heading.textContent=allowed?'Ask the business to get in touch':'Keep a copy of your notes';
-  if(note)note.textContent=allowed?'Add your details to submit a callback request. If you book directly, enter your details only on the business’s booking page.':'Use the email button above to send your request to wazooziehelp@gmail.com for review and forwarding. Saving a copy here does not send an email.';
-  $('#submissionConsent').textContent = allowed ? 'I agree to Wazoozie saving my contact information and project details and sharing this request with the business I selected so its office can follow up.' : 'I agree to Wazoozie saving my contact information and project details for review and follow-up about this project.';
+  if(heading)heading.textContent=allowed?'Ask Wazoozie to arrange an introduction':'Keep a copy of your notes';
+  if(note)note.textContent=allowed?'Add your details to email a request to Wazoozie Help for review and forwarding. If you book directly, enter your details only on the business’s booking page.':'Use the email button above to send your request to wazooziehelp@gmail.com for review and forwarding. Saving a copy here does not send an email.';
+  $('#submissionConsent').textContent = allowed ? 'I agree to Wazoozie saving my contact information and project details and emailing it to wazooziehelp@gmail.com for the Wazoozie team to review and forward to the business I selected.' : 'I agree to Wazoozie saving my contact information and project details for review and follow-up about this project.';
 }
 let saving = false;
 let submitted;
@@ -170,7 +170,7 @@ async function checkAvailability() {
     const response = await fetch('/api/project-capabilities', {cache: 'no-store'});
     const capability = await response.json();
     captureReady = response.ok && capability.captureReady === true;
-    emailProviders = []; // Central inbox handoff uses an explicit homeowner-sent email until delivery is verified.
+    emailProviders = response.ok && Array.isArray(capability.emailProviders) ? capability.emailProviders : [];
     emailChoice();
   } catch { captureReady = false; }
   $('#projectSave').disabled = !captureReady;
@@ -198,7 +198,7 @@ form.addEventListener('submit', async event => {
     if (!response.ok) throw new Error(result.error || 'We could not confirm that your brief was saved. Retry or call the business directly.');
     submitted = data;
     deliveryStatus = result.providerDelivery;
-    $('#receiptDelivery').textContent = deliveryStatus === 'automation_accepted' ? 'Saved privately. Your selected business’s email service accepted the request. Inbox delivery is not confirmed, and no appointment has been booked.' : deliveryStatus === 'pending' ? 'Saved privately. Your email request is waiting for retry. Call the business directly if you need help soon; no appointment has been booked.' : deliveryStatus === 'failed' ? 'Saved privately, but automatic email could not be confirmed. Please call the business directly.' : 'Saved privately with Wazoozie. The business has not been notified, and no appointment has been booked.';
+    $('#receiptDelivery').textContent = deliveryStatus === 'automation_accepted' ? 'Saved privately. The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not confirmed, and no appointment has been booked.' : deliveryStatus === 'pending' ? 'Saved privately. Your email request is waiting for retry. Call the business directly if you need help soon; no appointment has been booked.' : deliveryStatus === 'failed' ? 'Saved privately, but automatic email could not be confirmed. Please call the business directly.' : 'Saved privately with Wazoozie. The business has not been notified, and no appointment has been booked.';
     document.querySelector('#neighborCredit').hidden=true;
     if(data.neighborCode) document.querySelector('#receiptNeighborStatus').textContent=result.referralAttributed ? 'Your neighbor introduction was credited with this saved brief.' : 'Your project was saved, but this neighbor link could not be credited. It may have expired.';
     const dock=$('#projectConnectionDock');if(dock)dock.hidden=true;

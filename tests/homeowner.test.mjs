@@ -245,6 +245,6 @@ test('optional planner reaches review without personal details and only submits 
   const booking=new URL(d.querySelector('#reviewConnections a[href^="https://book.housecallpro.com/"]').href);
   assert.equal(booking.searchParams.has('name'),false);assert.equal(booking.searchParams.has('phone'),false);assert.equal(booking.searchParams.has('email'),false);
   form.dispatchEvent(new d.defaultView.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
-  const posts=env.requests.filter(r=>r.options?.method==='POST');assert.equal(posts.length,1);assert.equal(JSON.parse(posts[0].options.body).notifyProvider,false);
+  const posts=env.requests.filter(r=>r.options?.method==='POST');assert.equal(posts.length,1);assert.equal(JSON.parse(posts[0].options.body).notifyProvider,true);
  }finally{env.close();}
 });

@@ -28,7 +28,7 @@ test('callback routes appear only for a matching enabled recipient and never sub
  const d=doc('businesses/middletown-hvac'),calls=[];
  await initNetworkContact(d,{fetcher:async(url,options)=>{calls.push({url,options});return Response.json({captureReady:true,emailProviders:['middletown','ryan','untrusted']});}});
  const a=d.querySelector('[data-callback-slot] a');assert.equal(a.getAttribute('href'),'/start/?intent=comfort');assert.equal(a.textContent,'Request a callback');
- assert.match(d.querySelector('[data-callback-status]').textContent,/addressed to Middletown HVAC/);
+ assert.match(d.querySelector('[data-callback-status]').textContent,/Selected business: Middletown HVAC/);
  assert.equal(calls.length,1);assert.equal(calls[0].url,'/api/project-capabilities');assert.equal(calls[0].options.method,undefined);
  await initNetworkContact(d,{fetcher:async()=>Response.json({captureReady:true,emailProviders:['ryan']})});
  assert.equal(d.querySelector('[data-callback-slot] a'),null);

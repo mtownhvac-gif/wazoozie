@@ -1,4 +1,4 @@
-import {emailPayload, validWebhook} from './provider-email.mjs';
+import {emailPayload, applicationEmailPayload, validWebhook} from './provider-email.mjs';
 import {DurableObject} from 'cloudflare:workers';
 
 // Private SQLite storage, partitioned by provider and calendar month.
@@ -105,6 +105,7 @@ export class ProjectInbox extends DurableObject {
       this.ctx.storage.sql.exec('INSERT INTO contractor_applications(id,created_at,business_name,contact_name,email,phone,website,town,state,coverage,registration,insurance,services,interest,notes,consent_version,fingerprint) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',a.id,now,a.businessName,a.contactName,a.email,a.phone,a.website,a.town,a.state,a.coverage,a.registration,a.insurance,JSON.stringify(a.services),a.interest,a.notes,a.consentVersion,fingerprint);
       this.ctx.storage.sql.exec('INSERT INTO submission_limits(client_hash,day,count) VALUES (?,?,1) ON CONFLICT(client_hash) DO UPDATE SET count=count+1',key,new Date(now).toISOString().slice(0,10));
       this.incrementContact({action:'application_saved',provider:'contractor',context:'contractors'},now);
+      this.ctx.storage.sql.exec('INSERT INTO email_outbox(id,payload,next_attempt,expires) VALUES (?,?,?,?)', a.id, JSON.stringify(applicationEmailPayload(a)), now, now+48*3600000);
     });
     if(status===201&&!await this.ctx.storage.getAlarm())await this.ctx.storage.setAlarm(now+86400000);
     return {status};
