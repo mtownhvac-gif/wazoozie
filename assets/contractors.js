@@ -42,3 +42,13 @@ form.addEventListener('submit',async event=>{
   }catch(failure){showError(failure.message||'We could not confirm a save. Please retry.');}
   finally{submitting=false;button.disabled=!ready;button.textContent='Submit business application →';}
 });
+
+// Explicit email handoff while automated delivery to the central inbox is unverified.
+const deskLink=document.createElement('a');deskLink.className='btn primary';deskLink.textContent='Email this application to Wazoozie Help ↗';
+const deskNote=document.createElement('p');deskNote.textContent='Your application was saved privately. To notify the Wazoozie team, open this email draft, review it and send it to wazooziehelp@gmail.com. No email is sent automatically.';
+document.querySelector('#applicationReceipt').append(deskNote,deskLink);
+deskLink.addEventListener('click',()=>{
+ const entries=[...new FormData(form)].filter(([key])=>!['company','consent'].includes(key));
+ const body=['WAZOOZIE BUSINESS APPLICATION',`Reference WZ-B-${id.slice(0,8).toUpperCase()}`,...entries.map(([key,value])=>`${key}: ${value}`)].join('\n');
+ deskLink.href='mailto:wazooziehelp@gmail.com?subject='+encodeURIComponent('Wazoozie business introduction')+'&body='+encodeURIComponent(body);
+});

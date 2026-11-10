@@ -29,8 +29,8 @@ function emailChoice() {
   const allowed = selected && emailProviders.includes(INTENTS[selected].provider);
   $('#projectSave').textContent = allowed ? 'Submit request →' : 'Save my project brief →';
   const heading=$('#projectContactHeading'),note=$('#projectContactNote');
-  if(heading)heading.textContent=allowed?'Ask the business to get in touch':'Save a brief for later';
-  if(note)note.textContent=allowed?'Add your details to submit a callback request. If you book directly, enter your details only on the business’s booking page.':'Saving keeps your brief with Wazoozie; it does not notify this business. Call directly, or use the email draft if one is offered.';
+  if(heading)heading.textContent=allowed?'Ask the business to get in touch':'Keep a copy of your notes';
+  if(note)note.textContent=allowed?'Add your details to submit a callback request. If you book directly, enter your details only on the business’s booking page.':'Use the email button above to send your request to wazooziehelp@gmail.com for review and forwarding. Saving a copy here does not send an email.';
   $('#submissionConsent').textContent = allowed ? 'I agree to Wazoozie saving my contact information and project details and sharing this request with the business I selected so its office can follow up.' : 'I agree to Wazoozie saving my contact information and project details for review and follow-up about this project.';
 }
 let saving = false;
@@ -170,12 +170,12 @@ async function checkAvailability() {
     const response = await fetch('/api/project-capabilities', {cache: 'no-store'});
     const capability = await response.json();
     captureReady = response.ok && capability.captureReady === true;
-    emailProviders = response.ok && Array.isArray(capability.emailProviders) ? capability.emailProviders : [];
+    emailProviders = []; // Central inbox handoff uses an explicit homeowner-sent email until delivery is verified.
     emailChoice();
   } catch { captureReady = false; }
   $('#projectSave').disabled = !captureReady;
   $('#retryCapture').hidden = captureReady;
-  $('#captureStatus').textContent = captureReady ? 'Project saving is available. Review your request and consent before submitting.' : 'Project saving is currently unavailable. Your details have not been sent. Use the direct contact link for your selected business.';
+  $('#captureStatus').textContent = captureReady ? 'Project saving is available. Review your request and consent before submitting.' : 'Project saving is currently unavailable. Your details have not been sent. Email your brief to Wazoozie Help or call the business directly.';
 }
 checkAvailability();
 $('#retryCapture').addEventListener('click', checkAvailability);
@@ -228,13 +228,13 @@ function download(data, saved) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 function shareActions(data, saved) {
-  const provider = BUSINESSES[data.provider];
+  const provider = {...BUSINESSES[data.provider], email:'wazooziehelp@gmail.com'};
   const container = make('div');
   const actions = make('div', '', 'project-actions');
   if (provider.email) {
     const subject = `Wazoozie project inquiry · ${INTENTS[data.intent].label}`;
-    actions.append(businessLink(`Email my brief to ${provider.name} ↗`, `mailto:${provider.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText(data, saved))}`, 'btn primary'));
-    container.append(make('p', `Your email draft is addressed only to ${provider.email}. You must send it yourself. If your email app does not open, copy or download your brief.`, 'project-muted'));
+    actions.append(businessLink(`Email my brief to Wazoozie Help ↗`, `mailto:${provider.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText(data, saved))}`, 'btn primary'));
+    container.append(make('p', `Your email draft is addressed only to ${provider.email}. You must send it yourself. Wazoozie reviews your request and forwards it to the appropriate business. If your email app does not open, copy or download your brief.`, 'project-muted'));
   }
   const copy = make('button', 'Copy my brief', 'btn outline');
   copy.type = 'button';
