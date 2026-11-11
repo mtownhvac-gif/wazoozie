@@ -1,6 +1,7 @@
 """An accessible quote-and-scope challenge with useful next steps."""
 from editorial import write_editorial_page
 import shutil
+from homeowner_tools import section_range
 
 
 def add(out, origin, pages):
@@ -11,6 +12,9 @@ def add(out, origin, pages):
     teaser='<aside class="match-teaser"><div><span class="eyebrow">A LITTLE PLAY. A GOOD INSTINCT.</span><h2>Good Call or Gotcha?</h2><p>The missing scope. The conditional credit. Six decisions that deserve a closer look.</p></div><a class="btn primary" href="/who-would-you-call/">Play the quick challenge →</a></aside>'
     for route in ('','explore','good-call-club'):
         p=out/route/'index.html';s=p.read_text()
-        if route=='':s=s.replace('<p class="homepage-image-note">',teaser+'<p class="homepage-image-note">',1)
+        if route=='':
+            # The hero contains search and service shortcuts; give the game the next slot.
+            _, end = section_range(s, '<section class="grand-hero"')
+            s = s[:end]+'<div class="wrap" id="quick-challenge">'+teaser+'</div>'+s[end:]
         else:s=s.replace('</main>','<div class="wrap">'+teaser+'</div></main>',1)
         s=s.replace('</head>','<link rel="stylesheet" href="/assets/home-match.css"></head>',1);p.write_text(s)

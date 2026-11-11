@@ -2,17 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {PROJECTS,ASSUMPTIONS,DEFAULT_STATE,normalizeState,buildPlan,encodePlan,decodePlan,planText} from '../assets/second-invoice-model.mjs';
+import {PROJECTS,ASSUMPTIONS,DEFAULT_STATE,EXAMPLE_STATE,normalizeState,buildPlan,encodePlan,decodePlan,planText} from '../assets/second-invoice-model.mjs';
 
 test('the example reveals two do-overs and the proposed fix removes both',()=>{
- const p=buildPlan(DEFAULT_STATE);
+ const p=buildPlan(EXAMPLE_STATE);
  assert.deepEqual(p.risks.map(x=>x.id),['windows-before-paint','hvac-before-paint']);
  assert.deepEqual(p.recommended,['windows','heatpump','paint']);
- assert.equal(buildPlan({...DEFAULT_STATE,order:p.recommended}).risks.length,0);
+ assert.equal(buildPlan({...EXAMPLE_STATE,order:p.recommended}).risks.length,0);
 });
 test('separate rooms and confirmed access assumptions change the result',()=>{
- assert.equal(buildPlan({...DEFAULT_STATE,flags:[]}).risks.length,0);
- assert.deepEqual(buildPlan({...DEFAULT_STATE,flags:['same-area','window-trim']}).risks.map(x=>x.id),['windows-before-paint']);
+ assert.equal(buildPlan({...EXAMPLE_STATE,flags:[]}).risks.length,0);
+ assert.deepEqual(buildPlan({...EXAMPLE_STATE,flags:['same-area','window-trim']}).risks.map(x=>x.id),['windows-before-paint']);
 });
 test('every combination and order of up to four projects has an acyclic proposed fix',()=>{
  const flags=ASSUMPTIONS.map(x=>x.id),ids=Object.keys(PROJECTS);
@@ -28,19 +28,19 @@ test('moisture gates and connected equipment questions remain after changing ord
  const p=buildPlan({order:['heatpump','basement','waterheater'],flags:['house-change','moisture','tankless']});
  assert.deepEqual(p.gates.map(x=>x.id),['moisture-first','tankless-site-review']);
  assert.equal(p.overlaps.length,2);
- assert.equal(p.openQuestions.length,4);
+ assert.equal(p.openQuestions.length,10);
 });
 test('a share link allowlists choices and excludes discussion status and personal fields',()=>{
- const input={...DEFAULT_STATE,confirmed:['windows-before-paint'],name:'Private',address:'Private address'};
+ const input={...EXAMPLE_STATE,confirmed:['windows-before-paint'],name:'Private',address:'Private address'};
  const encoded=encodePlan(input),decoded=decodePlan(encoded);
- assert.deepEqual(decoded,{order:DEFAULT_STATE.order,flags:DEFAULT_STATE.flags,confirmed:[]});
+ assert.deepEqual(decoded,{order:EXAMPLE_STATE.order,flags:EXAMPLE_STATE.flags,confirmed:[]});
  assert.ok(!encoded.includes('Private'));assert.ok(!encoded.includes('confirmed'));
  assert.equal(decodePlan('v=2&jobs=paint'),null);
  assert.equal(decodePlan('x'.repeat(801)),null);
  assert.deepEqual(normalizeState({order:['paint','constructor','paint','bad'],flags:['same-area','bad']}),{order:['paint'],flags:['same-area'],confirmed:[]});
 });
 test('conversation sheet carries assumptions and questions without claiming a quote',()=>{
- const text=planText(DEFAULT_STATE);
+ const text=planText(EXAMPLE_STATE);
  assert.match(text,/not an estimate or invoice/);assert.match(text,/The trim touch-up/);
  assert.match(text,/ASSUMPTIONS/);assert.match(text,/PROPOSED ORDER TO DISCUSS/);
  assert.ok(!text.includes('$'));
@@ -50,10 +50,14 @@ test('built UI supports reorder, comparison, assumptions, share and clear withou
  const w=dom.window;let copied='';
  Object.defineProperty(w.navigator,'clipboard',{value:{writeText:async text=>{copied=text;}}});
  w.fetch=()=>{throw new Error('This tool must work without external calls');};
- Object.assign(w,{PROJECTS,ASSUMPTIONS,DEFAULT_STATE,normalizeState,buildPlan,encodePlan,decodePlan,planText});
+ Object.assign(w,{PROJECTS,ASSUMPTIONS,DEFAULT_STATE,EXAMPLE_STATE,normalizeState,buildPlan,encodePlan,decodePlan,planText});
  w.eval(fs.readFileSync('assets/second-invoice.js','utf8').replace(/^import[^\n]+\n/,''));
  const d=w.document;
+ assert.equal(d.querySelectorAll('#ripple-order li').length,0);
+ assert.match(d.getElementById('ripple-mode').textContent,/Nothing is selected/);
+ d.getElementById('ripple-example').click();
  assert.equal(d.querySelectorAll('.ripple-risk').length,2);
+ assert.equal(d.querySelectorAll('.ripple-scope-question').length,6);
  d.getElementById('ripple-fix').click();
  assert.equal(d.querySelectorAll('.ripple-risk').length,0);
  assert.equal(d.getElementById('ripple-undo').hidden,false);
@@ -67,4 +71,22 @@ test('built UI supports reorder, comparison, assumptions, share and clear withou
  assert.equal(w.localStorage.getItem('wazoozie-second-invoice-v1'),null);
  assert.equal(d.getElementById('ripple-share').disabled,true);
  dom.window.close();
+});
+
+test('a single project has useful scope questions and no sequencing approval',()=>{
+ assert.deepEqual(DEFAULT_STATE,{order:[],flags:[],confirmed:[]});
+ const p=buildPlan({order:['waterheater'],flags:[]});
+ assert.equal(p.scopeQuestions.length,2);
+ assert.equal(p.openQuestions.length,2);
+ assert.equal(p.risks.length,0);
+ assert.match(planText(p.state),/Which supporting changes|full conversion or replacement/);
+});
+test('reordering keeps coordination questions and discussion status',()=>{
+ const first=buildPlan({...EXAMPLE_STATE,confirmed:['windows-before-paint','scope-paint-first']});
+ const next=buildPlan({...first.state,order:first.recommended});
+ assert.equal(next.risks.length,0);
+ assert.ok(next.state.confirmed.includes('windows-before-paint'));
+ assert.ok(next.state.confirmed.includes('scope-paint-first'));
+ assert.equal(next.openQuestions.length,6);
+ assert.match(planText(next.state),/Can the window scope and finish repairs/);
 });

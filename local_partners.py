@@ -29,10 +29,11 @@ def extend_home_script(script, providers):
         data[key] = {**{k:p[k] for k in ('name','short','trade','location','phone','tel','email','web','source','tags','cover','color','featured')}, 'bio':p['intro'], 'hours':'Contact the business for current availability'}
     script = script.replace("let selectedProvider='middletown';", 'Object.assign(providers,' + json.dumps(data) + ');\nlet selectedProvider=\'middletown\';', 1)
     script = script.replace("cooke:'cooke-carpentry-construction'", "cooke:'cooke-carpentry-construction',hart:'hart-builders',rolledright:'rolled-right-painting'")
-    script = script.replace("['middletown','ryan','liberator','cooke']", "Object.keys(providers).sort((a,b)=>providers[a].name.localeCompare(providers[b].name))")
+    script = script.replace("['middletown','ryan','liberator','cooke']", "Object.keys(providers).sort((a,b)=>({middletown:0,ryan:1,rolledright:2}[a]??3)-({middletown:0,ryan:1,rolledright:2}[b]??3)||providers[a].name.localeCompare(providers[b].name))")
     script = script.replace("s==='handyman'?'cooke':'middletown'", "s==='handyman'?'cooke':s==='painting'?'rolledright':s==='construction-remodeling'?'hart':'middletown'")
     script = script.replace("'electrical','handyman']", "'electrical','handyman','painting','construction-remodeling']")
     script = script.replace("all:'All services'", "painting:'Painting & drywall', 'construction-remodeling':'Construction & remodeling',all:'All services'")
+    script = script.replace('alphabetical order', 'editorial order, not a quality ranking')
     # Each new card opens the shared planner with that business selected.
     return script
 

@@ -5,9 +5,10 @@ import {JSDOM} from 'jsdom';
 const doc=path=>new JSDOM(readFileSync(new URL('../dist'+path+'index.html',import.meta.url),'utf8'),{url:'https://wazoozie.com'+path}).window.document;
 const schema=d=>[...d.querySelectorAll('script[type="application/ld+json"]')].flatMap(s=>{const x=JSON.parse(s.textContent);return x['@graph']||[x];});
 
-test('homepage offers equal service choices before tools without an ownership banner',()=>{
+test('homepage offers equal service choices after the promoted game without an ownership banner',()=>{
  const d=doc('/'),main=d.querySelector('main'),direct=d.querySelector('.service-direct');
- assert.equal(main.children[1],direct);
+ assert.equal(main.children[1].id,'quick-challenge');
+ assert.equal(main.children[2],direct);
  assert.equal(d.querySelector('.grand-primary').getAttribute('href'),'/home-services/');
  assert.equal(direct.querySelectorAll('.service-choice').length,6);
  assert.equal(direct.querySelector('a[href^="tel:"]'),null);
@@ -88,11 +89,11 @@ test('standards distinguish consented Middletown delivery from saved briefs and 
 });
 
 
-test('home-service directory preserves alphabetical ordering before and after client filtering',()=>{
+test('home-service directory keeps Middletown, Ryan and Rolled Right first through client filtering',()=>{
  const markup=readFileSync(new URL('../dist/home-services/index.html',import.meta.url),'utf8');
  const dom=new JSDOM(markup,{url:'https://wazoozie.com/home-services/',runScripts:'outside-only'}),d=dom.window.document;
  const names=()=>[...d.querySelectorAll('#providerResults .procard h3')].map(e=>e.textContent.trim());
- const expected=['Cooke Carpentry & Construction, LLC','Hart Builders, Inc.','Liberator Service Company','Middletown HVAC','Rolled Right Painting, LLC','Ryan Dugan Electric LLC'];
+ const expected=['Middletown HVAC','Ryan Dugan Electric LLC','Rolled Right Painting, LLC','Cooke Carpentry & Construction, LLC','Hart Builders, Inc.','Liberator Service Company'];
  assert.deepEqual(names(),expected);
  const catalog=schema(d).find(x=>x['@type']==='ItemList');
  assert.deepEqual(catalog.itemListElement.map(x=>x.name),expected);
@@ -104,7 +105,7 @@ test('home-service directory preserves alphabetical ordering before and after cl
  filter('hvac');assert.deepEqual(names(),['Middletown HVAC']);
  assert.ok(d.querySelector('#providerResults a[href^="https://book.housecallpro.com/"]'));
  filter('all');assert.deepEqual(names(),expected);
- assert.match(d.querySelector('#resultCount').textContent,/alphabetical/);
+ assert.match(d.querySelector('#resultCount').textContent,/editorial order, not a quality ranking/);
  dom.window.close();
 });
 
@@ -118,4 +119,10 @@ test('booking and story browsing do not pin the owner business ahead of other bu
  assert.deepEqual(posts.slice(0,6),[...posts.slice(0,6)].sort((a,b)=>a.localeCompare(b)));
  assert.ok(stories.querySelector('.neighbor-side a[href="/home-services/"]'));
  d.defaultView.close();stories.defaultView.close();
+});
+
+test('home services remains the first category on the homepage and local hub',()=>{
+ for(const [path,selector] of [['/','.front-door-categories a'],['/local-help/','.local-category-grid a']]){
+  const d=doc(path);assert.equal(d.querySelector(selector).getAttribute('href'),'/home-services/');d.defaultView.close();
+ }
 });
