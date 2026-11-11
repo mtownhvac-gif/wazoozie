@@ -51,5 +51,5 @@ test('service recipients use the shared catalog and neutral pages offer the whol
   const d=doc(path);assert.ok(d.querySelector('.network-wide-next a[href="/local-help/"]'));assert.equal(d.querySelector('.network-wide-next a[href^="tel:"]'),null);d.defaultView.close();
  }
  const about=doc('about');for(const b of Object.values(BUSINESSES))assert.ok(about.querySelector('article a[href="/businesses/'+b.slug+'/"]'));about.defaultView.close();
- const how=doc('how-it-works');assert.match(how.querySelector('.network-how').textContent,/Saving notes alone does not notify a business/);assert.match(how.querySelector('.network-how').textContent,/receipt distinguishes accepted, queued and unsent requests/);how.defaultView.close();
+ const how=doc('how-it-works');assert.match(how.querySelector('.network-how').textContent,/Saving notes alone does not notify a business/);assert.match(how.querySelector('.network-how').textContent,/receipt tells you whether it was sent, is waiting to send or couldn’t be sent/);how.defaultView.close();
 });

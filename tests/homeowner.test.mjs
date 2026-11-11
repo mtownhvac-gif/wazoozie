@@ -85,7 +85,7 @@ test('business evidence is explicit and does not claim a recorded credential ins
     assert.ok(content.includes('WHY WE RECOMMEND THEM'));
     assert.ok(!content.includes('documents are not recorded'));
     assert.ok(content.includes('Talk to '));
-    assert.ok(content.includes('not a credential inspection'));
+    assert.ok(content.includes('haven’t independently checked its current licenses, insurance or workmanship'));
     assert.ok(!content.includes('Vetted by Wazoozie'));
   }
 });

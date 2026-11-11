@@ -6,10 +6,10 @@ export const QUESTIONS = [
   ['The project is finished. Your favorite part?', ['The house feels better to live in.', 'The work matches the plan.', 'It finally feels like our place.', 'I know what to look after next.']]
 ];
 export const PERSONALITIES = [
-  {name:'The Comfort Curator', line:'You notice how a home feels before anything else.', tip:'Choose one room and note when it feels uncomfortable. A clear pattern gives the first conversation somewhere useful to start.', action:'Explore heating & cooling', href:'/services/heating-cooling/'},
+  {name:'The Comfort Seeker', line:'You notice how a home feels before anything else.', tip:'Choose one room and note when it feels uncomfortable. Tell the contractor when it happens and how the rest of the house feels.', action:'Explore heating & cooling', href:'/services/heating-cooling/'},
   {name:'The Plan Keeper', line:'You like the details settled before the tools come out.', tip:'Compare the written scope, exclusions, and approval process before comparing totals. A shared plan keeps surprises out of the job.', action:'Compare two estimates', href:'/compare/'},
-  {name:'The Nest Remixer', line:'You see the room your home could become.', tip:'Pick one space, one must-have, and one thing you want to keep. Use those three details to start a focused project conversation.', action:'Make a project sheet', href:'/project-kit/'},
-  {name:'The Future Friend', line:'You want a home that is easier to look after.', tip:'Start a list of equipment, last known service dates, and manufacturer care instructions. Ask a professional to clarify anything you cannot verify safely.', action:'Browse the home tips', href:'/home-tips/'}
+  {name:'The Room Reimaginer', line:'You see the room your home could become.', tip:'Pick one space, one must-have, and one thing you want to keep. Use those details to explain the job when you call.', action:'Make a project sheet', href:'/project-kit/'},
+  {name:'The Upkeep Planner', line:'You want a home that is easier to look after.', tip:'Start a list of equipment, last known service dates, and manufacturer care instructions. Ask a professional to clarify anything you cannot verify safely.', action:'Browse the home tips', href:'/home-tips/'}
 ];
 export const PRIORITIES = [
   {name:'Comfort in every room', detail:'That one room should not need its own season.', tip:'Write down the affected rooms and when the comfort changes.', href:'/services/heating-cooling/', action:'Explore comfort help'},
