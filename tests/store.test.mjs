@@ -44,11 +44,14 @@ test('private store is durable, idempotent, rate limited and expires old records
 
 test('contractor applications remain private, idempotent, rate limited and expire',async()=>{
   const source=await storeSource();
-  const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:source+'\nexport class TestInbox extends ProjectInbox { async runExpiry(){return this.alarm();} }\nexport default {fetch(){return new Response("test");}};',compatibilityDate:'2026-11-04',durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}}}));
+  const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:source+'\nexport class TestInbox extends ProjectInbox { async runExpiry(){return this.alarm();} async deliveryAlarm(){return this.ctx.storage.getAlarm();} }\nexport default {fetch(){return new Response("test");}};',compatibilityDate:'2026-11-04',durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}}}));
   try{
-    const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');const store=ns.get(ns.idFromName('application-test'));const now=Date.now();
+    const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');const store=ns.get(ns.idFromName('application-test'));const now=Date.now()+60000;
+    await store.recordActivity({action:'call_click',provider:'middletown',context:'help'},'alarm-test',now);
+    assert.equal(await store.deliveryAlarm(),now+86400000);
     const data={id:crypto.randomUUID(),businessName:'Synthetic Contractor',contactName:'Synthetic Test',email:'test@example.invalid',phone:'202-555-0100',website:'',town:'Media',state:'PA',coverage:'Media and Delaware County',registration:'',insurance:'yes',services:['carpentry'],interest:'sponsored',notes:'Synthetic only',consentVersion:'test'};
     assert.equal((await store.saveApplication(data,'same','client',now)).status,201);
+    assert.equal(await store.deliveryAlarm(),now+1000,'application outbox must replace daily cleanup with a prompt delivery alarm before intake can send');
     assert.equal((await store.saveApplication(data,'same','client',now)).status,200);
     assert.equal((await store.saveApplication(data,'different','client',now)).status,409);
     for(let i=0;i<2;i++)assert.equal((await store.saveApplication({...data,id:crypto.randomUUID()},'next','client',now)).status,201);
