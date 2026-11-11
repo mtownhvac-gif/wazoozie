@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import {Miniflare, convertV4MiniflareOptions} from 'miniflare';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
+import {fileURLToPath} from 'node:url';
 async function storeSource(){
  const source=await readFile(new URL('../server/project-store.mjs',import.meta.url),'utf8');
- const result=await build({stdin:{contents:source,resolveDir:new URL('../server/',import.meta.url).pathname},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:workers']});
+ const result=await build({stdin:{contents:source,resolveDir:fileURLToPath(new URL('../server/',import.meta.url))},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:workers']});
  return result.outputFiles[0].text;
 }
 

@@ -1,4 +1,12 @@
 /* Visible by default. Motion is an enhancement, never a loading gate. */
+.wz-scene{margin:0;min-width:0;padding:9px}
+.wz-scene-art{display:block}
+.wz-scene-replay{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:18px;padding:9px 16px;border:1px solid currentColor;border-radius:24px;background:transparent;color:inherit;font:700 11px/1.5 Manrope,Arial,sans-serif;cursor:pointer}
+.wz-scene-replay[hidden]{display:none}
+.wz-scene-replay:focus-visible{outline:3px solid #d77739;outline-offset:5px}
+.wz-scene-replay:disabled{cursor:default;opacity:.7}
+.wz-scene-status{min-height:3em;margin-top:9px;font-size:10px;line-height:1.5;max-width:38em}
+.ripple-promo-demo[data-ordered]>.ripple-promo-again{color:#24634e}
 .wz-motion-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:8px 0;padding:8px 14px;border:1px solid #b9abbd;border-radius:24px;background:transparent;color:#59465e;font:600 11px/1.5 Manrope,Arial,sans-serif;cursor:pointer;white-space:normal}
 .wz-motion-toggle:focus-visible{outline:3px solid #9b632d;outline-offset:4px}
 .wz-motion-toggle:disabled{cursor:default;color:#695b6d;border-color:#c7bcc8}
@@ -23,4 +31,4 @@
 .wz-motion-off *{animation:none!important;transition:none!important}
 html.wz-motion-disabled{scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}body[data-wz-motion] *{animation:none!important;transition:none!important}}
-@media print{.wz-motion-toggle{display:none!important}body[data-wz-motion] *{animation:none!important;transition:none!important}}
+@media print{.wz-motion-toggle,.wz-scene-replay{display:none!important}body[data-wz-motion] *{animation:none!important;transition:none!important}}
