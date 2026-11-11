@@ -25,8 +25,8 @@ test('location evidence distinguishes published coverage from unknown coverage w
 test('all profiles explain evidence limits; only sourced coverage receives a coverage-check date',()=>{
  const book=new JSDOM(readFileSync('dist/book/index.html','utf8'));
  for(const card of book.window.document.querySelectorAll('[data-business]')){const slug=card.dataset.business,dom=new JSDOM(readFileSync('dist/businesses/'+slug+'/index.html','utf8')),d=dom.window.document;
-  const facts=d.querySelector('.profile-facts');assert.ok(facts,slug);assert.match(facts.textContent,/not a current inspection/);
-  if(slug==='middletown-hvac'){assert.match(facts.textContent,/coverage only/);assert.ok(facts.querySelector('a[href="https://www.mtownhvac.com/contact/"]'));}else{assert.match(facts.textContent,/Not independently recorded/);assert.doesNotMatch(facts.textContent,/Source read 2026/);}dom.window.close();
+  const facts=d.querySelector('.profile-facts');assert.ok(facts,slug);assert.match(facts.textContent,/listing doesn’t confirm these for your job/);
+  if(slug==='middletown-hvac'){assert.match(facts.textContent,/coverage only/);assert.ok(facts.querySelector('a[href="https://www.mtownhvac.com/contact/"]'));}else{assert.match(facts.textContent,/haven’t confirmed this business’s full service area/);assert.doesNotMatch(facts.textContent,/Source read 2026/);}dom.window.close();
  }book.window.close();
  const home=new JSDOM(readFileSync('dist/index.html','utf8'));assert.equal(home.window.document.querySelector('#home-town-query').name,'town');home.window.close();
 });
