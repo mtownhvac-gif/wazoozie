@@ -314,6 +314,25 @@ COPY.update({
 })
 
 
+COPY.update({
+    "A good question opens the right door.": "Not sure where to start?",
+    "Four simple checks, then a direct service connection.": "Try these checks before calling for service.",
+    "Get ready for a transmission-service conversation.": "What to tell the transmission shop.",
+    "Meet the process and the people who can explain it.": "What to ask before you start looking.",
+    "Need a repair, a mechanic, or help with a move? Start with the people here. Read why they’re listed, check their details, and give the business a call.": "Find local help for repairs, auto care or a move. Browse the businesses and call when you’re ready.",
+    "A local introduction, with a person in the middle.": "Tell us what you need.",
+    ". Our team reviews it and forwards it to the appropriate business. Use the planner to submit your request, or email us directly. We review requests before forwarding them; the business confirms your appointment.": ". We’ll review your request and pass it to the appropriate business. The business confirms the appointment.",
+    "Read the home-service directory standards →": "How we choose businesses →",
+    "Read the profile and follow the sources.": "See their services and contact details.",
+    "Make sure the fit is right.": "Before you hire.",
+    "THE DETAILS BEFORE THE CALL": "BEFORE YOU CALL",
+    "Keep the right trade on the right work.": "Need a different trade?",
+    "Give the business a useful starting point.": "Tell the business what you need.",
+    "Where the service information comes from.": "Service details and sources.",
+    "A starting point for the first conversation.": "What to ask before you call."
+})
+
+
 def clean(content):
     # Do not rewrite attributed quotations, typed examples, code, URLs or field values.
     chunks = re.split(r'(<(?:script|style|textarea|blockquote|q)\b[^>]*>.*?</(?:script|style|textarea|blockquote|q)>|<[^>]+>)', content, flags=re.S | re.I)
