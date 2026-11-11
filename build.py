@@ -318,6 +318,8 @@ from trade_imagery import add as add_trade_imagery
 add_trade_imagery(OUT)
 from finish_welcome import add as finish_welcome
 finish_welcome(OUT)
+from second_invoice import add as add_second_invoice
+add_second_invoice(OUT, PUBLIC, PAGES)
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata
 finalize_service_metadata(OUT, PUBLIC)
