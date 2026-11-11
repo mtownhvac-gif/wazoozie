@@ -322,6 +322,8 @@ from second_invoice import add as add_second_invoice
 add_second_invoice(OUT, PUBLIC, PAGES)
 from before_disappears import add as add_before_disappears
 add_before_disappears(OUT, PUBLIC, PAGES)
+from financing import add as add_financing
+add_financing(OUT, PUBLIC, PAGES)
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
 from service_discovery import finalize as finalize_service_metadata
 finalize_service_metadata(OUT, PUBLIC)

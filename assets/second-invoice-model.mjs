@@ -24,7 +24,8 @@ export const ASSUMPTIONS = [
   {id:'moisture',label:'The basement has an unresolved moisture concern.',help:'Have the cause evaluated before enclosing or finishing the space.'},
   {id:'tankless',label:'The Water Heater project is a Tankless conversion.',help:'Utility capacity, venting and drainage need a site review.'}
 ];
-export const DEFAULT_STATE={order:['paint','windows','heatpump'],flags:['same-area','wall-access','window-trim'],confirmed:[]};
+export const DEFAULT_STATE={order:[],flags:[],confirmed:[]};
+export const EXAMPLE_STATE={order:['paint','windows','heatpump'],flags:['same-area','wall-access','window-trim'],confirmed:[]};
 const allowedFlags=new Set(ASSUMPTIONS.map(x=>x.id));
 export function normalizeState(input={}){
   const order=Array.isArray(input.order)?[...new Set(input.order.filter(x=>typeof x==='string'&&Object.hasOwn(PROJECTS,x)))].slice(0,4):[];
@@ -66,9 +67,10 @@ export function buildPlan(input){
   if(has('basement')&&flag('moisture'))gates.push({id:'moisture-first',title:'Resolve the moisture question first.',trade:'construction',text:'Have the source and necessary correction evaluated before enclosing or finishing the affected area. Paint and new finishes do not resolve a moisture problem.',question:'What caused the moisture, what is the correction, and how will readiness for finishing be checked?',source:'https://www.epa.gov/mold/brief-guide-mold-moisture-and-your-home'});
   if(has('waterheater')&&flag('tankless'))gates.push({id:'tankless-site-review',title:'Price the conversion, including the supporting work.',trade:'hvac',text:'Ask for a site review of the equipment location, utility supply, venting, combustion air where applicable and condensate provisions before comparing totals.',question:'Which supporting changes are included, excluded or still awaiting a site finding?'});
   const tradeIds=[...new Set(state.order.map(id=>PROJECTS[id].trade).concat(overlaps.map(x=>x.trade),gates.map(x=>x.trade)))];
-  const relevant=new Set([...risks,...overlaps,...gates].map(x=>x.id));
+  const scopeQuestions=state.order.flatMap(id=>PROJECTS[id].questions.map((question,i)=>({id:`scope-${id}-${i===0?'first':'second'}`,project:id,question})));
+  const relevant=new Set([...scopeQuestions,...edges,...overlaps,...gates].map(x=>x.id));
   state.confirmed=state.confirmed.filter(id=>relevant.has(id));
-  return {state,edges,risks,overlaps,gates,trades:tradeIds.map(id=>({id,...TRADES[id]})),recommended:recommendedOrder(state.order,edges),openQuestions:[...gates,...risks,...overlaps].filter(x=>!state.confirmed.includes(x.id))};
+  return {state,edges,risks,overlaps,gates,trades:tradeIds.map(id=>({id,...TRADES[id]})),recommended:recommendedOrder(state.order,edges),scopeQuestions,openQuestions:[...scopeQuestions,...gates,...edges,...overlaps].filter(x=>!state.confirmed.includes(x.id))};
 }
 export function encodePlan(input){const s=normalizeState(input);return new URLSearchParams({v:'1',jobs:s.order.join(','),assume:s.flags.join(',')}).toString();}
 export function decodePlan(hash){
@@ -78,6 +80,6 @@ export function decodePlan(hash){
   return normalizeState({order:q.get('jobs').split(','),flags:(q.get('assume')||'').split(',')});
 }
 export function planText(input){
-  const p=buildPlan(input),lines=['WAZOOZIE / THE SECOND INVOICE','A planning conversation, not an estimate or invoice.','','MY PROPOSED ORDER',...p.state.order.map((id,i)=>`${i+1}. ${PROJECTS[id].name}`),'','ASSUMPTIONS',...ASSUMPTIONS.filter(x=>p.state.flags.includes(x.id)).map(x=>'- '+x.label),'','POSSIBLE DO-OVERS',...(p.risks.length?p.risks.map(x=>'- '+x.title+': '+x.possible):['No ordering conflicts found in this limited model. Site findings can add others.']),'','QUESTIONS BEFORE APPROVAL',...[...p.gates,...p.risks,...p.overlaps].map(x=>'- '+x.question),'','PROPOSED ORDER TO DISCUSS',...p.recommended.map((id,i)=>`${i+1}. ${PROJECTS[id].name}`),'','Each business confirms the scope, responsibilities, requirements, price and schedule.'];
+  const p=buildPlan(input),lines=['WAZOOZIE / THE SECOND INVOICE','A planning conversation, not an estimate or invoice.','','MY PROPOSED ORDER',...p.state.order.map((id,i)=>`${i+1}. ${PROJECTS[id].name}`),'','ASSUMPTIONS',...ASSUMPTIONS.filter(x=>p.state.flags.includes(x.id)).map(x=>'- '+x.label),'','POSSIBLE DO-OVERS',...(p.risks.length?p.risks.map(x=>'- '+x.title+': '+x.possible):['No ordering conflicts found in this limited model. Site findings can add others.']),'','QUESTIONS BEFORE APPROVAL',...[...p.scopeQuestions,...p.gates,...p.edges,...p.overlaps].map(x=>'- '+(x.project?PROJECTS[x.project].name+': ':'')+x.question),'','PROPOSED ORDER TO DISCUSS',...p.recommended.map((id,i)=>`${i+1}. ${PROJECTS[id].name}`),'','Each business confirms the scope, responsibilities, requirements, price and schedule.'];
   return lines.join('\n');
 }

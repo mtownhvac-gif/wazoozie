@@ -72,3 +72,12 @@ test('Sound Wraps stays a direct website referral and appears in public discover
  assert.equal(catalog.planning.pricingGuide,'https://wazoozie.com/pricing-guide/');
  const home=page('/');assert.ok(home.window.document.querySelector('.buying-home a[href="/pricing-guide/"]'));home.window.close();
 });
+
+test('private equity commentary targets practices, with clear caveats and practical questions',()=>{
+ const dom=page('/before-you-say-yes/'),section=dom.window.document.querySelector('#ownership-and-incentives');
+ assert.ok(section);assert.match(section.textContent,/Your furnace is not an exit strategy/);
+ assert.match(section.textContent,/Who owns this business/);assert.match(section.textContent,/not a claim that every investment-owned company/);
+ assert.match(section.textContent,/independent ownership is not a quality guarantee/);
+ assert.ok(section.querySelector('a[href="https://consumer.ftc.gov/articles/how-avoid-home-improvement-scam"]'));
+ assert.doesNotMatch(section.textContent,/Middletown|Liberator|Ryan Dugan|Cooke/);dom.window.close();
+});
