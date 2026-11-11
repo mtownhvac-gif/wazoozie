@@ -14,8 +14,8 @@ function page({reduced=false,paused=false,broken=false}={}){
  if(paused)w.localStorage.setItem(MOTION_KEY,'off');
  w.localStorage.setItem('my-project','keep my project');
  w.Element.prototype.getBoundingClientRect=()=>({top:100,bottom:200,width:300,height:100});
- w.Element.prototype.animate=function(frames,options){if(broken)throw Error('Animation unavailable');const animation={el:this,frames,options,cancelled:false,finished:new Promise(()=>{}),cancel(){this.cancelled=true;}};animations.push(animation);return animation;};
- w.IntersectionObserver=class{constructor(fn){this.fn=fn;this.targets=new Set();observers.push(this);}observe(el){this.targets.add(el);}unobserve(el){this.targets.delete(el);}disconnect(){this.targets.clear();}fire(el){this.fn([{target:el,isIntersecting:true}]);}};
+ w.Element.prototype.animate=function(frames,options){if(broken)throw Error('Animation unavailable');let finish;const animation={el:this,frames,options,cancelled:false,finished:new Promise(resolve=>{finish=resolve;}),finish(){finish();},cancel(){this.cancelled=true;}};animations.push(animation);return animation;};
+ w.IntersectionObserver=class{constructor(fn){this.fn=fn;this.targets=new Set();observers.push(this);}observe(el){this.targets.add(el);}unobserve(el){this.targets.delete(el);}disconnect(){this.targets.clear();}fire(el,ratio=0.5){this.fn([{target:el,isIntersecting:true,intersectionRatio:ratio}]);}};
  const app=mountMotion(w);
  return {w,d:w.document,dom,app,animations,observers,change(value){preference.matches=value;for(const fn of listeners)fn();},close(){app?.destroy();dom.window.close();}};
 }
@@ -50,4 +50,27 @@ test('forms, accounts and private tools retain their existing static flow; brows
  for(const route of ['start','account','for-contractors','before-it-disappears','compare']){const text=readFileSync('dist/'+route+'/index.html','utf8');assert.ok(!text.includes('/assets/motion.mjs'),route);assert.ok(!text.includes('data-wz-motion'),route);}
  for(const route of ['index.html','home-services/index.html','businesses/middletown-hvac/index.html','services/heating-cooling/index.html']){const text=readFileSync('dist/'+route,'utf8');assert.ok(text.includes('/assets/motion.mjs'),route);assert.ok(text.includes('data-wz-motion'),route);}
  const d=new JSDOM(html).window.document;assert.equal(d.querySelectorAll('link[href*="site-"]').length,1);assert.equal(d.querySelectorAll('.service-choice').length,6);
+});
+
+test('project illustrations play once on entry and can be replayed without navigation or network calls',async()=>{
+ const p=page();try{
+  const figure=p.d.querySelector('[data-wz-scene="order"]'),art=figure.querySelector('a'),button=figure.querySelector('button');
+  assert.equal(button.hidden,false);assert.equal(button.getAttribute('aria-controls'),art.id);
+  const before=p.animations.length;const observer=p.observers[0];observer.fire(art,0.1);assert.equal(p.animations.length,before);observer.fire(art);observer.fire(art);assert.equal(p.animations.length,before+3);assert.equal(button.disabled,true);
+  p.animations.slice(before).forEach(a=>a.finish());await new Promise(r=>setImmediate(r));
+  assert.equal(art.children[1].textContent.includes('Replace the windows'),true);assert.equal(art.children[2].textContent.includes('Paint the room'),true);
+  assert.match(figure.querySelector('figcaption').textContent,/Windows first/);assert.equal(button.disabled,false);assert.equal(art.getAttribute('href'),'/second-invoice/');
+  button.click();assert.equal(p.animations.length,before+6);assert.equal(art.children[1].textContent.includes('Paint the room'),true);
+  p.d.getElementById('wz-motion-toggle').click();assert.equal(button.disabled,true);assert.ok(p.animations.slice(before+3).every(a=>a.cancelled));
+  assert.equal(art.getAttribute('href'),'/second-invoice/');
+ }finally{p.close();}
+});
+test('layer previews respect device settings and cancel together on link focus or tab hiding',()=>{
+ const p=page();try{
+  const figure=p.d.querySelector('[data-wz-scene="layers"]'),art=figure.querySelector('a');const before=p.animations.length;
+  figure.querySelector('button').click();assert.equal(p.animations.length,before+3);art.focus();assert.ok(p.animations.slice(before).every(a=>a.cancelled));
+  figure.querySelector('button').focus();figure.querySelector('button').click();const last=p.animations.slice(-3);
+  Object.defineProperty(p.d,'hidden',{configurable:true,value:true});p.d.dispatchEvent(new p.w.Event('visibilitychange'));assert.ok(last.every(a=>a.cancelled));
+  p.change(true);assert.equal(figure.querySelector('button').disabled,true);assert.equal(art.getAttribute('href'),'/before-it-disappears/');
+ }finally{p.close();}
 });
