@@ -270,16 +270,30 @@ receive an additive nullable `neighbor_code` column, preserving prior records.
 ### Search-engine submissions
 
 The production build publishes the root ownership file configured in
-`indexnow-config.json`. After deploying, run `npm run notify:search` to notify
-IndexNow's participating engines using the **live** sitemap. Running
-`python3 scripts/submit_indexnow.py` alone only verifies the live file and lists
-its URL count. The script rejects query strings, fragments, other hosts and API
-paths; it does not transmit visitor details or referral codes.
+`indexnow-config.json`. After deployment, verify the public pages before asking
+engines to revisit them:
+
+- `npm run check:live-search -- --expected-dir dist` checks the live sitemap
+  against the build, robots.txt, canonical HTML and eight key public HVAC pages.
+  This is read-only and does not prove search-engine indexing.
+- `python3 scripts/submit_indexnow.py` performs a dry-run sitemap and ownership
+  check without notifying an engine.
+- `npm run notify:search -- --url https://wazoozie.com/services/second-opinion/`
+  notifies IndexNow about that changed page. Repeat `--url` for other pages
+  actually added or updated in the deployed release.
+- `npm run notify:search -- --all` deliberately notifies every public sitemap
+  URL, for example at first launch. Do not use it for every small change.
+
+Submission requires an explicit changed-page list or `--all`. Each selected
+page must be in the live sitemap, return HTTP 200, and declare the matching
+canonical without a noindex directive. Validation completes before anything is
+posted. The script rejects query strings, fragments, other hosts, internal
+routes and noncanonical paths; it does not transmit visitor details or referral
+codes. Ordinary builds and tests never submit URLs.
 
 An HTTP 200 means the URLs were received; 202 means receipt with ownership-key
 validation pending. Neither confirms indexing or ranking. Keep the ownership
-file deployed. Future updates can be submitted using the same command after
-successful deployment; ordinary builds do not send notifications.
+file deployed and do not repeatedly submit unchanged pages.
 
 Google uses its separate Search Console sitemap submission and URL inspection.
 Bing Webmaster Tools is useful for its reporting but is not required for an

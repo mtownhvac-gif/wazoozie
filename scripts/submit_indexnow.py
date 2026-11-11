@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from search_submission import configuration, canonical_urls
+from search_submission import configuration, canonical_urls, select_urls, validate_public_page
 
 
 def fetch(url, payload=None):
@@ -18,23 +18,35 @@ def fetch(url, payload=None):
     return int(status), body
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--submit', action='store_true', help='Send public sitemap URLs to IndexNow after live key verification.')
-    args = parser.parse_args()
+    parser.add_argument('--submit', action='store_true', help='Notify IndexNow after verifying the live key and selected pages.')
+    parser.add_argument('--url', action='append', help='Changed canonical URL. Repeat for each newly deployed or updated page.')
+    parser.add_argument('--all', action='store_true', help='Intentionally notify all public sitemap URLs, for example at first launch.')
+    args = parser.parse_args(argv)
+    if args.url and args.all:
+        parser.error('Choose --url or --all, not both.')
+    if args.submit and not (args.url or args.all):
+        parser.error('--submit needs --url for changed pages or --all for an intentional full submission.')
     config = configuration()
     origin, key = config['origin'], config['key']
     status, sitemap = fetch(origin + '/sitemap.xml')
     if status != 200:
         raise RuntimeError('The live sitemap is unavailable; nothing was submitted.')
-    urls = canonical_urls(sitemap, origin)
+    sitemap_urls = canonical_urls(sitemap, origin)
+    urls = select_urls(sitemap_urls, args.url, args.all) if args.url or args.all else sitemap_urls
     key_location = origin + '/' + key + '.txt'
     status, proof = fetch(key_location)
     if status != 200 or proof.strip() != key:
         raise RuntimeError('The live ownership file is not verified; nothing was submitted.')
-    print(f'Verified live ownership file and {len(urls)} canonical public sitemap URLs.', flush=True)
+    for url in urls if args.submit or args.url else []:
+        status, markup = fetch(url)
+        if status != 200:
+            raise RuntimeError(f'{url}: live page returned HTTP {status}; nothing was submitted.')
+        validate_public_page(markup, url)
+    print(f'Verified live ownership file; selected {len(urls)} of {len(sitemap_urls)} canonical public sitemap URLs.', flush=True)
     if not args.submit:
-        print('Dry run only. Use --submit after deployment to notify participating search engines.')
+        print('Dry run only. Use --submit --url CANONICAL_URL after deployment; --all is for an intentional full submission.')
         return
     payload = {'host': 'wazoozie.com', 'key': key, 'keyLocation': key_location, 'urlList': urls}
     status, body = fetch('https://api.indexnow.org/indexnow', payload)
