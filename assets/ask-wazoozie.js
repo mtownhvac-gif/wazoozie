@@ -74,9 +74,9 @@ function show(result,isSaved=false){
  root.append(make('div',source,'eyebrow'),make('h2',result.emergency?'Please get to a safe place.':'Your project, taking shape.'),make('p',result.summary,'ask-summary'));
  if(result.emergency){root.append(link('Emergency calling information','tel:911','btn primary'),make('p','Do not use this project helper to manage an emergency.','ask-small'));}
  else{
-  const notes=make('section',undefined,'ask-question-notes');notes.append(make('h3','Make these questions useful.'),make('p','Add what you know. These notes stay in this page until you save, download or choose to carry them into a request.','ask-small'));
+  const notes=make('section',undefined,'ask-question-notes');notes.append(make('h3','Add your notes.'),make('p','Add what you know. These notes stay in this page until you save, download or choose to carry them into a request.','ask-small'));
   result.questions.forEach((q,i)=>{
-   const label=make('label',q);const input=make('textarea');input.rows=2;input.maxLength=400;input.placeholder='What you know—or leave this to confirm';input.value=responses[i]||'';input.setAttribute('aria-label',`My note: ${q}`);
+   const label=make('label',q);const input=make('textarea');input.rows=2;input.maxLength=400;input.placeholder='Add what you know, or leave it blank';input.value=responses[i]||'';input.setAttribute('aria-label',`My note: ${q}`);
    input.oninput=()=>{responses[i]=input.value;edited();};label.append(input);notes.append(label);
   });root.append(notes);
   const prep=make('fieldset',undefined,'ask-prep-list');prep.append(make('legend','A few things to have ready'));
@@ -84,12 +84,12 @@ function show(result,isSaved=false){
   const progress=make('p','','ask-small');progress.id='ask-progress';progress.setAttribute('role','status');root.append(prep,progress);
   const caution=make('p','','ask-local-safety');caution.id='ask-local-safety';caution.hidden=true;caution.setAttribute('role','alert');root.append(caution);
   const trade=INTENTS[intent],business=BUSINESSES[trade.provider];
-  const resources=make('section',undefined,'ask-references');resources.append(make('h3','Useful guides for this project'),make('p','Selected from Wazoozie’s planning guides. These links are separate from the suggested notes.','ask-small'));
+  const resources=make('section',undefined,'ask-references');resources.append(make('h3','Useful guides for this project'),make('p','More help with this kind of project.','ask-small'));
   for(const resource of planningResources(intent,mode))resources.append(link(resource.title+' →',resource.href));root.append(resources);
   const contact=make('section',undefined,'ask-next');contact.id='ask-next-contact';
-  const requestLink=link('Take my notes to a request →','/start/?intent='+intent,'btn primary');
+  const requestLink=link('Use these notes in a request →','/start/?intent='+intent,'btn primary');
   requestLink.onclick=event=>{try{sessionStorage.setItem(ASK_HANDOFF_KEY,JSON.stringify({intent,details:requestNotes(snapshot()),at:Date.now()}));}catch{event.preventDefault();status('This browser could not carry the notes. Copy or download the plan, then use the business contact.');}};
-  contact.append(make('span','WHEN YOU’RE READY','eyebrow'),make('h3',business.name),make('p','A directory contact for your selected project. Confirm scope, address coverage, charges and availability directly.'),link('Meet the business →','/businesses/'+business.slug+'/','btn outline'),link('Call '+business.phone,'tel:'+business.tel,'ask-direct-call'),requestLink);root.append(contact);
+  contact.append(make('span','WHEN YOU’RE READY','eyebrow'),make('h3',business.name),make('p','Call to discuss the job, your address, the visit charge and available appointments.'),link('Meet the business →','/businesses/'+business.slug+'/','btn outline'),link('Call '+business.phone,'tel:'+business.tel,'ask-direct-call'),requestLink);root.append(contact);
   if(/\b(?:urgent|as soon as possible|no heat|no cooling|no hot water)\b/i.test(question))contact.prepend(make('p','Need prompt help? Call the business to check availability. Planning notes and online requests do not confirm service today.','ask-call-first'));
   const actions=make('div',undefined,'ask-result-actions');
   const copy=make('button','Copy my plan','btn outline');copy.type='button';copy.onclick=async()=>{try{await navigator.clipboard.writeText(formatPlan(snapshot(),CATALOG));status('Plan copied with your notes. You decide where to share it.');}catch{const fallback=make('textarea',undefined,'ask-copy-fallback');fallback.value=formatPlan(snapshot(),CATALOG);fallback.readOnly=true;fallback.setAttribute('aria-label','Project notes to copy');root.append(fallback);fallback.focus();fallback.select();status('Copy wasn’t available. Select and copy the notes shown below.');}};
@@ -106,7 +106,7 @@ function renderSaved(){
  if(!saved.length){root.append(make('p','No plans saved on this browser.'));return;}
  saved.forEach(r=>{
   const row=make('article');row.append(make('span',INTENTS[r.intent].label,'eyebrow'),make('h3',r.answer.summary.slice(0,95)+(r.answer.summary.length>95?'…':'')));
-  const open=make('button','Open saved plan →');open.type='button';open.onclick=()=>{if(busy)return;setMode(r.mode);$('ask-intent').value=r.intent;$('ask-question').value=r.question;renderDescription();count();$('ask-consent').checked=false;intent=r.intent;question=r.question;answer=r.answer;responses=[...(r.responses||[])];prepared=[...(r.prepared||[])];activeSavedId=r.id;show(answer,true);status('Saved notes reopened. No new model request or business request was made.');};
+  const open=make('button','Open saved plan →');open.type='button';open.onclick=()=>{if(busy)return;setMode(r.mode);$('ask-intent').value=r.intent;$('ask-question').value=r.question;renderDescription();count();$('ask-consent').checked=false;intent=r.intent;question=r.question;answer=r.answer;responses=[...(r.responses||[])];prepared=[...(r.prepared||[])];activeSavedId=r.id;show(answer,true);status('Your saved plan is open. Your question wasn’t sent again, and no business was contacted.');};
   const remove=make('button','Remove');remove.type='button';remove.onclick=()=>{try{const next=saved.filter(x=>x.id!==r.id);if(next.length)localStorage.setItem(STORE,JSON.stringify(next));else localStorage.removeItem(STORE);saved=next;if(activeSavedId===r.id){activeSavedId=null;edited();}renderSaved();$('ask-storage-status').textContent='Saved plan removed.';}catch{$('ask-storage-status').textContent='This browser could not remove the saved plan.';}};
   row.append(open,remove);root.append(row);
  });
@@ -121,7 +121,7 @@ $('ask-quick').onclick=()=>{
  if(!Object.hasOwn(INTENTS,selected)){status('Choose the kind of work to get a quick checklist.');$('ask-intent').focus();return;}
  clearAnswer();intent=selected;question=$('ask-question').value.trim()||`Preparing for ${INTENTS[intent].label.toLowerCase()}.`;
  answer=quickPlan(intent,question,CATALOG);responses=[];prepared=[];show(answer);
- status(answer.emergency?'Please follow the safety guidance.':'Quick checklist ready. Your question was not sent and no daily allowance was used.');
+ status(answer.emergency?'Please follow the safety guidance.':'Your checklist is ready. Your question wasn’t sent.');
 };
 $('ask-form').onsubmit=async event=>{
  event.preventDefault();if(busy||!available||!$('ask-form').reportValidity())return;
@@ -130,7 +130,7 @@ $('ask-form').onsubmit=async event=>{
   const response=await fetch('/api/ask-wazoozie',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'omit',referrerPolicy:'no-referrer',body:JSON.stringify({question,intent,mode,consent:true}),signal:AbortSignal.timeout(55000)});
   const result=await response.json();if(!response.ok)throw Error(result.error||'The helper is temporarily unavailable.');
   if(typeof result.summary!=='string'||!Array.isArray(result.questions)||!Array.isArray(result.prepare))throw Error('The helper could not produce a clear response.');
-  answer=result;show(answer);status(result.emergency?'Please follow the safety guidance.':'Your starting point is ready. Add your answers, check off preparation and choose the next step.');
+  answer=result;show(answer);status(result.emergency?'Please follow the safety guidance.':'Your notes are ready. Add what you know, check off what you have and decide what to do next.');
  }catch(error){status((error.name==='TimeoutError'?'The helper took too long.':error.message)+' You can use Get a quick checklist without another request.');$('ask-empty').hidden=false;}
  finally{lock(false);}
 };

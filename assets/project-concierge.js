@@ -86,7 +86,7 @@ export function initConcierge(doc, suppliedStorage) {
       for(const [key,value] of Object.entries(STAGES)){const option=el('option',value);option.value=key;select.append(option);}select.value=item.stage;
       select.addEventListener('change',()=>{item.stage=select.value;persist();render();doc.querySelector(`[data-project="${item.intent}"] select`)?.focus();});label.append(select);card.append(label);
       card.append(el('p','Your update · '+PROJECT_NEXT[item.stage],'home-project-next'));
-      const details=el('details');details.open=item.stage!=='done';details.append(el('summary','Before the first conversation'));
+      const details=el('details');details.open=item.stage!=='done';details.append(el('summary','Before you call'));
       const list=el('ul');for(const question of PROJECT_QUESTIONS[item.intent]||PROJECT_QUESTIONS.comfort)list.append(el('li',question));details.append(list);card.append(details);
       const contact=el('div',undefined,'home-project-contact');contact.append(el('strong',business.name),link('Meet the business ↗','/businesses/'+business.slug+'/'));
       const actions=el('div',undefined,'home-project-actions');actions.append(link('Plan this project →','/start/?intent='+item.intent,'btn primary'),link('Call '+business.phone,'tel:'+business.tel),link('Build a project sheet ↗','/project-kit/?intent='+item.intent));contact.append(actions,el('span',business.phone,'home-project-print-phone'));card.append(contact);
