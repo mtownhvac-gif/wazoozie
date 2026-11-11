@@ -25,9 +25,38 @@ const startedAt = Date.now();
 let captureReady = false;
 let emailProviders = [];
 let deliveryStatus = "not_sent";
+let pendingRequest;
+let pendingMonth;
+let availabilityCheck = 0;
+let checkingAvailability = false;
+const lockedControls = new Map();
+function lockRequest(locked) {
+  if (locked && !lockedControls.size) {
+    // Keep call, copy and download available while protecting the exact request
+    // from edits during an uncertain save or an explicit idempotent retry.
+    for (const control of [...form.querySelectorAll('input,select,textarea,[data-back],#projectNext1,#projectNext2,#retryCapture'), $('#keepNeighborCredit')].filter(Boolean)) {
+      if (control.closest('#reviewConnections')) continue;
+      lockedControls.set(control, control.disabled);
+      control.disabled = true;
+    }
+  } else if (!locked) {
+    for (const [control, disabled] of lockedControls) control.disabled = disabled;
+    lockedControls.clear();
+  }
+}
+async function requestJSON(url, options = {}, timeout = 12000) {
+  const controller = new AbortController();
+  let timer;
+  try {
+    return await Promise.race([
+      (async () => { const response = await fetch(url, {...options, signal: controller.signal}); return {response, result: await response.json()}; })(),
+      new Promise((_, reject) => { timer = setTimeout(() => { controller.abort(); reject(new Error('Request timed out.')); }, timeout); })
+    ]);
+  } finally { clearTimeout(timer); }
+}
 function emailChoice() {
   const allowed = selected && emailProviders.includes(INTENTS[selected].provider);
-  $('#projectSave').textContent = allowed ? 'Submit request →' : 'Save my project brief →';
+  $('#projectSave').textContent = saving ? 'Saving your brief…' : pendingRequest ? 'Retry the same request →' : allowed ? 'Submit request →' : 'Save my project brief →';
   const heading=$('#projectContactHeading'),note=$('#projectContactNote');
   if(heading)heading.textContent=allowed?'Ask Wazoozie to arrange an introduction':'Keep a copy of your notes';
   if(note)note.textContent=allowed?'Add your details to email a request to Wazoozie Help for review and forwarding. If you book directly, enter your details only on the business’s booking page.':'Use the email button above to send your request to wazooziehelp@gmail.com for review and forwarding. Saving a copy here does not send an email.';
@@ -46,11 +75,68 @@ function businessLink(text, url, className) {
   a.href = url;
   return a;
 }
-function error(message = '') {
-  $('#projectError').textContent = message;
-  if (message) $('#projectError').focus();
+const fieldErrors = new Map();
+const fieldLabels = {details:'Project details',name:'Your name',phone:'Phone',email:'Email',town:'Town',zip:'ZIP code',consent:'Permission to save or send'};
+function fieldMessage(field) {
+  const value = field.value.trim();
+  if (field.name === 'details' && value.length < 15) return 'Describe the job in at least 15 characters.';
+  if (field.name === 'name' && value.length < 2) return 'Enter your name (at least 2 characters).';
+  if (field.name === 'town' && value.length < 2) return 'Enter your town (at least 2 characters).';
+  if (field.name === 'phone' && !/^\d{10,15}$/.test(value.replace(/\D/g,''))) return 'Enter a phone number with 10 to 15 digits.';
+  if (field.name === 'zip' && !/^\d{5}$/.test(value)) return 'Enter a five-digit ZIP code.';
+  if (field.name === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a complete email address, or leave this optional field blank.';
+  if (field.name === 'consent' && !field.checked) return 'Review the privacy notice and check the permission box before saving or sending.';
+  return field.checkValidity() ? '' : field.validationMessage;
 }
+function setFieldError(field, message) {
+  if (!field.id) field.id = 'project-field-' + field.name;
+  const errorId = field.id + '-error';
+  let note = document.getElementById(errorId);
+  if (!note) { note = make('span', '', 'project-field-error'); note.id = errorId; field.closest('label').append(note); }
+  note.textContent = message; note.hidden = !message;
+  const described = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+  if (message) { described.add(errorId); field.setAttribute('aria-invalid','true'); fieldErrors.set(field, message); }
+  else { described.delete(errorId); field.removeAttribute('aria-invalid'); fieldErrors.delete(field); }
+  if (described.size) field.setAttribute('aria-describedby',[...described].join(' ')); else field.removeAttribute('aria-describedby');
+}
+function error(message = '') {
+  $('#projectError').replaceChildren();
+  if (message) { $('#projectError').textContent = message; $('#projectError').focus(); }
+}
+function validationSummary(focus = false) {
+  const summary = $('#projectError'); summary.replaceChildren();
+  if (!fieldErrors.size) return;
+  summary.append(make('strong', 'Check ' + fieldErrors.size + (fieldErrors.size === 1 ? ' highlighted field.' : ' highlighted fields.')));
+  const list = make('ul');
+  for (const [field, message] of fieldErrors) {
+    const item = make('li'), link = businessLink((fieldLabels[field.name] || 'Field') + ': ' + message, '#' + field.id);
+    link.addEventListener('click', event => { event.preventDefault(); field.closest('details')?.setAttribute('open',''); field.focus(); });
+    item.append(link); list.append(item);
+  }
+  summary.append(list);
+  if (focus) summary.focus();
+}
+function validateStep(step, consent = false) {
+  for (const [field] of fieldErrors) setFieldError(field, '');
+  for (const field of $(`#projectStep${step}`).querySelectorAll('input,select,textarea')) {
+    if (field.disabled || field.readOnly) continue;
+    if (field.name === 'consent' && !consent) continue;
+    const message = fieldMessage(field); if (message) setFieldError(field, message);
+  }
+  validationSummary(true);
+  return !fieldErrors.size;
+}
+form.addEventListener('input', event => {
+  const field = event.target;
+  if (fieldErrors.has(field)) { setFieldError(field, fieldMessage(field)); validationSummary(); }
+});
+form.addEventListener('change', event => {
+  const field = event.target;
+  if (fieldErrors.has(field)) { setFieldError(field, fieldMessage(field)); validationSummary(); }
+});
 function showStep(number) {
+  if (saving || pendingRequest) return;
+  for (const [field] of fieldErrors) setFieldError(field, '');
   error();
   for (let i = 1; i <= 3; i++) {
     $(`#projectStep${i}`).hidden = i !== number;
@@ -132,7 +218,7 @@ $('#projectServiceDetail').addEventListener('change', event => {
 
 showBusiness();
 if(params.get('entry')==='ask'&&selected){const carried=takeAskHandoff(sessionStorage,selected);if(carried){form.elements.details.value=carried;form.elements.consent.checked=false;const notice=make('p','Your planning notes were brought over from Ask Wazoozie. Review and edit them before you choose to send a request. Nothing has been sent.','project-muted');form.elements.details.insertAdjacentElement('afterend',notice);}}
-form.addEventListener('input',()=>{if(!$('#projectStep3').hidden)review(values());});
+form.addEventListener('input',()=>{if(!saving && !pendingRequest && !$('#projectStep3').hidden)review(values());});
 $('#projectNext1').addEventListener('click', () => { if (selected) showStep(2); });
 for (const button of document.querySelectorAll('[data-back]')) button.addEventListener('click', () => showStep(Number(button.dataset.back)));
 function updateNotices() {
@@ -154,49 +240,69 @@ function review(data) {
   if (INTENTS[data.intent].scopeCheck) fields.push(['Project fit to confirm', INTENTS[data.intent].scopeCheck]);
   for (const [label, value] of fields) list.append(make('dt', label), make('dd', value));
   $('#projectReview').replaceChildren(list);
+  if (data.timing === 'Urgent') $('#projectReview').prepend(make('p', 'Need help urgently? Call the business directly to ask about availability. This form is not emergency dispatch. For an immediate threat to life or safety, call 911.', 'project-notice'));
   const connection = $('#reviewConnections');
   connection.replaceChildren(make('h3', 'Choose how to get in touch.'), directActions(BUSINESSES[data.provider]), shareActions(data, false), make('p', BUSINESSES[data.provider].booking?'Book in Housecall Pro or call the office. Your planner details are not sent to the booking page.':'Call the business to arrange a time. You can copy your notes to share yourself; saving a brief below does not notify this business.'));
 }
 $('#projectNext2').addEventListener('click', () => {
-  for (const input of $('#projectStep2').querySelectorAll('input,select,textarea')) {
-    if (!input.reportValidity()) return;
-  }
-  const data = values();
-  if(data.details.trim().length<15)return error('Add a little more detail about the job.');
-  review(data); showStep(3);
+  if (saving || pendingRequest || !validateStep(2)) return;
+  review(values()); showStep(3);
 });
 async function checkAvailability() {
+  if (saving || pendingRequest || checkingAvailability) return;
+  const sequence = ++availabilityCheck;
+  checkingAvailability = true;
+  $('#projectSave').disabled = true;
+  $('#retryCapture').disabled = true;
+  $('#captureStatus').textContent = 'Checking project-brief availability…';
+  const priorDelivery = selected && emailProviders.includes(INTENTS[selected].provider);
+  captureReady = false;
+  emailProviders = [];
   try {
-    const response = await fetch('/api/project-capabilities', {cache: 'no-store'});
-    const capability = await response.json();
-    captureReady = response.ok && capability.captureReady === true;
-    emailProviders = response.ok && Array.isArray(capability.emailProviders) ? capability.emailProviders : [];
-    emailChoice();
-  } catch { captureReady = false; }
-  $('#projectSave').disabled = !captureReady;
+    const {response, result: capability} = await requestJSON('/api/project-capabilities', {cache:'no-store'});
+    if (sequence !== availabilityCheck) return;
+    captureReady = response.ok && capability?.captureReady === true;
+    emailProviders = captureReady && Array.isArray(capability.emailProviders) ? capability.emailProviders.filter(key => Object.hasOwn(BUSINESSES,key)) : [];
+  } catch { captureReady = false; emailProviders = []; }
+  finally { checkingAvailability = false; }
+  const deliveryChanged = priorDelivery !== (selected && emailProviders.includes(INTENTS[selected].provider));
+  if (deliveryChanged) form.elements.consent.checked = false;
+  emailChoice();
+  $('#projectSave').disabled = !captureReady || saving;
+  $('#retryCapture').disabled = false;
   $('#retryCapture').hidden = captureReady;
   $('#captureStatus').textContent = captureReady ? 'Project saving is available. Review your request and consent before submitting.' : 'Project saving is currently unavailable. Your details have not been sent. Email your brief to Wazoozie Help or call the business directly.';
+  if (deliveryChanged && !$('#projectStep3').hidden) $('#captureStatus').textContent += ' The available sending option changed. Please review the permission text again.';
 }
 checkAvailability();
 $('#retryCapture').addEventListener('click', checkAvailability);
 function briefText(data, saved = true) {
-  return ['WAZOOZIE · YOUR PROJECT BRIEF', `Reference: WZ-${id.slice(0, 8).toUpperCase()}`, '', `Business: ${BUSINESSES[data.provider].name}`, `Phone: ${BUSINESSES[data.provider].phone}`, ...(data.neighborCode && data.provider === 'middletown' ? [`Wazoozie referral: https://wazoozie.com/start/?neighbor=${data.neighborCode}`, 'Please record this introduction before booking. Any referral service credit requires office verification of the qualifying paid job.'] : []), `Service: ${INTENTS[data.intent].label}`, `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, `Equipment / project type: ${data.equipment || 'Not specified'}`, '', data.details, '', `Name: ${data.name}`, `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`, '', saved ? `Saved with Wazoozie. ${deliveryStatus === 'automation_accepted' ? 'Zapier accepted the Middletown email request; inbox delivery is not confirmed.' : deliveryStatus === 'pending' ? 'Email request queued for retry; call if you need help.' : 'No automatic email has been confirmed.'} No appointment has been booked.` : 'Prepared in the homeowner’s browser. No appointment has been booked. Please confirm coverage, timing and any diagnostic charge.'].join('\n');
+  return ['WAZOOZIE · YOUR PROJECT BRIEF', `Reference: WZ-${id.slice(0, 8).toUpperCase()}`, '', `Business: ${BUSINESSES[data.provider].name}`, `Phone: ${BUSINESSES[data.provider].phone}`, ...(data.neighborCode && data.provider === 'middletown' ? [`Wazoozie referral: https://wazoozie.com/start/?neighbor=${data.neighborCode}`, 'Please record this introduction before booking. Any referral service credit requires office verification of the qualifying paid job.'] : []), `Service: ${INTENTS[data.intent].label}`, `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, `Equipment / project type: ${data.equipment || 'Not specified'}`, '', data.details, '', `Name: ${data.name}`, `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`, '', saved ? `Saved with Wazoozie. ${deliveryStatus === 'automation_accepted' ? 'The email service accepted the request for Wazoozie Help to review and forward; inbox delivery is not confirmed.' : deliveryStatus === 'pending' ? 'Email request queued for retry; call if you need help.' : 'No automatic email has been confirmed.'} No appointment has been booked.` : 'Prepared in the homeowner’s browser. No appointment has been booked. Please confirm coverage, timing and any diagnostic charge.'].join('\n');
 }
 form.addEventListener('submit', async event => {
   event.preventDefault();
-  if (saving || !captureReady) return;
-  if (!form.elements.consent.checked) return error('Please review the privacy notice and check the consent box before saving.');
-  error(); saving = true;
-  $('#projectSave').disabled = true; $('#projectSave').textContent = 'Saving your brief…';
+  if (submitted || saving || checkingAvailability || !captureReady) return;
+  // Enter on an earlier step must never submit hidden contact fields.
+  if ($('#projectStep3').hidden) return;
+  if (pendingRequest && pendingMonth !== new Date().toISOString().slice(0,7)) return error('This request can no longer be safely retried here. Contact Wazoozie Help with reference WZ-' + id.slice(0,8).toUpperCase() + ' to confirm receipt before starting another brief.');
+  if (!pendingRequest && !validateStep(3, true)) return;
+  error();
+  const data = pendingRequest || values();
+  if (!pendingRequest) pendingMonth = new Date().toISOString().slice(0,7);
+  pendingRequest = data;
+  saving = true; lockRequest(true); form.setAttribute('aria-busy','true');
+  $('#projectSave').disabled = true; emailChoice();
   try {
-    for(const input of $('#projectStep3').querySelectorAll('input,select,textarea'))if(!input.reportValidity())return;
-    const data = values();
-    const digits=data.phone.replace(/\D/g,'');
-    if(digits.length<10||digits.length>15){error('Enter a valid phone number so the office can reach you.');return;}
-    const response = await fetch('/api/project-briefs', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'We could not confirm that your brief was saved. Retry or call the business directly.');
-    submitted = data;
+    const {response, result} = await requestJSON('/api/project-briefs', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}, 20000);
+    if (!response.ok) {
+      // A definite validation/rate-limit rejection is editable. Network failures,
+      // 5xx and malformed replies may follow a successful save, so retain the
+      // same reference and payload for a user-triggered retry.
+      if (response.status >= 400 && response.status < 500) { pendingRequest = undefined; lockRequest(false); }
+      throw new Error(result?.error || 'We could not confirm that your brief was saved. Retry or call the business directly.');
+    }
+    if (result?.status !== 'saved' || (result.reference && result.reference !== id)) throw new Error('The save response was incomplete.');
+    submitted = data; pendingRequest = undefined;
     deliveryStatus = result.providerDelivery;
     $('#receiptDelivery').textContent = deliveryStatus === 'automation_accepted' ? 'Saved privately. The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not confirmed, and no appointment has been booked.' : deliveryStatus === 'pending' ? 'Saved privately. Your email request is waiting for retry. Call the business directly if you need help soon; no appointment has been booked.' : deliveryStatus === 'failed' ? 'Saved privately, but automatic email could not be confirmed. Please call the business directly.' : 'Saved privately with Wazoozie. The business has not been notified, and no appointment has been booked.';
     document.querySelector('#neighborCredit').hidden=true;
@@ -212,8 +318,9 @@ form.addEventListener('submit', async event => {
     $('#receiptShare').replaceChildren(shareActions(data, true));
     receiptTracking(document,$('#projectReceipt'),{intent:data.intent,delivery:deliveryStatus});
     $('#projectReceipt').focus();
-  } catch (failure) { error(failure.message || 'We could not confirm the save. Your next step is to retry or call directly.'); }
-  finally { saving = false; $('#projectSave').disabled = !captureReady; emailChoice(); }
+  } catch (failure) {
+    error(pendingRequest ? 'We could not confirm whether your request was saved. Your details are still here and held unchanged for a safe retry. Choose “Retry the same request” or call the business directly. Do not start another brief for the same request.' : failure.message || 'We could not confirm the save. Your next step is to retry or call directly.');
+  } finally { saving = false; form.removeAttribute('aria-busy'); $('#projectSave').disabled = !captureReady; emailChoice(); }
 });
 function directActions(provider, compact = false) {
   const actions = make('div', '', 'project-actions');

@@ -119,6 +119,7 @@ test('project planner offers removable neighbor credit and keeps door requests w
   const form=env.doc.querySelector('#projectForm');
   for(const [key,value]of Object.entries({name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',details:'Synthetic test only, replace the front door.'}))form.elements[key].value=value;
   form.elements.consent.checked=true;env.doc.querySelector('#keepNeighborCredit').checked=false;
+  env.doc.querySelector('#projectNext1').click();env.doc.querySelector('#projectNext2').click();
   form.dispatchEvent(new env.dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
   const data=JSON.parse(requests.find(r=>r.url==='/api/project-briefs').options.body);assert.equal(data.provider,'hart');assert.equal(data.neighborCode,undefined);
  }finally{env.close();}
@@ -130,7 +131,8 @@ test('keeping neighbor credit records the code and shows only the saved-credit r
   let sent;globalThis.fetch=async(url,options)=>{if(url.includes('capabilities'))return Response.json({captureReady:true});sent=JSON.parse(options.body);return Response.json({status:'saved',referralAttributed:true});};
   await import(`../dist/assets/project.js?kept=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
   const form=env.doc.querySelector('#projectForm');for(const [key,value]of Object.entries({name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',details:'Synthetic test: home comfort project.'}))form.elements[key].value=value;
-  form.elements.consent.checked=true;form.dispatchEvent(new env.dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
+  form.elements.consent.checked=true;env.doc.querySelector('#projectNext1').click();env.doc.querySelector('#projectNext2').click();
+  form.dispatchEvent(new env.dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
   assert.equal(sent.neighborCode,code);assert.equal(sent.provider,'middletown');
   assert.ok(env.doc.querySelector('#receiptNeighborStatus').textContent.includes('credited'));
   assert.equal(env.doc.querySelector('#neighborCredit').hidden,true);
