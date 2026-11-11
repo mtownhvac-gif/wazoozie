@@ -107,7 +107,9 @@ export class ProjectInbox extends DurableObject {
       this.incrementContact({action:'application_saved',provider:'contractor',context:'contractors'},now);
       this.ctx.storage.sql.exec('INSERT INTO email_outbox(id,payload,next_attempt,expires) VALUES (?,?,?,?)', a.id, JSON.stringify(applicationEmailPayload(a)), now, now+48*3600000);
     });
-    if(status===201&&!await this.ctx.storage.getAlarm())await this.ctx.storage.setAlarm(now+86400000);
+    // Arm delivery before returning, even if a later intake RPC is interrupted.
+    // An existing daily cleanup alarm must not delay the queued office alert.
+    if(status===201)await this.scheduleEmailAlarm(now);
     return {status};
   }
 
