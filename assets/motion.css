@@ -1,0 +1,26 @@
+/* Visible by default. Motion is an enhancement, never a loading gate. */
+.wz-motion-toggle{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:8px 0;padding:8px 14px;border:1px solid #b9abbd;border-radius:24px;background:transparent;color:#59465e;font:600 11px/1.5 Manrope,Arial,sans-serif;cursor:pointer;white-space:normal}
+.wz-motion-toggle:focus-visible{outline:3px solid #9b632d;outline-offset:4px}
+.wz-motion-toggle:disabled{cursor:default;color:#695b6d;border-color:#c7bcc8}
+.wz-motion-on .service-tile,.wz-motion-on .explore-card,.wz-motion-on .brand-collection-card{transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .28s ease,border-color .28s ease}
+.wz-motion-on .service-symbol{transition:transform .3s cubic-bezier(.22,1,.36,1),background-color .25s ease}
+.wz-motion-on .btn .action-icon,.wz-motion-on .service-tile strong>span{display:inline-block;transition:transform .25s ease}
+.wz-motion-on .network-intro li>span{transition:background-color .25s ease,color .25s ease}
+.wz-motion-on .ll-promo-art span,.wz-motion-on .ripple-promo-demo>div{transition:translate .35s cubic-bezier(.22,1,.36,1)}
+.wz-motion-on .ll-promo-art span:nth-child(2),.wz-motion-on .ripple-promo-demo>div:nth-of-type(2){transition-delay:45ms}
+.wz-motion-on .ll-promo-art span:nth-child(3){transition-delay:90ms}
+@media(hover:hover) and (pointer:fine){
+ .wz-motion-on .service-tile:hover,.wz-motion-on .explore-card:hover,.wz-motion-on .brand-collection-card:hover{transform:translateY(-5px);box-shadow:0 14px 30px #49334f12;border-color:#aa8d76}
+ .wz-motion-on .service-tile:hover .service-symbol{transform:translateY(-2px) rotate(-5deg)}
+ .wz-motion-on .btn:hover .action-icon,.wz-motion-on .service-tile:hover strong>span{transform:translateX(4px)}
+ .wz-motion-on .ll-promo-art:hover span:first-child{translate:0 -4px}
+ .wz-motion-on .ll-promo-art:hover span:nth-child(2){translate:5px 0}
+ .wz-motion-on .ll-promo-art:hover span:nth-child(3){translate:10px 4px}
+ .wz-motion-on .ripple-promo-demo:hover>div{translate:5px 0}
+}
+.wz-motion-on .service-tile:focus-visible,.wz-motion-on .explore-card:focus-visible,.wz-motion-on .brand-collection-card:focus-visible{outline:3px solid #9b632d;outline-offset:5px;border-color:#9b632d}
+.wz-motion-on .ll-promo-art:focus-visible span:nth-child(2){translate:5px 0}
+.wz-motion-off *{animation:none!important;transition:none!important}
+html.wz-motion-disabled{scroll-behavior:auto!important}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}body[data-wz-motion] *{animation:none!important;transition:none!important}}
+@media print{.wz-motion-toggle{display:none!important}body[data-wz-motion] *{animation:none!important;transition:none!important}}
