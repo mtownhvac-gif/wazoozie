@@ -318,6 +318,8 @@ from trade_imagery import add as add_trade_imagery
 add_trade_imagery(OUT)
 from finish_welcome import add as finish_welcome
 finish_welcome(OUT)
+from comfort_map import add as add_comfort_map
+add_comfort_map(OUT, PUBLIC, PAGES, BOOKING)
 from second_invoice import add as add_second_invoice
 add_second_invoice(OUT, PUBLIC, PAGES)
 from before_disappears import add as add_before_disappears
