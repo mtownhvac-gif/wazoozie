@@ -71,7 +71,9 @@ export class ProjectInbox extends DurableObject {
       if (b.notifyProvider) this.ctx.storage.sql.exec('INSERT INTO email_outbox(id,payload,next_attempt,expires) VALUES (?,?,?,?)', b.id, JSON.stringify(emailPayload(b,now)), now, now + 48*3600000);
       this.incrementContact({action:'brief_saved',provider:b.provider,context:'planner'}, now);
     });
-    if (status === 201) await this.scheduleEmailAlarm(now);
+    // A retry must repair scheduling if the original save committed before
+    // setting its alarm failed. Reuse the existing outbox and its backoff.
+    if (status === 201 || status === 200) await this.scheduleEmailAlarm(now);
     return {status,referralAttributed};
   }
 
@@ -115,7 +117,7 @@ export class ProjectInbox extends DurableObject {
     });
     // Arm delivery before returning, even if a later intake RPC is interrupted.
     // An existing daily cleanup alarm must not delay the queued office alert.
-    if(status===201)await this.scheduleEmailAlarm(now);
+    if(status===201||status===200)await this.scheduleEmailAlarm(now);
     return {status};
   }
 
