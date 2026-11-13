@@ -40,6 +40,8 @@ def add(out, public, pages):
     for page in out.rglob('*.html'):
         text = page.read_text()
         text = text.replace('<a class="btn primary" href="/book/">Book or call <span aria-hidden="true">↗</span></a>', '<a class="btn primary" href="/request/">Request help <span aria-hidden="true">↗</span></a>')
+        text = text.replace('<a class="account-top-link" href="/account/">Log in / Sign up</a>', '<a class="account-top-link" href="/request/">Request help</a>')
+        text = text.replace('<a class="btn primary" href="/book/">Book or call</a>', '<a class="btn primary" href="/request/">Request help</a>')
         text = text.replace('<nav aria-label="Mobile navigation">', '<nav aria-label="Mobile navigation"><a href="/request/">Request local help</a>', 1)
         if '/services/' in '/' + str(page.relative_to(out)):
             match = re.search(r'/start/\?intent=([a-z]+)', text)

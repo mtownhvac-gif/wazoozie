@@ -37,3 +37,13 @@ test('mismatched receipts never show success and definite validation errors allo
  let mode='invalid';const e=await page(async(url)=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown']}):mode==='invalid'?Response.json({error:'Please check your phone.'},{status:400}):Response.json({status:'saved',reference:'wrong-reference',providerDelivery:'automation_accepted'}));
  try{e.complete();e.submit();await tick();assert.equal(e.form.elements.phone.disabled,false);assert.match(e.$('request-error').textContent,/check your phone/);mode='wrong';e.submit();await tick();assert.equal(e.$('request-receipt').hidden,true);assert.equal(e.form.elements.phone.disabled,true);assert.match(e.$('request-send').textContent,/Retry/);}finally{e.close();}
 });
+
+test('mobile contact controls lead directly to requests and all service choices remain reachable',()=>{
+ const dom=new JSDOM(readFileSync('dist/index.html','utf8')),d=dom.window.document;
+ assert.equal(d.querySelector('.account-top-link').getAttribute('href'),'/request/');
+ assert.ok(d.querySelector('a.btn.primary[href="/request/"]'));
+ assert.equal(d.querySelectorAll('.service-choice').length,6);
+ assert.ok(d.querySelector('.local-proof a[href="/projects/"]'));
+ assert.equal(d.querySelectorAll('.local-proof figure img').length,2);
+ dom.window.close();
+});
