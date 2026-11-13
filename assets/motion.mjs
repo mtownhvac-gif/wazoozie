@@ -105,11 +105,11 @@ export function mountMotion(w = window) {
         if (scene) { scene.start(); continue; }
         const siblings = [...el.parentElement.children];
         const delay = el.matches('.network-intro li') ? Math.min(siblings.indexOf(el), 2) * 110 :
-          el.matches('.service-choice, .explore-card, .brand-collection-card') ? Math.max(0, siblings.indexOf(el) % 3) * 55 : 0;
+          el.matches('.service-choice, .project-finder-choice, .explore-card, .brand-collection-card') ? Math.max(0, siblings.indexOf(el) % 3) * 55 : 0;
         play(el, delay);
       }
     }, {threshold:[0.08,0.35], rootMargin:'0px 0px -24px 0px'});
-    const targets = d.querySelectorAll('main > section h2, .service-choice, .explore-card, .brand-collection-card, .network-intro li, .brand-cover h1, .page-hero h1, .destination-intro h1');
+    const targets = d.querySelectorAll('main > section h2, .service-choice, .project-finder-choice, .explore-card, .brand-collection-card, .network-intro li, .brand-cover h1, .page-hero h1, .destination-intro h1');
     for (const el of [...targets].slice(0, 48)) {
       // Returning to an anchor or a restored scroll position never replays content above it.
       if (el.getBoundingClientRect().bottom <= 0) { seen.add(el); continue; }
