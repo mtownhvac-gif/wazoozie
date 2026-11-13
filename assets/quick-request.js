@@ -29,7 +29,7 @@ function update() {
   const available = ready && providers.includes(INTENTS[service.value]?.provider);
   $('request-send').disabled = busy || complete || (!pending && !available);
   $('request-send').textContent = busy ? 'Sending…' : pending ? 'Retry the same request →' : 'Send request →';
-  $('request-status').textContent = pending ? 'We could not confirm receipt. Retry the same request below, or call the business with your reference. Your details are kept here until you leave this page.' : available ? 'Ready when you are. Wazoozie Help reviews and forwards your request.' : ready && !business ? 'Choose a service to continue.' : 'Online requests are unavailable for this service right now. Please call directly or email wazooziehelp@gmail.com.';
+  $('request-status').textContent = busy ? 'Sending your request…' : pending ? 'We could not confirm receipt. Retry the same request below, or call the business with your reference. Your details are kept here until you leave this page.' : available ? 'Ready when you are. Wazoozie Help reviews and forwards your request.' : ready && !business ? 'Choose a service to continue.' : 'Online requests are unavailable for this service right now. Please call directly or email wazooziehelp@gmail.com.';
   $('request-recheck').hidden = busy || complete || !!pending || available;
   $('request-urgent').hidden = form.elements.timing.value !== 'Urgent';
   $('request-coverage').textContent = form.elements.state.value === 'PA' ? 'The business confirms coverage for your address before scheduling.' : 'Service in New Jersey and Delaware is not confirmed. Call the business to check coverage before sending.';
