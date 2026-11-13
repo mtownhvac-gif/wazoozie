@@ -23,7 +23,7 @@ function page({reduced=false,paused=false,broken=false}={}){
 test('device reduced-motion preference prevents entrance/reveal animations and reacts immediately to changes',()=>{
  const p=page({reduced:true});try{
   assert.equal(p.animations.length,0);assert.equal(p.app.enabled(),false);assert.equal(p.d.getElementById('wz-motion-toggle').disabled,true);
-  p.change(false);assert.equal(p.app.enabled(),true);const target=p.d.querySelector('.service-choice');p.observers.at(-1).fire(target);assert.equal(p.animations.length,1);
+  p.change(false);assert.equal(p.app.enabled(),true);const target=p.d.querySelector('.project-finder-choice');p.observers.at(-1).fire(target);assert.equal(p.animations.length,1);
   p.change(true);assert.equal(p.animations[0].cancelled,true);assert.equal(p.observers.at(-1).targets.size,0);
  }finally{p.close();}
 });
@@ -36,20 +36,20 @@ test('the visible motion switch cancels work, persists only its preference and l
 });
 test('reveals run once, do not observe forms, and cancel when a user focuses their link',()=>{
  const p=page();try{
-  const observer=p.observers[0],card=p.d.querySelector('.service-choice');assert.ok(observer.targets.has(card));assert.ok([...observer.targets].every(el=>!el.matches('form,input,select,textarea')));
+  const observer=p.observers[0],card=p.d.querySelector('.project-finder-choice');assert.ok(observer.targets.has(card));assert.ok([...observer.targets].every(el=>!el.matches('form,input,select,textarea')));
   const before=p.animations.length;observer.fire(card);observer.fire(card);assert.equal(p.animations.length,before+1);
-  const animation=p.animations.at(-1);card.querySelector('a').focus();assert.equal(animation.cancelled,true);
+  const animation=p.animations.at(-1);card.focus();assert.equal(animation.cancelled,true);
   assert.ok(p.animations.every(a=>a.options.iterations===undefined&&a.options.duration<=1050));
  }finally{p.close();}
 });
 test('missing browser APIs and animation failures leave the visible site and contact links usable',()=>{
- const p=page({broken:true});try{assert.equal(p.animations.length,0);assert.ok(p.d.querySelector('.service-tile[href]'));assert.equal(p.d.querySelector('.grand-hero h1').style.opacity,'');assert.equal(p.d.querySelector('.grand-hero').hasAttribute('hidden'),false);}finally{p.close();}
+ const p=page({broken:true});try{assert.equal(p.animations.length,0);assert.ok(p.d.querySelector('.project-finder-choice[href]'));assert.equal(p.d.querySelector('.grand-hero h1').style.opacity,'');assert.equal(p.d.querySelector('.grand-hero').hasAttribute('hidden'),false);}finally{p.close();}
  const dom=new JSDOM(html);try{assert.equal(mountMotion(dom.window),null);assert.ok(dom.window.document.querySelector('h1').textContent.length);}finally{dom.window.close();}
 });
 test('forms, accounts and private tools retain their existing static flow; browsing pages get bundled motion styles',()=>{
  for(const route of ['start','account','for-contractors','before-it-disappears','compare']){const text=readFileSync('dist/'+route+'/index.html','utf8');assert.ok(!text.includes('/assets/motion.mjs'),route);assert.ok(!text.includes('data-wz-motion'),route);}
  for(const route of ['index.html','home-services/index.html','businesses/middletown-hvac/index.html','services/heating-cooling/index.html']){const text=readFileSync('dist/'+route,'utf8');assert.ok(text.includes('/assets/motion.mjs'),route);assert.ok(text.includes('data-wz-motion'),route);}
- const d=new JSDOM(html).window.document;assert.equal(d.querySelectorAll('link[href*="site-"]').length,1);assert.equal(d.querySelectorAll('.service-choice').length,6);
+ const d=new JSDOM(html).window.document;assert.equal(d.querySelectorAll('link[href*="site-"]').length,1);assert.equal(d.querySelectorAll('.project-finder-choice').length,8);
 });
 
 test('project illustrations play once on entry and can be replayed without navigation or network calls',async()=>{

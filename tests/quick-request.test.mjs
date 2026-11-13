@@ -42,7 +42,7 @@ test('mobile contact controls lead directly to requests and all service choices 
  const dom=new JSDOM(readFileSync('dist/index.html','utf8')),d=dom.window.document;
  assert.equal(d.querySelector('.account-top-link').getAttribute('href'),'/request/');
  assert.ok(d.querySelector('a.btn.primary[href="/request/"]'));
- assert.equal(d.querySelectorAll('.service-choice').length,6);
+ assert.equal(d.querySelectorAll('.project-finder-choice').length,8);
  assert.ok(d.querySelector('.local-proof a[href="/projects/"]'));
  assert.equal(d.querySelectorAll('.local-proof figure img').length,2);
  dom.window.close();

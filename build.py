@@ -324,6 +324,8 @@ from before_disappears import add as add_before_disappears
 add_before_disappears(OUT, PUBLIC, PAGES)
 from lead_conversion import add as add_lead_conversion
 add_lead_conversion(OUT, PUBLIC, PAGES)
+from project_finder import add as add_project_finder
+add_project_finder(OUT)
 from motion import add as add_motion
 add_motion(OUT)
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
