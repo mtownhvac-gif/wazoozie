@@ -36,7 +36,9 @@ async function readJSON(request, limit = 16384) {
 export async function handleIntake(request, env) {
   const url = new URL(request.url);
   if (url.pathname === '/api/project-capabilities') {
-    return request.method === 'GET' ? respond({capabilityVersion: 2, captureReady: Boolean(env.PROJECT_INBOX), emailProviders: validWebhook(env.MIDDLETOWN_ZAPIER_WEBHOOK) ? Object.keys(BUSINESSES) : []}) : respond({error: 'Method not allowed.'}, 405);
+    const version = env.CF_VERSION_METADATA?.id;
+    const deploymentVersion = typeof version === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(version) ? version : null;
+    return request.method === 'GET' ? respond({capabilityVersion: 2, deploymentVersion, captureReady: Boolean(env.PROJECT_INBOX), emailProviders: validWebhook(env.MIDDLETOWN_ZAPIER_WEBHOOK) ? Object.keys(BUSINESSES) : []}) : respond({error: 'Method not allowed.'}, 405);
   }
   const neighbor = url.pathname === '/api/neighbor-referrals';
   const activity = url.pathname === '/api/contact-activity';
