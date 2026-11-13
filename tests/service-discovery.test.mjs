@@ -7,8 +7,9 @@ const schema=d=>[...d.querySelectorAll('script[type="application/ld+json"]')].fl
 
 test('homepage offers equal service choices before tools without an ownership banner',()=>{
  const d=doc('/'),main=d.querySelector('main'),direct=d.querySelector('.service-direct');
- assert.equal(main.children[1],direct);
- assert.equal(d.querySelector('.grand-primary').getAttribute('href'),'/home-services/');
+ assert.equal(main.children[1],d.querySelector('.local-proof'));
+ assert.equal(main.children[2],direct);
+ assert.equal(d.querySelector('.grand-primary').getAttribute('href'),'/request/?entry=home');
  assert.equal(direct.querySelectorAll('.service-choice').length,6);
  assert.equal(direct.querySelector('a[href^="tel:"]'),null);
  assert.equal(direct.querySelector('a[href^="https://book.housecallpro.com/"]'),null);
