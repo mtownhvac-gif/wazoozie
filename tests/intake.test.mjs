@@ -7,6 +7,23 @@ import {CONSENT_VERSION, INTENTS} from '../project-config.mjs';
 const valid = () => ({id:crypto.randomUUID(),startedAt:Date.now()-5000,provider:'middletown',intent:'comfort',name:'Preview Homeowner',phone:'202-555-0100',email:'preview@example.invalid',town:'Media',zip:'19063',state:'PA',details:'Synthetic test: a room is not comfortable.',timing:'Planning ahead',role:'Homeowner',property:'House',equipment:'Test equipment',source:'start-page',consent:true,consentVersion:CONSENT_VERSION});
 const request = (data, options={}) => new Request('https://wazoozie.com/api/project-briefs',{method:'POST',headers:{origin:'https://wazoozie.com','content-type':'application/json',...options.headers},body:typeof data==='string'?data:JSON.stringify(data)});
 
+test('capabilities identify the running version without exposing environment metadata',async()=>{
+  const id=crypto.randomUUID();
+  for(const version of [id,undefined,'not-a-version']){
+    const response=await handleIntake(new Request('https://wazoozie.com/api/project-capabilities'),{
+      CF_VERSION_METADATA:{id:version,tag:'private release note',timestamp:'private timestamp'},
+      MIDDLETOWN_ZAPIER_WEBHOOK:'https://hooks.zapier.com/hooks/catch/123/test/',
+      OTHER_SECRET:'synthetic-secret',
+    });
+    const data=await response.json();
+    assert.equal(data.deploymentVersion,version===id?id:null);
+    assert.equal(response.headers.get('cache-control'),'no-store');
+    assert.equal(response.headers.get('x-robots-tag'),'noindex');
+    const serialized=JSON.stringify(data);
+    for(const privateValue of ['private release note','private timestamp','hooks.zapier.com','synthetic-secret'])assert.ok(!serialized.includes(privateValue));
+  }
+});
+
 test('every intent maps only to its named provider',()=>{
   for(const [intent,meta] of Object.entries(INTENTS)) {
     assert.ok(validateBrief({...valid(),intent,provider:meta.provider}).brief);
