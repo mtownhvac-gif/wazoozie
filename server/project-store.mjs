@@ -1,6 +1,7 @@
 import {emailPayload, applicationEmailPayload, validWebhook} from './provider-email.mjs';
 import {DurableObject} from 'cloudflare:workers';
 import {GUIDE_DAILY_NEURONS} from './guide-budget.mjs';
+import {emailRetryDelay} from './email-retry.mjs';
 
 // Private SQLite storage, partitioned by provider and calendar month.
 // No public endpoint can list or retrieve project briefs.
@@ -167,18 +168,20 @@ export class ProjectInbox extends DurableObject {
     let accepted = false;
     let result = 'configuration_error';
     let httpStatus = null;
+    let retryAfter = null;
     if (validWebhook(hook)) {
       try {
         const response = await fetch(hook, {method:'POST', redirect:'manual', headers:{'Content-Type':'application/json'}, body:row.payload, signal:AbortSignal.timeout(8000)});
         accepted = response.ok;
         httpStatus = response.status;
+        if (response.status === 429 || response.status === 503) retryAfter = response.headers.get('Retry-After');
         result = accepted ? 'accepted' : response.status === 429 ? 'rate_limited' : response.status >= 500 ? 'provider_error' : 'rejected';
         await response.body?.cancel();
       } catch { result = 'transport_error'; }
     }
     const attempts = row.attempts + 1;
     const state = accepted ? 'automation_accepted' : attempts >= 10 ? 'failed' : 'pending';
-    const next = now + Math.min(6*3600000,60000 * 2**(attempts-1));
+    const next = now + emailRetryDelay(attempts, retryAfter, now);
     this.ctx.storage.sql.exec('UPDATE email_outbox SET state=?,attempts=?,next_attempt=?,last_attempt=?,last_result=?,last_http_status=? WHERE id=?',state,attempts,next,now,result,httpStatus,id);
     await this.scheduleEmailAlarm(now);
     return state;

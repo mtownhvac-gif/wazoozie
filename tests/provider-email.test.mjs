@@ -23,8 +23,8 @@ test('delivery capability is advertised only for a complete Zapier hook',async()
 });
 test('durable email outbox saves before sending, retries failures and does not resend accepted duplicates',async()=>{
  const bundled=await build({stdin:{contents:"import {ProjectInbox} from './server/project-store.mjs';import {handleIntake} from './server/intake.mjs';export class TestInbox extends ProjectInbox {async runDeliveryAlarm(){return this.alarm();}};export default {fetch:handleIntake};",resolveDir:process.cwd()},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:workers']});
- let calls=0,fail=true,received;
- const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:bundled.outputFiles[0].text,compatibilityDate:'2026-11-04',bindings:{MIDDLETOWN_ZAPIER_WEBHOOK:'https://hooks.zapier.com/hooks/catch/123/test/'},durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}},outboundService:async request=>{calls++;received=await request.json();return new Response('{}',{status:fail?503:200});}}));
+ let calls=0,fail=true,received,failureStatus=503;
+ const mf=new Miniflare(convertV4MiniflareOptions({unsafeInspectDurableObjects:true,modules:true,script:bundled.outputFiles[0].text,compatibilityDate:'2026-11-04',bindings:{MIDDLETOWN_ZAPIER_WEBHOOK:'https://hooks.zapier.com/hooks/catch/123/test/'},durableObjects:{PROJECT_INBOX:{className:'TestInbox',useSQLite:true}},outboundService:async request=>{calls++;received=await request.json();return new Response('{}',{status:fail?failureStatus:200,headers:fail?{'Retry-After':'3600'}:{}});}}));
  try {
   const input=valid();const call=()=>mf.dispatchFetch('https://wazoozie.com/api/project-briefs',{method:'POST',headers:{Origin:'https://wazoozie.com','Content-Type':'application/json'},body:JSON.stringify(input)});
   let response=await call();assert.equal(response.status,201);assert.equal((await response.json()).providerDelivery,'pending');assert.equal(calls,1);
@@ -33,12 +33,22 @@ test('durable email outbox saves before sending, retries failures and does not r
   assert.equal((await sql.exec('SELECT count(*) AS n FROM project_briefs'))[0].n,1);
   let outbox=(await sql.exec('SELECT state,attempts,last_result,last_http_status FROM email_outbox'))[0];
   assert.deepEqual(outbox,{state:'pending',attempts:1,last_result:'provider_error',last_http_status:503});
+  const retry=(await sql.exec('SELECT next_attempt,last_attempt FROM email_outbox'))[0];
+  assert.equal(retry.next_attempt-retry.last_attempt,3600000,'persist the requested wait in SQLite');
+  const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');const store=ns.get(ns.idFromName(name));
+  await store.runDeliveryAlarm();assert.equal(calls,1,'an early alarm must not send during the requested wait');
   await sql.exec('UPDATE email_outbox SET next_attempt=0');fail=false;
-  const ns=await mf.getDurableObjectNamespace('PROJECT_INBOX');await ns.get(ns.idFromName(name)).runDeliveryAlarm();
+  await store.runDeliveryAlarm();
   outbox=(await sql.exec('SELECT state,attempts,last_result,last_http_status FROM email_outbox'))[0];
   assert.deepEqual(outbox,{state:'automation_accepted',attempts:2,last_result:'accepted',last_http_status:200});
   response=await call();assert.equal((await response.json()).providerDelivery,'automation_accepted');assert.equal(calls,2);assert.match(received.message,/&lt;script&gt;/);
   response=await call();assert.equal((await response.json()).providerDelivery,'automation_accepted');assert.equal(calls,2);
   input.id=crypto.randomUUID();input.notifyProvider=false;response=await call();assert.equal((await response.json()).providerDelivery,'not_sent');assert.equal(calls,2,'save-only never emails');
+  input.id=crypto.randomUUID();input.notifyProvider=true;fail=true;failureStatus=429;
+  response=await call();assert.equal((await response.json()).providerDelivery,'pending');assert.equal(calls,3);
+  const limited=(await sql.exec('SELECT state,attempts,next_attempt,last_attempt,last_result FROM email_outbox WHERE id=?',input.id))[0];
+  assert.equal(limited.state,'pending');assert.equal(limited.attempts,1);assert.equal(limited.last_result,'rate_limited');
+  assert.equal(limited.next_attempt-limited.last_attempt,3600000);
+  response=await call();assert.equal((await response.json()).providerDelivery,'pending');assert.equal(calls,3,'throttled duplicate must keep the persisted wait');
  } finally {await mf.dispose();}
 });
