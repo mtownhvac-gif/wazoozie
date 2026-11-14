@@ -7,7 +7,7 @@ export const QUESTIONS = [
 ];
 export const PERSONALITIES = [
   {name:'The Comfort Seeker', line:'You notice how a home feels before anything else.', tip:'Choose one room and note when it feels uncomfortable. Tell the contractor when it happens and how the rest of the house feels.', action:'Explore heating & cooling', href:'/services/heating-cooling/'},
-  {name:'The Plan Keeper', line:'You like the details settled before the tools come out.', tip:'Compare the written scope, exclusions, and approval process before comparing totals. A shared plan keeps surprises out of the job.', action:'Compare two estimates', href:'/compare/'},
+  {name:'The Plan Keeper', line:'You like the details settled before the tools come out.', tip:'Compare what is included, what is excluded and how extra work is approved before comparing totals. A written plan can help prevent misunderstandings.', action:'Compare two estimates', href:'/compare/'},
   {name:'The Room Reimaginer', line:'You see the room your home could become.', tip:'Pick one space, one must-have, and one thing you want to keep. Use those details to explain the job when you call.', action:'Make a project sheet', href:'/project-kit/'},
   {name:'The Upkeep Planner', line:'You want a home that is easier to look after.', tip:'Start a list of equipment, last known service dates, and manufacturer care instructions. Ask a professional to clarify anything you cannot verify safely.', action:'Browse the home tips', href:'/home-tips/'}
 ];

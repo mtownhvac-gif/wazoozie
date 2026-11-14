@@ -58,7 +58,7 @@ function emailChoice() {
   const allowed = selected && emailProviders.includes(INTENTS[selected].provider);
   $('#projectSave').textContent = saving ? 'Saving your brief…' : pendingRequest ? 'Retry the same request →' : allowed ? 'Submit request →' : 'Save my project brief →';
   const heading=$('#projectContactHeading'),note=$('#projectContactNote');
-  if(heading)heading.textContent=allowed?'Ask Wazoozie to arrange an introduction':'Keep a copy of your notes';
+  if(heading)heading.textContent=allowed?'Send a request through Wazoozie Help':'Keep a copy of your notes';
   if(note)note.textContent=allowed?'Add your details to email a request to Wazoozie Help for review and forwarding. If you book directly, enter your details only on the business’s booking page.':'Use the email button above to send your request to wazooziehelp@gmail.com for review and forwarding. Saving a copy here does not send an email.';
   $('#submissionConsent').textContent = allowed ? 'I agree to Wazoozie saving my contact information and project details and emailing it to wazooziehelp@gmail.com for the Wazoozie team to review and forward to the business I selected.' : 'I agree to Wazoozie saving my contact information and project details for review and follow-up about this project.';
 }
@@ -172,7 +172,7 @@ function showBusiness() {
   image.alt = INTENTS[selected].provider === 'middletown' ? 'Conventional tank Water Heater and Heil Furnace installation published by Middletown HVAC' : 'Illustrative home-service scene';
   image.width = 600; image.height = 500;
   const copy = make('div', '', 'project-business-copy');
-  copy.append(make('div', intent.scopeCheck ? 'DISCUSS YOUR PROJECT WITH' : 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Confirm your address, project fit and availability directly before scheduling.'));
+  copy.append(make('div', intent.scopeCheck ? 'DISCUSS YOUR PROJECT WITH' : 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Ask whether the business handles your job and serves your address before arranging a visit.'));
   if (intent.scopeCheck) copy.append(make('p', intent.scopeCheck, 'project-fit-note'));
   if (provider.booking) copy.append(businessLink('Book online with Middletown ↗', provider.booking, 'btn primary'));
   copy.append(businessLink('Get to know this business →', `/businesses/${provider.slug}/`), businessLink(`Call ${provider.phone}`, `tel:${provider.tel}`));
@@ -306,7 +306,7 @@ form.addEventListener('submit', async event => {
     deliveryStatus = result.providerDelivery;
     $('#receiptDelivery').textContent = deliveryStatus === 'automation_accepted' ? 'Saved privately. The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not confirmed, and no appointment has been booked.' : deliveryStatus === 'pending' ? 'Saved privately. Your email request is waiting for retry. Call the business directly if you need help soon; no appointment has been booked.' : deliveryStatus === 'failed' ? 'Saved privately, but automatic email could not be confirmed. Please call the business directly.' : 'Saved privately with Wazoozie. The business has not been notified, and no appointment has been booked.';
     document.querySelector('#neighborCredit').hidden=true;
-    if(data.neighborCode) document.querySelector('#receiptNeighborStatus').textContent=result.referralAttributed ? 'Your neighbor introduction was credited with this saved brief.' : 'Your project was saved, but this neighbor link could not be credited. It may have expired.';
+    if(data.neighborCode) document.querySelector('#receiptNeighborStatus').textContent=result.referralAttributed ? 'Your neighbor introduction was attached to this request. Any service credit still requires office verification of a qualifying paid job.' : 'Your project was saved, but this neighbor link could not be credited. It may have expired.';
     const dock=$('#projectConnectionDock');if(dock)dock.hidden=true;
     form.hidden = true;
     $('#projectReceipt').hidden = false;

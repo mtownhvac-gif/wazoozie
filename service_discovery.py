@@ -5,9 +5,11 @@ import re
 import shutil
 
 METADATA = {
+    '/local-stories/': ('Local Work and Business Profiles', 'See published local installation photos, learn about the businesses and find contact details. Actual projects and illustrations are labeled.'),
+    '/businesses/liberator-service-company/': ('Liberator Service Company | Plumbing & Drains', 'Find Liberator Service Company’s plumbing and drain contact details, services and linked customer reviews. Ask about your job and service address.'),
     '/about/': ('About Wazoozie and Its Local Business Network', 'Meet the local home-service network, read the business relationships and profiles, and choose how to make contact.'),
-    '/how-it-works/': ('How Wazoozie Works | Choose, Meet & Connect', 'Choose your project, meet a trusted local business, then call, book or use an available callback option. Understand recipients, saved notes and what happens next.'),
-    '/our-standards/': ('Our Standard for Trusted Local Introductions', 'Understand Wazoozie’s owner-selected local recommendations, business relationships, published sources and direct contact choices.'),
+    '/how-it-works/': ('How Requests and Direct Contact Work', 'See the business before you contact it. Calls and bookings go directly; online requests go through Wazoozie Help for review and forwarding.'),
+    '/our-standards/': ('How Businesses Are Listed and Recommended', 'Understand Wazoozie’s owner-selected local recommendations, business relationships, published sources and direct contact choices.'),
     '/': ('Local Services in Delco & the Main Line', 'Find local HVAC, plumbing, electrical, painting and home-repair businesses in Delco, Chester County and the Main Line. Call your chosen business directly.'),
     '/home-services/': ('Home Services in Delco & Chester County', 'Compare named local contacts for heating, cooling, plumbing, electrical work, painting and home repairs. Read profiles and confirm your address with the business.'),
     '/local-help/': ('Local Businesses in Delco, Chester County & the Main Line', 'Explore local home services, auto care and real estate contacts. Read the business profiles and choose who you contact. Each business confirms its service area.'),

@@ -36,7 +36,7 @@ function render() {
   }
   if(choice.variants||choice.repair!==choice.plan)result.append(modes);
   const provider=make('div','','project-finder-provider');
-  provider.append(make('span','BUSINESS TO CONTACT'),link(business.name,`/businesses/${business.slug}/`),make('p','Confirm your address, project fit and timing with the business.'));
+  provider.append(make('span','BUSINESS TO CONTACT'),link(business.name,`/businesses/${business.slug}/`),make('p','Ask whether the business handles your job, serves your address and has time available.'));
   result.append(provider,make('p',choice.note,'project-finder-prep'));
   const details=make('details');details.append(make('summary','What’s useful to have ready?'));
   const list=make('ul');for(const question of PROJECT_QUESTIONS[intent])list.append(make('li',question));details.append(list);result.append(details);

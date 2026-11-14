@@ -1,0 +1,471 @@
+[
+  {
+    "paths": [
+      "/privacy/"
+    ],
+    "before": "When you choose to save a brief on the project-planning page, Wazoozie stores your name, phone, optional email, town, ZIP, state, project details, preferences and consent record privately on Cloudflare for about 90 days, with daily cleanup. The site operator can review the brief and follow up about this project. Saving alone does not notify a provider. For Middletown HVAC, the submit action and consent checkbox authorize sending the brief and contact details through Zapier to service@mtownhvac.com for project follow-up. Other providers are not automatically emailed. Zapier processes the email request under its own retention policies; contact us about deletion. Email does not book an appointment. Do not include payment details or other sensitive information. Contact the operator below to ask about access or deletion.",
+    "after": "When you save a project brief or submit a request, Wazoozie stores your name, phone, optional email, town, ZIP, state, project details, preferences and consent record privately on Cloudflare for about 90 days, with daily cleanup. The site operator can review the brief and follow up about this project. Saving alone does not notify a business. When online requests are available and you consent to sending one, your contact and project details go through Zapier to wazooziehelp@gmail.com. Wazoozie Help reviews the request and forwards it to the business you selected. An accepted email request does not confirm inbox receipt or book an appointment. Zapier processes the email request under its own retention policies; contact us about deletion. Do not include payment details or other sensitive information. Contact the operator below to ask about access or deletion.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/privacy/"
+    ],
+    "before": "Email request forms.",
+    "after": "Email-draft links.",
+    "selector": "h2,h3"
+  },
+  {
+    "paths": [
+      "/privacy/"
+    ],
+    "before": "The forms prepare an email draft in your own email application. Entries are held in the open page and are not automatically sent to Wazoozie or saved in a Wazoozie leads database. You must review and send the email yourself. The named recipient and your email provider receive the information when you choose to send.",
+    "after": "Email-draft links open a draft in your own email application. You review and send it yourself. Wazoozie does not send that draft or save its contents as a submitted request. The named recipient and your email provider receive the information when you send it. Separate request forms save information as described above.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/privacy/"
+    ],
+    "before": "You can reach the operator through service@mtownhvac.com. This notice describes browsing, optional email drafts and private project briefs. Wazoozie sends a brief only to Middletown HVAC when the homeowner submits a request with consent for delivery through Zapier.",
+    "after": "For questions about a listing, a saved request or deletion, email wazooziehelp@gmail.com. Requests submitted with delivery consent go through Zapier to this inbox for Wazoozie Help to review and forward to the selected business. Calls, business website links and external bookings go directly to the named business or its provider.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/our-standards/"
+    ],
+    "before": "Calls and booking links connect directly to the named business. On the project planner, Middletown HVAC can receive an email request when delivery is available and you explicitly consent to sending it. Other businesses keep their direct call, website or email-draft options; a saved brief alone does not notify them. Email-draft links open your own email app for you to review and send. Your information is not automatically distributed to multiple businesses.",
+    "after": "Calls and booking links connect directly to the named business or its booking provider. Saving notes alone does not notify a business. When online requests are available, the form shows your selected business and asks permission before saving your details and sending them to wazooziehelp@gmail.com. Wazoozie Help reviews the request and forwards it to that business. The receipt reports the save and email-alert status; email-service acceptance does not confirm inbox receipt or an appointment. Email-draft links open your own email app for you to review and send. Your information is not automatically distributed to multiple businesses.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/our-standards/"
+    ],
+    "before": "If a business detail is incorrect, contact the operator at service@mtownhvac.com. Include the business name and the detail that needs attention.",
+    "after": "If a business detail is incorrect, email wazooziehelp@gmail.com. Include the business name, the page link and the detail that needs attention.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/start/"
+    ],
+    "before": "Your request goes only to the business shown above when direct submission is available. Otherwise, you can save a brief and contact the business yourself. This does not reserve an appointment. Call or use the business’s booking link to arrange service.",
+    "after": "When online requests are available, Wazoozie Help reviews and forwards your request to the business shown above. Saving a brief without sending it does not notify the business. Neither action reserves an appointment. Call or use the business’s booking link to arrange service.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/middletown-hvac/"
+    ],
+    "before": "Heating, cooling and hot-water inquiries you choose to send here go directly to Middletown HVAC.",
+    "after": "Calls and online bookings go directly to Middletown HVAC. Requests submitted through Wazoozie are reviewed by Wazoozie Help and forwarded to the business you selected.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/how-it-works/"
+    ],
+    "before": "Where a callback form is available, review who will receive it before sending. The receipt tells you whether it was sent, is waiting to send or couldn’t be sent. The business still needs to confirm your appointment.",
+    "after": "When online requests are available, the form shows your selected business before you send. Wazoozie Help reviews and forwards the request. The receipt reports whether the email service accepted the alert, delivery is pending or sending could not be confirmed. The business still needs to confirm your appointment.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/delaware-valley/"
+    ],
+    "before": "Philadelphia and its surrounding communities, South Jersey, and northern Delaware. A region built from places that feel like home.",
+    "after": "Explore the current business listings for Delco, Chester County and the Main Line in Pennsylvania. Ask each business to confirm coverage for your address.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/delaware-valley/"
+    ],
+    "before": "Explore local help around Philadelphia, Delaware County, Chester County, Montgomery County, Bucks County, and the Main Line. Each business confirms availability for your address.",
+    "after": "The current directory focuses on southeastern Pennsylvania, especially Delco, Chester County and the Main Line. Call the business with your exact address before arranging a visit.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/delaware-valley/"
+    ],
+    "before": "Our Delco, Chester County and the Main Line plans include South Jersey, starting with communities around Camden, Burlington, and Gloucester counties. Provider service coverage in New Jersey is not yet confirmed. Contact a business before planning a visit.",
+    "after": "Service coverage in New Jersey has not been confirmed. Contact the business with your address before planning a visit.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/delaware-valley/"
+    ],
+    "before": "We hope to include more businesses around Wilmington and New Castle County. We haven’t confirmed service coverage in Delaware yet. Ask a business about your address before making plans.",
+    "after": "Service coverage in Delaware has not been confirmed. Contact the business with your address before planning a visit.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/delaware-valley/"
+    ],
+    "before": "Wazoozie helps homeowners explore services in Delco, Chester County and the Main Line. The directory includes HVAC, electrical, plumbing and carpentry businesses. Regional content is not a statement that every business serves every county or state.",
+    "after": "Wazoozie currently lists businesses for Delco, Chester County and the Main Line in Pennsylvania. Each business sets its own service area. Coverage in New Jersey and Delaware has not been confirmed.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/facts/"
+    ],
+    "before": "The directory is being developed for Delco, Chester County and the Main Line: southeastern Pennsylvania, South Jersey, and northern Delaware. Every provider confirms its own service area and address availability. New Jersey and Delaware provider coverage has not been confirmed.",
+    "after": "The current directory focuses on Delco, Chester County and the Main Line in Pennsylvania. Each business confirms its own service area and availability for your address. Service coverage in New Jersey and Delaware has not been confirmed.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-services/"
+    ],
+    "before": "From the Main Line to South Jersey and northern Delaware. We’re building around the places we call home. Explore the region; confirm each business’s coverage for your address.",
+    "after": "The current listings focus on Delco, Chester County and the Main Line. Coverage in New Jersey and Delaware has not been confirmed. Ask the business about your address before arranging work.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/middletown-hvac/"
+    ],
+    "before": "The business is based in Glen Mills. Ask about availability in Delaware County, Chester County, Montgomery County, Philadelphia, and the Main Line. Coverage and scheduling are confirmed for your address. Broader Delco, Chester County and the Main Line coverage is being developed; New Jersey and Delaware availability is not confirmed.",
+    "after": "Middletown HVAC is based in Glen Mills. Its published coverage includes Glen Mills, Media, West Chester, Newtown Square, Havertown, Wayne, Villanova and Garnet Valley. Ask the office about your exact address and appointment availability. New Jersey and Delaware coverage has not been confirmed.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/about/"
+    ],
+    "before": "You can also meet trusted local contacts for auto care, vehicle wraps and real estate.",
+    "after": "You’ll also find local contacts for auto care, vehicle wraps and real estate.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/about/"
+    ],
+    "before": "Our home-service network brings together Cooke Carpentry & Construction, LLC, Hart Builders, Inc., Liberator Service Company, Middletown HVAC, Rolled Right Painting, LLC, Ryan Dugan Electric LLC. Wazoozie selects and recommends these businesses for the quality of their work and the people behind them.",
+    "after": "The current home-service listings include Cooke Carpentry & Construction, Hart Builders, Liberator Service Company, Middletown HVAC, Rolled Right Painting and Ryan Dugan Electric. Each profile explains the recommendation and links to business information.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/how-it-works/"
+    ],
+    "before": "Trusted local businesses. Your choice.",
+    "after": "Choose the business you want to contact.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/hart-builders/"
+    ],
+    "before": "A trusted name for a bigger project.",
+    "after": "Doors, windows, decks and remodeling.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/liberator-service-company/"
+    ],
+    "before": "A trusted plumbing contact.",
+    "after": "Plumbing and drain services.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/cooke-carpentry-construction/"
+    ],
+    "before": "The unfinished detail. The small repair you keep walking past. Shelving or trim that would make a room work better. Cooke’s Wazoozie profile is a starting point for smaller carpentry and home-repair conversations, with direct contact so you can explain what you have in mind.",
+    "after": "Contact Cooke about trim, shelving, wood repairs and other smaller home projects. Describe the work and ask whether the business handles your job size and location.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/ryan-dugan-electric/"
+    ],
+    "before": "Middletown HVAC uses Ryan Dugan Electric for its electrical work. That working relationship is why we’re glad to introduce Ryan here.",
+    "after": "Middletown HVAC uses Ryan Dugan Electric for its electrical work. That working relationship is the basis for this recommendation.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/ryan-dugan-electric/"
+    ],
+    "before": "This profile is based on published business information. Local business. Confirm the project scope and availability directly.",
+    "after": "This profile uses published business information. Ask Ryan about your job, address and available appointments.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-services/"
+    ],
+    "before": "Get to know the people behind each business.Find the right fit for what you need.",
+    "after": "See what each business does and how to get in touch.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-services/"
+    ],
+    "before": "Good reputations deservea bigger stage.",
+    "after": "Meet the businesses.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-services/"
+    ],
+    "before": "Meet a business.Skip the mystery.",
+    "after": "Know who you’re contacting.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-services/"
+    ],
+    "before": "Less runaround.A clearer first call.",
+    "after": "Get ready to call.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/guides/"
+    ],
+    "before": "Useful questions. Clear expectations.A calmer way to plan the work.",
+    "after": "Check what the job includes, compare proposals and get ready to call.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-tips/",
+      "/guides/",
+      "/guides/one-room-too-hot-too-cold/"
+    ],
+    "before": "The rest of the house feels fine. One bedroom, addition or home office never quite joins in. Here is how to start a useful comfort conversation.",
+    "after": "One bedroom, addition or home office stays too hot or too cold. Note when it happens and ask for an assessment before choosing equipment.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/guides/one-room-too-hot-too-cold/"
+    ],
+    "before": "Bring your notes, the room’s approximate size and any readily available photos of the space. Middletown HVAC’s ductless planning tool can give a business-specific starting point, followed by a site assessment and written scope. You can also start with the room-comfort service page and decide whether a conversation would be helpful.",
+    "after": "Have your notes, the room’s approximate size and any available photos ready. Middletown HVAC’s ductless tool provides planning prices; a site assessment is needed to confirm equipment and installation work.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/guides/car-repair-estimate-changed/"
+    ],
+    "before": "Save the original estimate, revised scope, your approval and the final invoice. Ask for written warranty terms. If an item on the bill is unclear, ask for its purpose, price and approval record. When you need a local introduction, Wazoozie lists general repair shops and a separate transmission specialist so you can start the right conversation.",
+    "after": "Save the original estimate, revised scope, your approval and the final invoice. Ask for written warranty terms. If an item on the bill is unclear, ask for its purpose, price and approval record. Wazoozie lists general repair shops and a transmission specialist if you need another shop to call.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/guides/car-repair-estimate-changed/"
+    ],
+    "before": "The sources for this guide are listed below. It is not a diagnosis, a safety clearance or a quote. HVAC contact and estimator links lead to Middletown HVAC. Choose the business and agree on the work directly.",
+    "after": "The sources for this guide are listed below. This guide does not diagnose your vehicle or establish whether it is safe to drive. Contact the shop directly to discuss an assessment, the charge and the work.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/services/ductless-mini-splits/"
+    ],
+    "before": "For an oil-heated home, ductless may also be part of a conversation about reducing oil use. Compare that plan with other heating-conversion options.",
+    "after": "If your home uses oil, ask how ductless compares with the other ways to reduce or replace oil heating.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/services/ductless-mini-splits/"
+    ],
+    "before": "A pricing tool helps start the conversation. It does not inspect your house or establish the final installed scope, schedule or equipment fit.",
+    "after": "Use the tool for planning prices. Middletown confirms the equipment, installation work and schedule after assessing your home.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/services/replacement-estimates/"
+    ],
+    "before": "A replacement should solve the problems you actually have. Start with a conversation about comfort, the house, and what matters to you.",
+    "after": "Tell the office what is wrong with your current system and what you want to improve before choosing a replacement.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/services/second-opinion/"
+    ],
+    "before": "Not in this version. Call Middletown HVAC to confirm how to send documents and whether an assessment is appropriate.",
+    "after": "Call Middletown HVAC to ask how to share your estimate and arrange the appropriate assessment.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/projects/"
+    ],
+    "before": "A technician at a Bosch outdoor Heat Pump installation, published by Middletown HVAC. A useful starting point for a conversation about changing how your home is heated.",
+    "after": "A technician at a Bosch outdoor Heat Pump installation, published by Middletown HVAC. Ask about heat pump and dual-fuel options for your home.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/pricing-guide/",
+      "/before-you-say-yes/"
+    ],
+    "before": "Great price. Now ask the great question: “What will I owe if I don’t approve any repairs?”",
+    "after": "Before booking, ask: “What will I owe if I don’t approve any repairs?”",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/good-call-club/"
+    ],
+    "before": "Know your house.A little more legendary.",
+    "after": "Five questions about homes, cars and hiring help.",
+    "selector": "h1"
+  },
+  {
+    "paths": [
+      "/vehicle-wraps/"
+    ],
+    "before": "Your ride.A little more you.",
+    "after": "Vehicle wraps and custom vinyl work.",
+    "selector": "h1"
+  },
+  {
+    "paths": [
+      "/who-would-you-call/"
+    ],
+    "before": "The quote looks good. The details? Your move. Six decisions about scope, credits and the bits people skip.",
+    "after": "Try six fictional estimates and see which details you would check before agreeing.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/liberator-service-company/"
+    ],
+    "before": "The everyday things that make home work.",
+    "after": "Tell Liberator what needs attention.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/cooke-carpentry-construction/"
+    ],
+    "before": "For the parts of home you notice every day.",
+    "after": "Small repairs and carpentry projects.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/businesses/ryan-dugan-electric/"
+    ],
+    "before": "Make the room feel right.",
+    "after": "Planning lighting changes.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/projects/"
+    ],
+    "before": "The details behind hot water.",
+    "after": "Tankless Water Heater installation.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/projects/"
+    ],
+    "before": "Comfort where you need it.",
+    "after": "Indoor ductless installation.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/projects/"
+    ],
+    "before": "A look outside, too.",
+    "after": "Outdoor ductless installation.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-tips/"
+    ],
+    "before": "Good decisionslive in the details.",
+    "after": "Before you hire a business.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-tips/"
+    ],
+    "before": "Before the beautiful color,there’s the preparation.",
+    "after": "What is included in a painting job?",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-tips/"
+    ],
+    "before": "Make a little roomfor what’s next.",
+    "after": "Plan your next home project.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/guides/"
+    ],
+    "before": "Pick the project you’re planning. Keep the scope, responsibilities and next steps clear.",
+    "after": "Choose a project to see what to ask, what to have ready and which details belong in writing.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/home-services/"
+    ],
+    "before": "A recommendationwith a reason.",
+    "after": "Read why each business is listed.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/my-home/"
+    ],
+    "before": "A good first conversation.",
+    "after": "Before you call.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/explore/"
+    ],
+    "before": "People worth calling.",
+    "after": "Find a local business.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/explore/"
+    ],
+    "before": "A little help before the first call.",
+    "after": "Get ready to contact a business.",
+    "selector": "p,h2,h3,li,summary"
+  },
+  {
+    "paths": [
+      "/auto-mechanics/transmission-repair/",
+      "/real-estate-agents/first-time-home-buyers/",
+      "/services/electrical-panel-upgrades/"
+    ],
+    "before": "No Wazoozie account needed. Call the named business or professional to arrange a conversation. Wazoozie does not reserve a time or send this inquiry to another business.",
+    "after": "No Wazoozie account needed. Call the listed business or professional directly to ask about an appointment. This page does not send an inquiry or reserve a time.",
+    "selector": "p,h2,h3,li,summary"
+  }
+]
