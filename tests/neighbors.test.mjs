@@ -125,7 +125,7 @@ test('project planner offers removable neighbor credit and keeps door requests w
  }finally{env.close();}
 });
 
-test('keeping neighbor credit records the code and shows only the saved-credit receipt',async()=>{
+test('keeping a neighbor introduction records the code and explains the conditions for service credit',async()=>{
  const env=await domPage('start','?intent=comfort&neighbor='+code);
  try{
   let sent;globalThis.fetch=async(url,options)=>{if(url.includes('capabilities'))return Response.json({captureReady:true});sent=JSON.parse(options.body);return Response.json({status:'saved',referralAttributed:true});};
@@ -134,7 +134,8 @@ test('keeping neighbor credit records the code and shows only the saved-credit r
   form.elements.consent.checked=true;env.doc.querySelector('#projectNext1').click();env.doc.querySelector('#projectNext2').click();
   form.dispatchEvent(new env.dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
   assert.equal(sent.neighborCode,code);assert.equal(sent.provider,'middletown');
-  assert.ok(env.doc.querySelector('#receiptNeighborStatus').textContent.includes('credited'));
+  assert.match(env.doc.querySelector('#receiptNeighborStatus').textContent,/attached to this request/);
+  assert.match(env.doc.querySelector('#receiptNeighborStatus').textContent,/requires office verification of a qualifying paid job/);
   assert.equal(env.doc.querySelector('#neighborCredit').hidden,true);
  }finally{env.close();}
 });

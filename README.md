@@ -4,12 +4,12 @@ A premium homeowner marketplace introducing local businesses and directing quali
 
 ## Build and preview
 
-Python 3.12+; no package installation required. Node is used only for JavaScript syntax checks.
+Requires Python 3.12+ and Node 22+. Run `npm ci` once. The build generates static pages, then uses the installed JSDOM package for the final presentation and copy pass.
 
 ```sh
-python3 build.py
-python3 check_site.py
-node --check dist/assets/home.js
+npm ci
+npm run build
+npm run check
 python3 -m http.server 8000 --directory dist
 ```
 
@@ -35,7 +35,7 @@ python3 check_site.py
 
 This adds canonicals, sitemap, social metadata, and crawl permission. It does not deploy, alter DNS, or grant public access. Confirm the origin before deploying. A private preview cannot generate search leads; search metadata does not guarantee traffic.
 
-Preserve the existing wazoozie.com site and coordinate its public launch with the owner. GitHub pushes do not automatically update the earlier public prototype. Configure static hosting to build with `python3 build.py` and serve `dist/`.
+Preserve the existing wazoozie.com site and coordinate its public launch with the owner. GitHub pushes do not automatically update the earlier public prototype. The current Cloudflare Worker deployment builds with `npm run build:production && npm run check` after dependency installation and serves `dist/` alongside the existing private intake endpoints.
 
 ## Operational requirements
 
@@ -55,11 +55,7 @@ Object stores validated, consented briefs. The initial migration is
 preserved. Deploy with `npm run deploy` from an authenticated Cloudflare session.
 The deploy command builds and runs the checks before changing production.
 
-**Delivery is not automatic.** Saving does not notify a contractor, reserve a
-visit or create a Housecall Pro customer. The confirmation says this explicitly
-and offers the selected business's phone and, where available, booking link.
-Do not change the receipt to “sent” until a delivery service is configured and
-its acceptance is verified. Project-saving failure leaves direct contact usable.
+**Saving and delivery are separate.** Saving notes alone does not notify a business, reserve a visit or create a Housecall Pro customer. When the live capability endpoint confirms office email routing and the visitor consents, submitted requests go through Zapier to `wazooziehelp@gmail.com` for Wazoozie Help to review and forward to the selected business. This applies to all six configured home-service businesses. Email-service acceptance does not prove inbox receipt or a booking. See `EMAIL_DELIVERY.md` for the current delivery contract. Direct contact remains available if intake fails.
 
 Office review uses authenticated Cloudflare Data Studio: Durable Objects →
 ProjectInbox namespace → Data Studio. Enter the object name

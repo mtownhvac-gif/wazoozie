@@ -1,4 +1,4 @@
-"""Dependency-free static publisher. Preview is noindex; set PUBLIC_SITE_URL for launch."""
+"""Static publisher with a final DOM presentation pass. Preview is noindex; set PUBLIC_SITE_URL for launch."""
 from pathlib import Path
 import os, re, json, shutil, html
 from urllib.parse import urlparse
@@ -329,6 +329,8 @@ add_project_finder(OUT)
 from motion import add as add_motion
 add_motion(OUT)
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
+import subprocess
+subprocess.run(['node', str(ROOT/'scripts/sitewide-refresh.mjs'), str(OUT), PUBLIC or 'http://localhost:8123', os.environ.get('WAZOOZIE_REVIEW_REPORT','')], check=True)
 from service_discovery import finalize as finalize_service_metadata
 finalize_service_metadata(OUT, PUBLIC)
 from agent_content import generate

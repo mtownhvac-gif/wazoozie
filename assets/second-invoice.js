@@ -37,7 +37,7 @@ function render(){
   $('fix').textContent=p.risks.length?'Fix my order ↶':'Order checked in this model ✓';
   $('undo').hidden=!original;
   $('undo').textContent=showingFixed?'Compare with my original order':'Return to the proposed fix';
-  const connections=[...p.gates.map(x=>({...x,kind:'SETTLE THIS FIRST'})),...p.overlaps.map(x=>({...x,kind:'A SHARED CONVERSATION'}))];
+  const connections=[...p.gates.map(x=>({...x,kind:'SETTLE THIS FIRST'})),...p.overlaps.map(x=>({...x,kind:'COORDINATE THE WORK'}))];
   $('summary').textContent=p.openQuestions.length+' question'+(p.openQuestions.length===1?'':'s')+' still to discuss';
   $('connections').innerHTML=connections.length?connections.map(x=>`<article class="ripple-connection ${x.kind==='SETTLE THIS FIRST'?'ripple-gate':''}"><span class="ripple-kicker">${x.kind}</span><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p>${question(x)}</article>`).join(''):`<article class="ripple-connection"><span class="ripple-kicker">AGREE ON WHO DOES WHAT</span><h3>Who leaves it ready for the next trade?</h3><p>Agree on who handles access, protection, patching, cleanup and touch-ups. Include those responsibilities in the written proposals.</p></article>`;
   $('trades').innerHTML=p.trades.map(x=>`<a href="${x.href}">${esc(x.name)} <span>Meet local contacts ↗</span></a>`).join('')||'<a href="/local-help/">Explore local help →</a>';
@@ -67,7 +67,7 @@ $('undo').addEventListener('click',()=>{const next=original;original=[...state.o
 $('clear').addEventListener('click',()=>{state={order:[],flags:['same-area','wall-access','window-trim'],confirmed:[]};update();announce('Start with the projects you have in mind.');});
 function sharedURL(){return (location.origin==='null'?'https://wazoozie.com':location.origin)+'/second-invoice/#'+encodePlan(state);}
 async function copyText(text,isLink){
-  try{await navigator.clipboard.writeText(text);$('fallback').hidden=true;announce(isLink?'Plan link copied. It shares project choices and assumptions only.':'Conversation sheet copied. Review it before sharing.');}
+  try{await navigator.clipboard.writeText(text);$('fallback').hidden=true;announce(isLink?'Plan link copied. It shares project choices and assumptions only.':'Project sheet copied. Review it before sharing.');}
   catch{$('fallback').hidden=false;$('link').value=text;$('link').focus();$('link').select();announce('Select and copy the text below.');}
 }
 $('share').addEventListener('click',()=>copyText(sharedURL(),true));

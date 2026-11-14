@@ -14,7 +14,7 @@ for(const [id,trade] of Object.entries(INTENTS).sort((a,b)=>a[1].label.localeCom
 function setMode(next){
  if(!['plan','prepare','estimate'].includes(next))return;
  mode=next;document.querySelectorAll('[data-ask-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.askMode===mode)));
- $('ask-question-label').textContent=mode==='estimate'?'What would you like to clarify about the quote?':mode==='prepare'?'What are you planning to discuss?':'What would you like sorted out?';
+ $('ask-question-label').textContent=mode==='estimate'?'What would you like to clarify about the quote?':mode==='prepare'?'What are you planning to discuss?':'What would you like help planning?';
  $('ask-submit').textContent=mode==='estimate'?'Help me review the details →':mode==='prepare'?'Get my questions ready →':'Help me plan this →';
 }
 const params=new URL(location.href).searchParams;
@@ -71,7 +71,7 @@ function downloadPlan(){
 function show(result,isSaved=false){
  const root=$('ask-result');root.replaceChildren();$('ask-empty').hidden=true;root.hidden=false;
  const source=isSaved?'SAVED ON THIS BROWSER':result.emergency?'SAFETY FIRST':result.kind==='checklist'?'YOUR QUICK CHECKLIST':'YOUR STARTING POINT';
- root.append(make('div',source,'eyebrow'),make('h2',result.emergency?'Please get to a safe place.':'Your project, taking shape.'),make('p',result.summary,'ask-summary'));
+ root.append(make('div',source,'eyebrow'),make('h2',result.emergency?'Please get to a safe place.':'Your project notes.'),make('p',result.summary,'ask-summary'));
  if(result.emergency){root.append(link('Emergency calling information','tel:911','btn primary'),make('p','Do not use this project helper to manage an emergency.','ask-small'));}
  else{
   const notes=make('section',undefined,'ask-question-notes');notes.append(make('h3','Add your notes.'),make('p','Add what you know. These notes stay in this page until you save, download or choose to carry them into a request.','ask-small'));

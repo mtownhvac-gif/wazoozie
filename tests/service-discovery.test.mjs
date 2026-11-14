@@ -35,7 +35,8 @@ test('repair content gives local context, supported service questions and safety
  assert.match(content,/Do not bypass a safety control or repeatedly reset/);
  assert.match(content,/leave the building and call emergency services or the utility/);
  assert.ok(d.querySelector('.service-content-source a[href="https://www.mtownhvac.com/services/"]'));
- assert.match(d.querySelector('.service-attribution').textContent,/Call clicks alone do not tell us/);
+ assert.match(d.querySelector('.service-attribution').textContent,/Mention Wazoozie when you call/);
+ assert.ok(d.querySelector('.service-attribution a[href="/how-it-works/"]'));
  const service=schema(d).find(x=>x['@type']==='Service');
  assert.equal(service.provider['@id'],'https://www.mtownhvac.com/#business');
  assert.equal(service.provider['@type'],'HVACBusiness');
@@ -75,10 +76,12 @@ test('Middletown profile and contact page support requests without changing othe
  assert.match(md,/What’s on your list/);assert.doesNotMatch(md,/Wazoozie and Middletown HVAC are related businesses/);
 });
 
-test('standards distinguish consented Middletown delivery from saved briefs and email drafts',()=>{
+test('standards distinguish consented office delivery from saved notes, direct contact and email drafts',()=>{
  const d=doc('/our-standards/');
- assert.match(d.querySelector('main').textContent,/explicitly consent to sending it/);
- assert.match(d.querySelector('main').textContent,/a saved brief alone does not notify them/);
+ assert.match(d.querySelector('main').textContent,/asks permission before saving your details/);
+ assert.match(d.querySelector('main').textContent,/Saving notes alone does not notify a business/);
+ assert.match(d.querySelector('main').textContent,/wazooziehelp@gmail.com/);
+ assert.match(d.querySelector('main').textContent,/acceptance does not confirm inbox receipt or an appointment/);
  assert.doesNotMatch(d.querySelector('main').textContent,/homepage shows all listed businesses/);
  const privacy=doc('/privacy/');assert.match(privacy.querySelector('main').textContent,/pricing-tool links/);
  d.defaultView.close();privacy.defaultView.close();
