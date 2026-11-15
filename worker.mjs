@@ -47,6 +47,10 @@ export default {
       response.headers.set('Referrer-Policy','no-referrer');
       response.headers.set('Content-Security-Policy', "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
     }
+    if (url.pathname === '/same-job/') {
+      response.headers.set('Referrer-Policy','no-referrer');
+      response.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'");
+    }
     if (url.pathname === '/account/') {
       response.headers.set('Cache-Control','no-store');
       response.headers.set('X-Robots-Tag','noindex');

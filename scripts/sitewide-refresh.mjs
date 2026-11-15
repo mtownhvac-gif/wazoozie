@@ -102,11 +102,11 @@ function refreshHeader(d,path){
  const nav=header.querySelector('nav[aria-label="Main navigation"]');
  const vehicle=isVehicle(path)||path==='/guides/car-repair-estimate-changed/',property=isProperty(path);
  const action=/vehicle-wraps|sound-wraps/.test(path)?['/book/?q=wraps','Wrap contacts']:vehicle?['/book/?q=mechanic','Find a shop']:property?['/book/?q=realtor','Find an agent']:['/request/','Request help'];
- const links=[['/local-help/','Find a business'],['/pricing-guide/','Prices'],['/guides/','Guides'],['/explore/','Tools']];
+ const links=[['/local-help/','Find a business'],['/same-job/','Compare estimates'],['/pricing-guide/','Prices'],['/guides/','Guides'],['/explore/','Tools']];
  if(nav){nav.replaceChildren();for(const [href,label] of [...links,action]){const a=element(d,'a',href===action[0]?'btn primary':'');a.href=href;a.textContent=label;if(path===href)a.setAttribute('aria-current','page');nav.append(a);}}
  const quick=header.querySelector('.account-top-link');if(quick){quick.href=action[0];quick.textContent=action[1];}
  const menu=header.querySelector('nav[aria-label="Mobile navigation"]');
- if(menu){menu.replaceChildren();for(const [href,label] of [action,['/local-help/','All businesses'],['/home-services/','Home services'],['/auto-mechanics/','Auto care'],['/real-estate-agents/','Real estate'],['/vehicle-wraps/','Vehicle wraps'],['/pricing-guide/','Prices'],['/guides/','Guides'],['/explore/','Tools & quizzes'],['/projects/','Actual local work'],['/account/','Your saved projects'],['/for-contractors/','List your business']]){const a=element(d,'a');a.href=href;a.textContent=label;menu.append(a);}}
+ if(menu){menu.replaceChildren();for(const [href,label] of [action,['/local-help/','All businesses'],['/home-services/','Home services'],['/auto-mechanics/','Auto care'],['/real-estate-agents/','Real estate'],['/vehicle-wraps/','Vehicle wraps'],['/pricing-guide/','Prices'],['/guides/','Guides'],['/explore/','Tools & quizzes'],['/projects/','Actual local work'],['/same-job/','Compare estimates'],['/account/','Your saved projects'],['/for-contractors/','List your business']]){const a=element(d,'a');a.href=href;a.textContent=label;menu.append(a);}}
  const dock=d.querySelector('.contact-dock');if(dock){const actions=[...dock.querySelectorAll('a')];if(actions.length>1){actions[0].href='/local-help/';actions[0].textContent='Find a business';actions.at(-1).href=action[0];actions.at(-1).textContent=action[1];}}
  const tag=header.querySelector('.header-tagline');if(tag)tag.setAttribute('aria-hidden','true');
  const beta=d.querySelector('body>.beta');if(beta)beta.textContent='DELCO · CHESTER COUNTY · THE MAIN LINE';
@@ -120,7 +120,7 @@ function refreshHome(d){
  // Keep the source photos and live project finder as the first useful stops.
  const folded=element(d,'details','wz-more-tools');folded.append(element(d,'summary','', 'More planning tools, quizzes and referral details <span aria-hidden="true">+</span>'));
  const inside=element(d,'div','wz-more-tools-content');folded.append(inside);
- const essential=new Set(['grand-hero','local-proof','project-finder','network-intro']);
+ const essential=new Set(['grand-hero','local-proof','project-finder','same-job-home','network-intro']);
  for(const el of [...main.children]){if([...essential].some(c=>el.classList.contains(c))||['find','explore'].includes(el.id))continue;inside.append(el);}
  if(inside.children.length)main.append(folded);
  // Put actual ways to contact people before optional browsing and games.
@@ -141,6 +141,7 @@ function refreshFooter(d){
  const first=footer.querySelector('.footergrid>div:first-child p');if(first)first.innerHTML='I’m choosy. I use Wazoozie.<br><span>Local help for home, auto and real estate.</span>';
  const labels=footer.querySelectorAll('.footergrid strong');if(labels[0])labels[0].textContent='Find what you need';if(labels[1])labels[1].textContent='About & contact';
  for(const a of footer.querySelectorAll('a')){const labels={'/explore/':'Tools & quizzes','/projects/':'Actual local work','/account/':'Your saved projects','/our-standards/':'How businesses are listed','/hello/':'Contact Wazoozie','/for-contractors/':'List your business'};if(labels[a.getAttribute('href')])a.textContent=labels[a.getAttribute('href')];}
+ const comparison=element(d,'a');comparison.href='/same-job/';comparison.textContent='Compare two estimates';footer.querySelector('.footergrid>div:nth-child(2)')?.append(comparison);
  const bottom=footer.querySelector('.footbottom>span:last-child');if(bottom)bottom.textContent='You choose who you contact.';
 }
 function replaceText(d,el,value){
@@ -170,7 +171,7 @@ function copyReview(d,path){
  return changes;
 }
 function relatedAndSharing(d,path){
- if(path==='/'||['/404/','/account/','/my-home/','/request/','/start/','/privacy/','/for-contractors/'].includes(path))return;
+ if(path==='/'||['/404/','/account/','/same-job/','/my-home/','/request/','/start/','/privacy/','/for-contractors/'].includes(path))return;
  const main=d.querySelector('main');if(!main)return;const c=context(path);
  if(!['/about/','/our-standards/','/how-it-works/','/hello/','/facts/'].includes(path)){
   const panel=element(d,'section','wrap wz-next-step');panel.setAttribute('aria-label','Related help');

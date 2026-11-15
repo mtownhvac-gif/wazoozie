@@ -1,4 +1,5 @@
 import {BUSINESSES, INTENTS, CONSENT_VERSION} from './project-config.mjs';
+import {takeEstimateHandoff} from './estimate-handoff.mjs';
 import {entryContext} from './lead-context.mjs';
 const $ = id => document.getElementById(id);
 const form = $('quickRequest'), service = form.elements.intent;
@@ -9,6 +10,7 @@ for (const [value, intent] of Object.entries(INTENTS)) {
   const option = document.createElement('option'); option.value = value; option.textContent = intent.label; service.append(option);
 }
 if (Object.hasOwn(INTENTS, params.get('intent'))) service.value = params.get('intent');
+if(params.get('entry')==='estimate-check'){let notes=null;try{notes=takeEstimateHandoff(sessionStorage,service.value);}catch{}if(notes){form.elements.details.value=notes;form.elements.consent.checked=false;const notice=document.createElement('p');notice.className='request-note';notice.textContent='Your selected estimate questions are below. Review them before sending. Nothing has been sent yet.';form.prepend(notice);}}
 function selectedBusiness() { return BUSINESSES[INTENTS[service.value]?.provider]; }
 function contacts(business) {
   const box = document.createElement('div');
