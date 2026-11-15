@@ -108,7 +108,7 @@ test('a native worker loading error fails promptly with a paste fallback',async(
 });
 
 test('comparison page CSP confines modules, workers and document-related requests to this origin',async()=>{
- const response=await worker.fetch(new Request('https://wazoozie.com/same-job/'),{ASSETS:{fetch:async()=>new Response(html,{headers:{'Content-Type':'text/html'}})}});const csp=response.headers.get('Content-Security-Policy');assert.match(csp,/script-src 'self'; worker-src 'self'/);assert.match(csp,/connect-src 'self'/);assert.match(csp,/object-src 'none'/);assert.doesNotMatch(csp,/unsafe-eval|unsafe-inline|blob:/);assert.equal(response.headers.get('Referrer-Policy'),'no-referrer');assert.equal(response.headers.get('X-Robots-Tag'),null);
+ const response=await worker.fetch(new Request('https://wazoozie.com/same-job/'),{ASSETS:{fetch:async()=>new Response(html,{headers:{'Content-Type':'text/html'}})}});const csp=response.headers.get('Content-Security-Policy');assert.match(csp,/script-src 'self'; worker-src 'self'/);assert.match(csp,/connect-src 'self'/);assert.match(csp,/object-src 'none'/);assert.doesNotMatch(csp,/unsafe-eval|unsafe-inline|blob:/);assert.equal(response.headers.get('Referrer-Policy'),'no-referrer');assert.equal(response.headers.get('X-Robots-Tag'),null);assert.doesNotMatch(html,/<[^>]+\sstyle=/,'strict-CSP page keeps styling in its external stylesheet');
 });
 test('an unresponsive parser is terminated at its deadline',async()=>{
  const previous=LIMITS.deadline;LIMITS.deadline=10;const mock=mockPDF([DEMO.a],{delay:true});try{await assert.rejects(extractEstimatePDF(mockFile(),mock.options),/took too long/);assert.ok(mock.calls.terminated);}finally{LIMITS.deadline=previous;}
