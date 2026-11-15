@@ -11,7 +11,6 @@ REASONS = {
     'ryan': ('The electrician Middletown calls.', 'Middletown HVAC uses Ryan Dugan Electric for its own electrical work. That working relationship is why Wazoozie recommends Ryan here.'),
     'liberator': ('A trusted plumbing contact.', 'Selected for the local network for plumbing and drain inquiries. Start with the fixture, leak or blockage that needs attention.'),
     'cooke': ('The smaller jobs deserve good work, too.', 'Selected for carpentry and home-repair inquiries, including trim, shelving and finishing details.'),
-    'hart': ('A trusted name for a bigger project.', 'Selected for construction and remodeling inquiries, including doors, windows, decks and additions.'),
     'rolledright': ('A good finish starts with good preparation.', 'Selected for painting, drywall repairs and cabinet-refinishing inquiries.'),
 }
 

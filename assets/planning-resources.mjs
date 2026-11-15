@@ -10,10 +10,6 @@ const guides={
  plumbing:[['/services/plumbing/','Plumbing & drain questions','Identify the fixture, visible issue and timing. Ask about access, scope and any diagnostic charge.']],
  painting:[['/guides/painting-estimate-checklist/','Compare painting estimates','Confirm surfaces, protection, preparation, repairs and finish coats so proposals cover the same work.']],
  carpentry:[['/services/handyman/','Plan a carpentry repair','Describe dimensions, materials, access and the result you want. Confirm that the business handles the exact scope.']],
- doors:[['/services/construction-remodeling/','Doors and surrounding work','Clarify whether the work includes the door, frame, hardware, trim and finishing. Confirm project fit with the business.']],
- windows:[['/services/construction-remodeling/','Windows and surrounding repairs','Clarify the number of windows, product choice, frame condition and surrounding restoration.']],
- decks:[['/services/construction-remodeling/','Deck and porch planning','Discuss size, materials, stairs, rails, access and responsibilities for design and permits.']],
- additions:[['/services/construction-remodeling/','Plan a remodeling project','Explain the intended space and identify responsibilities for design, permits and trade coordination.']]
 };
 export function planningResources(intent,mode='plan'){
  if(!Object.hasOwn(guides,intent))return [];

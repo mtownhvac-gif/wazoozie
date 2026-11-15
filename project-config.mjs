@@ -6,7 +6,6 @@ export const BUSINESSES = {
     slug: 'middletown-hvac', image: 'middletown-conventional-project',
     booking: 'https://book.housecallpro.com/book/Middletown-HVAC-LLC/fee90a1b38e64428a9ebf1cf37e04197?v2=true&utm_source=wazoozie&utm_medium=referral&utm_campaign=project-brief&utm_content=start'
   },
-  hart: {defaultIntent:'additions',name:'Hart Builders, Inc.',phone:'215-350-5502',tel:'+12153505502',email:'quality@hartbuildersinc.com',slug:'hart-builders',image:'window-framing'},
   rolledright: {defaultIntent:'painting',name:'Rolled Right Painting, LLC',phone:'610-291-9552',tel:'+16102919552',email:'louislitwin618@gmail.com',slug:'rolled-right-painting',image:'valley-colonial-home'},
   ryan: {defaultIntent:'electrical',name: 'Ryan Dugan Electric LLC', phone: '445-258-9962', tel: '+14452589962', slug: 'ryan-dugan-electric', image: 'outdoor-lighting'},
   liberator: {defaultIntent:'plumbing',name: 'Liberator Service Company', phone: '267-328-5235', tel: '+12673285235', slug: 'liberator-service-company', image: 'sink'},
@@ -15,17 +14,12 @@ export const BUSINESSES = {
 
 export const PROJECT_GROUPS = [
   {key:'systems',label:'Systems & everyday service',intents:['comfort','water','electrical','plumbing']},
-  {key:'repairs',label:'Repairs & finishing',intents:['doors','windows','painting','carpentry']},
-  {key:'projects',label:'Bigger home projects',intents:['decks','additions']}
+  {key:'repairs',label:'Repairs & finishing',intents:['painting','carpentry']},
 ];
 
 export const INTENTS = {
-  doors: {label:'Hang or repair a door',description:'Interior doors, sticking doors, hardware and trim.',provider:'hart',service:'construction-remodeling',group:'repairs',scopeCheck:'Discuss door hanging, frame or hardware work and current availability directly with Hart Builders.'},
-  windows: {label:'Replace or repair windows',description:'Window replacement, frames and surrounding trim.',provider:'hart',service:'construction-remodeling',group:'repairs',scopeCheck:'Discuss window replacement, product selection, surrounding repairs and project coverage directly with Hart Builders.'},
   painting: {label:'Painting & drywall',description:'A room to repaint. Walls, ceilings or drywall to finish.',provider:'rolledright',service:'painting',group:'repairs',scopeCheck:'Discuss the surfaces, preparation, finishes and current coverage directly with Rolled Right Painting.'},
   carpentry: {label:'Carpentry & home repairs',description:'Smaller trim, shelving, wood repairs and finishing details.',provider:'cooke',service:'handyman',group:'repairs'},
-  decks: {label:'Build or repair a deck',description:'Decks, porches, stairs, railings and outdoor projects.',provider:'hart',service:'construction-remodeling',group:'projects',scopeCheck:'Discuss the deck or porch scope, design, permits and current availability directly with Hart Builders.'},
-  additions: {label:'Remodel or build an addition',description:'More space, a new layout or a room ready for a change.',provider:'hart',service:'construction-remodeling',group:'projects',scopeCheck:'Confirm that Hart Builders accepts your remodeling or addition scope. Design, engineering, permits and trade coordination must be agreed directly.'},
   comfort: {label:'Heating & cooling',description:'Repairs, Boilers, maintenance and new systems.',provider:'middletown',service:'heating-cooling',group:'systems'},
   water: {label:'Water Heaters & hot water',description:'Tank, tankless, repairs and replacements.',provider:'middletown',service:'water-heaters',group:'systems'},
   electrical: {label:'Electrical work',description:'Outlets, lighting, circuits and electrical projects.',provider:'ryan',service:'electrical',group:'systems'},
@@ -37,11 +31,7 @@ export const INTENTS = {
 };
 
 export const PROJECT_QUESTIONS = {
-  doors:['A new door, a replacement or a repair?','Interior or exterior, and how many doors?','Door, frame, hardware or trim—which parts need attention?'],
-  windows:['Repair or replacement, and how many windows?','Any frame damage, drafts or water entry?','Have you selected a product, or do you need help planning?'],
   painting:['Interior or exterior, and which rooms or surfaces?','Any drywall damage, patching or preparation needed?','Approximate room size, access and preferred timing?'],
-  decks:['A new deck or repairs to an existing one?','Approximate size, materials and height above ground?','Any plans, permit information or railing/stair requirements?'],
-  additions:['Which space would you like to add or remodel?','Approximate size and what you want the space to do?','Do you have drawings, permits or a preferred timeline?'],
   comfort: ['What type of heating or cooling system do you have?', 'What changed, and which rooms are affected?', 'Any thermostat message or previous service findings?'],
   water: ['Tank or tankless, and which fuel if you know?', 'No hot water, inconsistent temperature or a visible leak?', 'Any model information or displayed error?'],
   boiler: ['Gas or oil, if you know?', 'Radiators, baseboards or another type of heat?', 'All rooms affected, or just one part of the home?'],

@@ -14,7 +14,6 @@ HOME={
  'electrical':('electrical work','directory-prices','/guides/electrical-project-estimate/','electrical'),
  'painting':('painting','directory-prices','/guides/painting-estimate-checklist/','painting'),
  'handyman':('carpentry & home repairs','directory-prices','/project-kit/?intent=carpentry','carpentry'),
- 'construction-remodeling':('windows & remodeling','directory-prices','/guides/window-replacement-questions/','windows')
 }
 
 

@@ -47,7 +47,7 @@ export const TRADES={
   topic('coats','Coats & color',['coat','coats','coverage','color','colour','color change'],'What coats and color changes does the price cover, and what would cost extra?'),
  ]},
  carpentry:{label:'Carpentry & small repairs',intent:'carpentry',topics:WOOD},
- remodeling:{label:'Remodeling, decks & additions',intent:'additions',topics:WOOD},
+ remodeling:{label:'Remodeling, decks & additions',intent:'carpentry',topics:WOOD},
 };
 const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const qualification=/\b(?:not included|not covered|not required|not applicable|no permit|without|excluded|excludes|except|unless|by others|owner supplied|customer supplied|additional|extra|allowances?|optional|if required|as needed|subject to|TBD|to be determined)\b/i;

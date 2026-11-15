@@ -1,7 +1,7 @@
 export const SERVICE_SUGGESTIONS=[
  ['Car repair','car','auto'],['Vehicle wraps','wraps','auto'],['Transmission repair','transmission','auto'],['Tires','tires','auto'],
  ['Heating & AC repair','hvac','home','ac heating cooling furnace air conditioning'],['No heat','no heat','home'],['AC not cooling','ac not cooling','home'],['No hot water','no hot water','home'],['Water Heaters & tankless','water heater','home'],['Boilers & radiators','boiler','home'],
- ['Plumbing & drains','plumbing','home','plumber'],['Leaking sink','leaking sink','home'],['Clogged drain','clogged drain','home'],['Electrical work','electrical','home','electrician'],['Breaker keeps tripping','breaker keeps tripping','home'],['Painting & drywall','painting','home','painter paint'],['Carpentry & home repairs','carpentry','home','handyman shelving trim'],['Windows & doors','windows','home'],['Decks & remodeling','decks','home'],['Real estate agents','real estate','realestate','realtor buying selling']
+ ['Plumbing & drains','plumbing','home','plumber'],['Leaking sink','leaking sink','home'],['Clogged drain','clogged drain','home'],['Electrical work','electrical','home','electrician'],['Breaker keeps tripping','breaker keeps tripping','home'],['Painting & drywall','painting','home','painter paint'],['Carpentry & home repairs','carpentry','home','handyman shelving trim'],['Real estate agents','real estate','realestate','realtor buying selling']
 ].map(([label,query,category,aliases=''])=>({label,query,category,aliases}));
 const normalize=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
 export function matchingSuggestions(query,items=SERVICE_SUGGESTIONS){

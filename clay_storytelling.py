@@ -12,7 +12,7 @@ SCENES = {
     'clay-tankless-bath': ('Clay-style parent supervising a bubbly bath beside a separate utility space with a tankless water heater', ['services/water-heaters', 'guides/plan-a-tankless-conversion']),
     'clay-family-painting': ('A smiling clay-style family painting a room together', ['services/painting', 'guides/painting-estimate-checklist', 'businesses/rolled-right-painting']),
     'clay-door-replacement': ('Clay-style carpenter adjusting a front door beside a closed glazed window', ['services/handyman']),
-    'clay-window-renovation': ('Clay-style family and installer admiring a new glazed window', ['services/construction-remodeling', 'guides/window-replacement-questions']),
+    'clay-window-renovation': ('Clay-style family and installer admiring a new glazed window', ['guides/window-replacement-questions']),
     'clay-dusty-filter': ('Clay-style technician removing a filter with an enormous fictional dust-bunny cloud', ['services/maintenance', 'seasonal-home-checklist']),
     'clay-ductless-comfort': ('Clay-style parent, child and cat enjoying a room with a wall-mounted mini-split', ['services/ductless-mini-splits', 'services/heating-cooling', 'guides/one-room-too-hot-too-cold']),
     'clay-hot-water': ('Clay-style parent and child washing flour from their hands with a water heater in the background', []),

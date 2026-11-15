@@ -1,5 +1,5 @@
 export const ESTIMATE_HANDOFF_KEY='wazoozie.estimate.questions.v1';
-const intents=new Set(['secondopinion','replacement','water','plumbing','electrical','painting','carpentry','additions']);
+const intents=new Set(['secondopinion','replacement','water','plumbing','electrical','painting','carpentry']);
 export function saveEstimateHandoff(storage,intent,details,now=Date.now()){
  if(!intents.has(intent)||typeof details!=='string'||!details.trim()||details.length>2400||!Number.isFinite(now))return false;
  try{storage.setItem(ESTIMATE_HANDOFF_KEY,JSON.stringify({intent,details,at:now}));return true;}catch{return false;}

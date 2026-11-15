@@ -11,7 +11,7 @@ export const PROJECTS = {
 };
 export const TRADES = {
   painting:{name:'Painting',href:'/services/painting/'},
-  construction:{name:'Construction & remodeling',href:'/services/construction-remodeling/'},
+  construction:{name:'Construction & remodeling',href:'/home-services/'},
   hvac:{name:'Heating, cooling & hot water',href:'/services/heating-cooling/'},
   plumbing:{name:'Plumbing',href:'/services/plumbing/'},
   electrical:{name:'Electrical',href:'/services/electrical/'}

@@ -21,7 +21,7 @@ Open http://localhost:8000. Serve **dist/**, not the repository root. Builds are
 - Heating and cooling is the initial directory selection. HVAC, Boiler, Water Heater, maintenance, and replacement paths connect to Middletown HVAC.
 - Direct phone links and Middletown's existing Housecall Pro booking link. Outbound web/booking links include referral parameters, without form entries.
 - Pennsylvania, New Jersey, and Delaware browsing. Coverage is confirmed per address; NJ and DE provider coverage is not confirmed.
-- The home-service network includes Middletown HVAC, Ryan Dugan Electric, Liberator Service Company, Cooke Carpentry & Construction, Hart Builders and Rolled Right Painting. Bryan selects and recommends the businesses; profiles identify the relationship and published sources.
+- The home-service network includes Middletown HVAC, Ryan Dugan Electric, Liberator Service Company, Cooke Carpentry & Construction and Rolled Right Painting. Bryan selects and recommends the businesses; profiles identify the relationship and published sources.
 - Direct calls and available booking links remain usable without an account. Callback options appear only for a matching provider enabled by the live capability endpoint. Saved briefs and email drafts are distinguished from delivered requests. Never send test requests to real businesses.
 
 ## Search indexing and launch
@@ -223,17 +223,15 @@ planning links. Full equipment remains visible in responsive photo panels.
 
 ### Additional local business listings
 
-`local_partners.py` adds Hart Builders, Inc. (77 West Baltimore Pike, Media;
-215-350-5502; quality@hartbuildersinc.com) from its published contact page at
-https://www.hartbuildersinc.com/html/contact.html, and Rolled Right Painting, LLC
+`local_partners.py` adds Rolled Right Painting, LLC
 (610-291-9552; louislitwin618@gmail.com) from
 https://rolledrightpainting.com/services/ and https://rolledrightpainting.com/contact/.
 Rolled Right's site lists different street addresses in its contact body and
 footer; this directory uses the business name, phone, email and service
 information without selecting an unconfirmed street address.
 
-Painting requests select Rolled Right; remodeling/addition inquiries select
-Hart. Both have source-linked profiles and service pages. Current scope,
+Painting requests select Rolled Right, which has a source-linked profile and
+service page. Current scope,
 address coverage, availability and documents must be confirmed directly.
 These listings do not assert a credential inspection, customer review or
 exclusive partnership. Saved project briefs retain the existing private,

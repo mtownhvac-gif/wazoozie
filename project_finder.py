@@ -9,8 +9,6 @@ CHOICES = [
     ('electrical', 'Electrical work', '04'),
     ('painting', 'Painting or drywall', '05'),
     ('carpentry', 'Small home repairs', '06'),
-    ('windows', 'Doors or windows', '07'),
-    ('decks', 'Decks or remodeling', '08'),
 ]
 
 def add(out):

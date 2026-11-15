@@ -9,7 +9,7 @@ import {NEIGHBOR_CONSENT_VERSION,neighborLink} from '../neighbor-config.mjs';
 import {CONSENT_VERSION} from '../project-config.mjs';
 const code='a'.repeat(32);
 const valid=()=>({id:crypto.randomUUID(),startedAt:Date.now()-5000,name:'Synthetic Neighbor',email:'referrer@example.invalid',phone:'',consent:true,consentVersion:NEIGHBOR_CONSENT_VERSION});
-const brief=()=>({id:crypto.randomUUID(),startedAt:Date.now()-5000,provider:'hart',intent:'doors',name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',state:'PA',details:'Synthetic test only: replace the front door.',timing:'Planning ahead',role:'Homeowner',property:'House',consent:true,consentVersion:CONSENT_VERSION,neighborCode:code});
+const brief=()=>({id:crypto.randomUUID(),startedAt:Date.now()-5000,provider:'cooke',intent:'carpentry',name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',state:'PA',details:'Synthetic test only: repair the trim and shelving.',timing:'Planning ahead',role:'Homeowner',property:'House',consent:true,consentVersion:CONSENT_VERSION,neighborCode:code});
 const req=(body,path='/api/neighbor-referrals')=>new Request('https://wazoozie.com'+path,{method:'POST',headers:{origin:'https://wazoozie.com','content-type':'application/json'},body:JSON.stringify(body)});
 
 test('neighbor links contain only an opaque code on the canonical site',()=>{
@@ -49,7 +49,7 @@ test('saved projects accept only valid referral codes and bind attribution to th
   const r=await handleIntake(req(brief(),'/api/project-briefs'),env);
   assert.equal(r.status,201);const result=await r.json();
   assert.equal(result.referralAttributed,known);assert.equal(saved.neighborCode,known?code:undefined);
-  assert.equal(result.provider,'Hart Builders, Inc.');assert.equal(result.providerDelivery,'not_sent');
+  assert.equal(result.provider,'Cooke Carpentry & Construction, LLC');assert.equal(result.providerDelivery,'not_sent');
   assert.ok(!JSON.stringify(result).includes(code));
  }
 });
@@ -109,19 +109,19 @@ test('simple referral shares without a form, account, stored identity or network
   assert.equal(env.doc.querySelector('#simpleReferralFallback').hidden,false);assert.equal(env.doc.querySelector('#simpleReferralText').value,copied);
  }finally{env.close();}
 });
-test('project planner offers removable neighbor credit and keeps door requests with Hart',async()=>{
- const env=await domPage('start','?intent=doors&neighbor='+code);
+test('project planner offers removable neighbor credit and keeps carpentry requests with Cooke',async()=>{
+ const env=await domPage('start','?intent=carpentry&neighbor='+code);
  try{
   const requests=[];globalThis.fetch=async(url,options)=>{requests.push({url,options});return Response.json({captureReady:true,status:'saved',referralAttributed:true});};
   await import(`../dist/assets/project.js?neighbor=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
   assert.equal(env.doc.querySelector('#neighborCredit').hidden,false);
-  assert.ok(env.doc.querySelector('#projectBusiness').textContent.includes('Hart Builders'));
+  assert.ok(env.doc.querySelector('#projectBusiness').textContent.includes('Cooke Carpentry'));
   const form=env.doc.querySelector('#projectForm');
-  for(const [key,value]of Object.entries({name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',details:'Synthetic test only, replace the front door.'}))form.elements[key].value=value;
+  for(const [key,value]of Object.entries({name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',details:'Synthetic test only, repair the trim and shelving.'}))form.elements[key].value=value;
   form.elements.consent.checked=true;env.doc.querySelector('#keepNeighborCredit').checked=false;
   env.doc.querySelector('#projectNext1').click();env.doc.querySelector('#projectNext2').click();
   form.dispatchEvent(new env.dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
-  const data=JSON.parse(requests.find(r=>r.url==='/api/project-briefs').options.body);assert.equal(data.provider,'hart');assert.equal(data.neighborCode,undefined);
+  const data=JSON.parse(requests.find(r=>r.url==='/api/project-briefs').options.body);assert.equal(data.provider,'cooke');assert.equal(data.neighborCode,undefined);
  }finally{env.close();}
 });
 

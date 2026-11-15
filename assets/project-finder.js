@@ -11,8 +11,6 @@ const choices = {
   electrical: {repair:'electrical',plan:'electrical',title:'Electrical work',note:'Note the affected circuit or room. Do not open a panel or touch exposed wiring.'},
   painting: {repair:'painting',plan:'painting',title:'Painting & drywall',note:'List the rooms or surfaces, any patching and whether furniture needs moving.'},
   carpentry: {repair:'carpentry',plan:'carpentry',title:'Small home repairs',note:'Group the jobs into one list. A few measurements and photos can help explain the work.'},
-  windows: {repair:'doors',plan:'windows',title:'Doors & windows',note:'Choose the work below. The business will confirm the scope and availability.',variants:['doors','windows']},
-  decks: {repair:'decks',plan:'additions',title:'Decks & remodeling',note:'Choose the work below. Ask about design, permits and which trades are included.',variants:['decks','additions']},
 };
 let variant;
 const make = (tag,text,cls) => { const el=document.createElement(tag); if(text)el.textContent=text;if(cls)el.className=cls;return el; };

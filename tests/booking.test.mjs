@@ -6,11 +6,11 @@ import {initBooking} from '../dist/assets/booking.js';
 import {initActionIcons} from '../assets/action-icons.js';
 test('every listed business has a scheduling route and category filtering preserves direct contacts',()=>{
  const dom=new JSDOM(readFileSync('dist/book/index.html','utf8'),{url:'https://wazoozie.com/book/'}),d=dom.window.document;initBooking(d);
- const cards=[...d.querySelectorAll('.booking-card')];assert.equal(cards.length,13);assert.ok(cards.every(c=>c.querySelector('.booking-actions a[href]')));
+ const cards=[...d.querySelectorAll('.booking-card')];assert.equal(cards.length,12);assert.ok(cards.every(c=>c.querySelector('.booking-actions a[href]')));
  assert.ok(d.querySelector('[data-business="middletown-hvac"] a[href^="https://book.housecallpro.com/"]'));
  assert.match(d.querySelector('[data-business="ryan-dugan-electric"]').textContent,/Call to schedule/);
  assert.ok(d.querySelector('[data-business="c-and-j-automotive-upper-chichester"] a[href="https://candjautorepair.com/upper-chi/"]'));
- for(const [category,count] of [['home',6],['auto',4],['realestate',3],['all',13]]){d.querySelector('[data-book-filter="'+category+'"]').click();assert.equal(cards.filter(c=>!c.hidden).length,count);}
+ for(const [category,count] of [['home',5],['auto',4],['realestate',3],['all',12]]){d.querySelector('[data-book-filter="'+category+'"]').click();assert.equal(cards.filter(c=>!c.hidden).length,count);}
  dom.window.close();
 });
 test('SVG arrows preserve links, button handlers and user-entered text, including dynamic actions',async()=>{
@@ -30,7 +30,7 @@ test('ordinary problem descriptions find the relevant contact without silently b
   input.value=query;input.dispatchEvent(new dom.window.Event('input'));assert.deepEqual(visible(),[expected],query);
  }
  input.value='unlisted specialty service';input.dispatchEvent(new dom.window.Event('input'));assert.deepEqual(visible(),[]);assert.equal(d.querySelector('#booking-empty').hidden,false);
- d.querySelector('#booking-reset').click();assert.equal(visible().length,13);assert.equal(input.value,'');
+ d.querySelector('#booking-reset').click();assert.equal(visible().length,12);assert.equal(input.value,'');
  dom.window.close();
 });
 
@@ -42,7 +42,7 @@ test('short words do not match inside other words, while service and business pr
  for(const [q,expected] of [['carp','cooke-carpentry-construction'],['cook','cooke-carpentry-construction'],['AC','middletown-hvac'],['electric','ryan-dugan-electric']]){search(q);assert.deepEqual(visible(),[expected],q);assert.equal(d.querySelector('.booking-card:not([hidden]) .booking-match').hidden,false);}
  search('art');assert.deepEqual(visible(),[]);assert.equal(d.querySelector('#booking-empty').hidden,false);
  search('car');d.querySelector('[data-book-filter="home"]').click();assert.deepEqual(visible(),[]);
- d.querySelector('#booking-reset').click();assert.equal(visible().length,13);assert.ok(cards.every(c=>c.querySelector('.booking-match').hidden));
+ d.querySelector('#booking-reset').click();assert.equal(visible().length,12);assert.ok(cards.every(c=>c.querySelector('.booking-match').hidden));
  dom.window.close();
 });
 

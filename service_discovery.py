@@ -85,7 +85,6 @@ def add(out, origin, pages, booking):
         ('Heating & cooling', 'Heat, AC, boilers and hot-water help.', 'heating-cooling', 'Middletown HVAC', 'middletown-hvac'),
         ('Painting', 'Fresh paint, drywall repairs and cabinet refinishing.', 'painting', 'Rolled Right Painting', 'rolled-right-painting'),
         ('Plumbing & drains', 'Leaks, fixtures and getting things flowing again.', 'plumbing', 'Liberator Service Company', 'liberator-service-company'),
-        ('Remodeling', 'Windows, doors, decks and bigger home projects.', 'construction-remodeling', 'Hart Builders', 'hart-builders'),
     ]
     icons = {
         'handyman': 'M4 20 15 9m-3-5 3-2 7 7-3 3-7-8ZM3 17l4 4',

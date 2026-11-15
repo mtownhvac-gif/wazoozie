@@ -10,7 +10,6 @@ ROUTES = {
     '/services/plumbing/': 'plumbing',
     '/services/electrical/': 'electrical',
     '/services/handyman/': 'carpentry',
-    '/services/construction-remodeling/': 'construction',
     '/services/painting/': 'painting',
     '/auto-mechanics/': 'automotive',
     '/vehicle-wraps/': 'wraps',

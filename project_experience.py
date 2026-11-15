@@ -44,7 +44,7 @@ def upgrade(out, public, pages, booking):
             content = content.replace('<h2>Email request forms.</h2>', saved_notice + context_notice + '<h2>Email request forms.</h2>')
             content = content.replace('This notice describes the current static site; it must be updated when lead storage or delivery changes.', 'This notice describes browsing, optional email drafts and private project briefs. Wazoozie sends a brief only to Middletown HVAC when the homeowner submits a request with consent for delivery through Zapier.')
         if '/businesses/' in str(target):
-            keys = {'middletown-hvac': 'middletown', 'ryan-dugan-electric': 'ryan', 'liberator-service-company': 'liberator', 'cooke-carpentry-construction': 'cooke', 'hart-builders':'hart', 'rolled-right-painting':'rolledright'}
+            keys = {'middletown-hvac': 'middletown', 'ryan-dugan-electric': 'ryan', 'liberator-service-company': 'liberator', 'cooke-carpentry-construction': 'cooke', 'rolled-right-painting':'rolledright'}
             key = keys.get(target.parent.name)
             if key:
                 box = f'<div class="wrap"><section class="project-inline"><h2>Make the first conversation easier.</h2><p>Put your location, timing and project details in a clear brief for the business you choose.</p><a class="btn primary" href="/start/?provider={key}">Plan a project with this business →</a>'
@@ -52,7 +52,7 @@ def upgrade(out, public, pages, booking):
                     box += '<p><a href="/projects/">See published installation photos →</a></p>'
                 content = content.replace('</main>', box + '</section></div></main>')
         target.write_text(content)
-    (out / 'assets/project-links.js').write_text("document.addEventListener('click',event=>{const button=event.target.closest('[data-request]');if(!button)return;const key=button.dataset.request;if(!['middletown','ryan','liberator','cooke','hart','rolledright'].includes(key))return;event.preventDefault();event.stopImmediatePropagation();location.assign('/start/?provider='+key);},true);")
+    (out / 'assets/project-links.js').write_text("document.addEventListener('click',event=>{const button=event.target.closest('[data-request]');if(!button)return;const key=button.dataset.request;if(!['middletown','ryan','liberator','cooke','rolledright'].includes(key))return;event.preventDefault();event.stopImmediatePropagation();location.assign('/start/?provider='+key);},true);")
     # AI-discoverable facts match the actual delivery behavior.
     with (out / 'llms.txt').open('a') as handle:
         handle.write('\n## Project planning\n\n' + (public or '') + '/start/ helps homeowners choose a named business and save a private project brief with consent. Saving alone does not notify the business. Middletown request submission with consent authorizes delivery through Zapier. No appointment is booked. Call or use the named provider booking link directly. ' + (public or '') + '/projects/ shows sourced actual Middletown HVAC project photographs.\n')

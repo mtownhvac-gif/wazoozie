@@ -27,7 +27,7 @@ test('account request gate rejects foreign origins, insecure hosts, oversized da
  assert.equal((await handleAccount(req('https://wazoozie.com'),{})).status,503);
  assert.equal((await handleAccount(new Request('https://www.wazoozie.com/api/account/status'),{})).status,403);
  const env={HOME_ACCOUNTS:{get(){throw Error('must not reach storage');},idFromName(){return 'id';}}};assert.equal((await handleAccount(req('https://wazoozie.com',{name:'x'.repeat(21000)}),env)).status,400);
- assert.deepEqual(validateAccountData({version:0,projects:[{intent:'water',stage:'planning',email:'not stored'}],favorites:['hart']}),{projects:[{intent:'water',stage:'planning'}],favorites:['hart']});
+ assert.deepEqual(validateAccountData({version:0,projects:[{intent:'water',stage:'planning',email:'not stored'}],favorites:['cooke']}),{projects:[{intent:'water',stage:'planning'}],favorites:['cooke']});
  for(const projects of [[{intent:'__proto__',stage:'planning'}],[{intent:'comfort',stage:'evil'}],[{intent:'water',stage:'done'},{intent:'water',stage:'planning'}]])assert.equal(validateAccountData({version:0,projects,favorites:[]}),null);
 });
 test('real passkey registration/login, private accounts, replay resistance, recovery, conflicts, logout and deletion',async()=>{
@@ -39,7 +39,7 @@ test('real passkey registration/login, private accounts, replay resistance, reco
   assert.match(registered.headers.get('set-cookie'),/HttpOnly/);assert.match(registered.headers.get('set-cookie'),/Secure/);assert.match(registered.data.recoveryCode,/^[a-f0-9]{32}\.[a-f0-9]{64}$/);
   assert.equal((await alice.call('register/verify',reg)).status,400);
   assert.equal((await stranger.call('status')).data.account,null);assert.equal((await stranger.call('data',{version:0,projects:[],favorites:[]},'PUT')).status,401);
-  let saved=await alice.call('data',{version:0,projects:[{intent:'water',stage:'calling'}],favorites:['hart']},'PUT');assert.equal(saved.status,200);assert.equal(saved.data.account.version,1);
+  let saved=await alice.call('data',{version:0,projects:[{intent:'water',stage:'calling'}],favorites:['cooke']},'PUT');assert.equal(saved.status,200);assert.equal(saved.data.account.version,1);
   assert.equal((await alice.call('data',{version:0,projects:[],favorites:[]},'PUT')).status,409);
   await alice.call('logout',{});assert.equal((await alice.call('status')).data.account,null);
   let login=await alice.call('login/options',{});const bad=auth.login(login.data.options,1,'https://evil.invalid');assert.equal((await alice.call('login/verify',bad)).status,400);

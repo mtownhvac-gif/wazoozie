@@ -11,7 +11,7 @@ test('feed filters existing stories and shares only the public page link',async(
  try{
   await import('../assets/neighborhood-feed.js');
   const d=dom.window.document;
-  assert.equal(d.querySelectorAll('[data-feed-topic]').length,7);
+  assert.equal(d.querySelectorAll('[data-feed-topic]').length,6);
   d.querySelector('[data-feed-filter="electrical"]').click();
   assert.deepEqual([...d.querySelectorAll('[data-feed-topic]')].filter(x=>!x.hidden).map(x=>x.dataset.feedTopic),['electrical']);
   d.querySelector('[data-feed-filter="all"]').click();

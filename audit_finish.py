@@ -18,7 +18,7 @@ def add(out, origin, pages):
         records.append(dict(key=key,name=business['name'],slug=business['slug'],phone=business['phone'],tel=business['tel'],category='home',booking=business.get('booking'),intent=business['defaultIntent']))
     for person in PEOPLE:
         records.append(dict(key=person['slug'],name=person['name'],slug=person['slug'],phone=person.get('phone',''),tel=person.get('tel',''),category='auto' if person['category']=='automotive' else 'realestate',web=person['website'],services=person['label'],location=person['detail'],keywords='mechanic car auto repair' if person['category']=='automotive' and not person.get('vehiclewrap') else ''))
-    services={'middletown':'Heating, cooling, ductless mini splits, furnaces, AC, boilers & hot water','hart':'Windows, doors, decks, additions & remodeling','rolledright':'Painting, drywall & wall preparation','ryan':'Electrical, lighting, outlets, panels & circuits','liberator':'Plumbing, drains, leaks & fixtures','cooke':'Carpentry, shelving, trim & home repairs'}
+    services={'middletown':'Heating, cooling, ductless mini splits, furnaces, AC, boilers & hot water','rolledright':'Painting, drywall & wall preparation','ryan':'Electrical, lighting, outlets, panels & circuits','liberator':'Plumbing, drains, leaks & fixtures','cooke':'Carpentry, shelving, trim & home repairs'}
     for record in records:
         if record['category']=='home':record['services']=services[record['key']]
     by_slug={r['slug']:r for r in records}
@@ -93,7 +93,7 @@ def add(out, origin, pages):
         selected=r
         if path.startswith('/services/'):
             service=path.split('/')[2]
-            provider={'heating-cooling':'middletown','ductless-mini-splits':'middletown','water-heaters':'middletown','boilers':'middletown','maintenance':'middletown','replacement-estimates':'middletown','second-opinion':'middletown','oil-to-gas-conversion':'middletown','electrical':'ryan','plumbing':'liberator','handyman':'cooke','painting':'rolledright','construction-remodeling':'hart'}.get(service)
+            provider={'heating-cooling':'middletown','ductless-mini-splits':'middletown','water-heaters':'middletown','boilers':'middletown','maintenance':'middletown','replacement-estimates':'middletown','second-opinion':'middletown','oil-to-gas-conversion':'middletown','electrical':'ryan','plumbing':'liberator','handyman':'cooke','painting':'rolledright'}.get(service)
             selected=next((x for x in records if x['key']==provider),None)
         if path=='/start/':
             dock='<aside id="projectConnectionDock" class="contact-dock" aria-label="Contact your selected business" hidden></aside>'

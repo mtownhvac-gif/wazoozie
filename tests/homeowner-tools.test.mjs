@@ -16,17 +16,17 @@ test('estimate arithmetic handles currency, equal prices and invalid or extreme 
  assert.equal(priceDifference('8500',''),null);
 });
 test('project sheet uses validated routes, treats free text as text, and supports blocked clipboard',async()=>{
- const {dom,doc,requests}=await page('project-kit','?intent=windows');
+ const {dom,doc,requests}=await page('project-kit','?intent=carpentry');
  try{
-  assert.equal(doc.querySelector('#kit-intent').value,'windows');
-  assert.match(doc.querySelector('#kit-business').textContent,/Hart Builders/);
-  assert.ok(doc.querySelector('#kit-business a[href="tel:+12153505502"]'));
+  assert.equal(doc.querySelector('#kit-intent').value,'carpentry');
+  assert.match(doc.querySelector('#kit-business').textContent,/Cooke Carpentry/);
+  assert.ok(doc.querySelector('#kit-business a[href="tel:+14849483201"]'));
   const goal=doc.querySelector('#kit-goal');goal.value='<img src=x onerror=alert(1)> Fix the draft';goal.dispatchEvent(new dom.window.Event('input',{bubbles:true}));
   assert.equal(doc.querySelector('#kit-preview img'),null);assert.match(doc.querySelector('#kit-preview').textContent,/<img/);
   doc.querySelector('#kit-copy').click();await new Promise(r=>setImmediate(r));
   assert.equal(doc.querySelector('#kit-copy-fallback').hidden,false);
   assert.match(doc.querySelector('#kit-copy-fallback').value,/Fix the draft/);
-  assert.match(doc.querySelector('#kit-copy-fallback').value,/215-350-5502/);
+  assert.match(doc.querySelector('#kit-copy-fallback').value,/484-948-3201/);
   assert.match(doc.querySelector('#kit-status').textContent,/Copy command/);
   assert.equal(dom.window.localStorage.length,0);assert.equal(requests(),0);
  }finally{dom.window.close();}

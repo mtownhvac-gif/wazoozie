@@ -49,7 +49,7 @@ test('missing browser APIs and animation failures leave the visible site and con
 test('forms, accounts and private tools retain their existing static flow; browsing pages get bundled motion styles',()=>{
  for(const route of ['start','account','for-contractors','before-it-disappears','compare']){const text=readFileSync('dist/'+route+'/index.html','utf8');assert.ok(!text.includes('/assets/motion.mjs'),route);assert.ok(!text.includes('data-wz-motion'),route);}
  for(const route of ['index.html','home-services/index.html','businesses/middletown-hvac/index.html','services/heating-cooling/index.html']){const text=readFileSync('dist/'+route,'utf8');assert.ok(text.includes('/assets/motion.mjs'),route);assert.ok(text.includes('data-wz-motion'),route);}
- const d=new JSDOM(html).window.document;assert.equal(d.querySelectorAll('link[href*="site-"]').length,1);assert.equal(d.querySelectorAll('.project-finder-choice').length,8);
+ const d=new JSDOM(html).window.document;assert.equal(d.querySelectorAll('link[href*="site-"]').length,1);assert.equal(d.querySelectorAll('.project-finder-choice').length,6);
 });
 
 test('project illustrations play once on entry and can be replayed without navigation or network calls',async()=>{

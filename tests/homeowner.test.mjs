@@ -80,7 +80,7 @@ test('direct contact is offered before form entry and an unsaved brief can be em
 });
 
 test('business evidence is explicit and does not claim a recorded credential inspection',async()=>{
-  for(const slug of ['middletown-hvac','ryan-dugan-electric','liberator-service-company','cooke-carpentry-construction','hart-builders','rolled-right-painting']){
+  for(const slug of ['middletown-hvac','ryan-dugan-electric','liberator-service-company','cooke-carpentry-construction','rolled-right-painting']){
     const content=await readFile(new URL(`../dist/businesses/${slug}/index.html`,import.meta.url),'utf8');
     assert.ok(content.includes('WHY WE RECOMMEND THEM'));
     assert.ok(!content.includes('documents are not recorded'));
@@ -135,24 +135,24 @@ test('contact counting cannot send project text or email draft bodies',async()=>
   }finally{env.close();}
 });
 
-test('whole-home categories start neutral and route doors and painting with relevant scope prompts',async()=>{
+test('whole-home categories start neutral and route carpentry and painting with relevant scope prompts',async()=>{
   const env=await page('start');
   try{
     await import(`../dist/assets/project.js?balanced=${Date.now()}`);
     // Let the startup capability request settle before tearing down the DOM.
     await new Promise(resolve=>setImmediate(resolve));
-    assert.equal(env.document.querySelectorAll('#projectChoices input').length,10);
+    assert.equal(env.document.querySelectorAll('#projectChoices input').length,6);
     assert.equal(env.document.querySelectorAll('#projectChoices input:checked').length,0);
     assert.equal(env.document.querySelector('#projectNext1').disabled,true);
     assert.equal(env.document.querySelector('#projectQuickConnect').hidden,true);
     assert.ok(!env.document.querySelector('#projectBusiness').textContent.includes('Middletown'));
-    for(const key of ['doors','windows','decks','additions','painting']){
+    for(const key of ['carpentry','painting']){
       const radio=env.document.querySelector(`#projectChoices input[value="${key}"]`);
       radio.checked=true;radio.dispatchEvent(new env.document.defaultView.Event('change',{bubbles:true}));
       assert.equal(env.document.querySelector('#projectNext1').disabled,false);
-      const expectedBusiness = key === 'painting' ? 'Rolled Right Painting' : 'Hart Builders';
+      const expectedBusiness = key === 'painting' ? 'Rolled Right Painting' : 'Cooke Carpentry';
       assert.ok(env.document.querySelector('#projectBusiness').textContent.includes(expectedBusiness));
-      assert.ok(env.document.querySelector('#projectQuickConnect a[href="' + (key === 'painting' ? 'tel:+16102919552' : 'tel:+12153505502') + '"]'));
+      assert.ok(env.document.querySelector('#projectQuickConnect a[href="' + (key === 'painting' ? 'tel:+16102919552' : 'tel:+14849483201') + '"]'));
       assert.equal(env.document.querySelector('#projectServiceDetailLabel').hidden,true);
       assert.equal(env.document.querySelectorAll('#projectPrompts li').length,3);
       assert.ok(!env.document.querySelector('#projectPrompts').textContent.includes('Furnace'));
@@ -175,8 +175,8 @@ test('home-service page finder preserves direct routes for whole-home projects',
   const dom=new JSDOM(markup);
   try{
     const entries=[...dom.window.document.querySelectorAll('[data-project-choice] > a')];
-    assert.equal(entries.length,14);
-    for(const key of ['doors','windows','decks','additions','painting'])assert.ok(entries.some(link=>link.getAttribute('href')===`/start/?intent=${key}`));
+    assert.equal(entries.length,10);
+    for(const key of ['carpentry','painting'])assert.ok(entries.some(link=>link.getAttribute('href')===`/start/?intent=${key}`));
   }finally{dom.window.close();}
 });
 
@@ -187,10 +187,10 @@ test('home-service directory still initializes after category navigation is repl
   try{
     dom.window.HTMLElement.prototype.scrollIntoView=()=>{};
     dom.window.eval(script);
-    assert.equal(dom.window.document.querySelectorAll('[data-project-choice] > a').length,14);
-    assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,6);
-    assert.ok(dom.window.document.querySelector('#resultCount').textContent.includes('6'));
-    for (const [service,name,tel] of [['painting','Rolled Right Painting','+16102919552'],['construction-remodeling','Hart Builders','+12153505502']]) {
+    assert.equal(dom.window.document.querySelectorAll('[data-project-choice] > a').length,10);
+    assert.equal(dom.window.document.querySelectorAll('#providerResults .procard').length,5);
+    assert.ok(dom.window.document.querySelector('#resultCount').textContent.includes('5'));
+    for (const [service,name,tel] of [['painting','Rolled Right Painting','+16102919552'],['handyman','Cooke Carpentry & Construction','+14849483201']]) {
       dom.window.document.querySelector('#serviceSearch').value=service;
       dom.window.document.querySelector('#searchForm').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));
       const results=dom.window.document.querySelector('#providerResults');

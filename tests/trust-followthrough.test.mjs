@@ -14,12 +14,12 @@ const memory=()=>{const data=new Map();return {getItem:k=>data.get(k)||null,setI
 test('location evidence distinguishes published coverage from unknown coverage without hiding businesses by default',()=>{
  const dom=new JSDOM(readFileSync('dist/book/index.html','utf8'),{url:'https://wazoozie.com/book/?town=Media'}),d=dom.window.document;initBooking(d);
  const cards=[...d.querySelectorAll('.booking-card')],visible=()=>cards.filter(c=>!c.hidden);
- assert.equal(visible().length,13);assert.match(d.querySelector('[data-business="middletown-hvac"] .booking-coverage').textContent,/Published coverage includes Media/);
+ assert.equal(visible().length,12);assert.match(d.querySelector('[data-business="middletown-hvac"] .booking-coverage').textContent,/Published coverage includes Media/);
  assert.match(d.querySelector('[data-business="cooke-carpentry-construction"] .booking-coverage').textContent,/needs confirmation/);
  const check=d.querySelector('#booking-coverage-only');check.checked=true;check.dispatchEvent(new dom.window.Event('change'));assert.deepEqual(visible().map(c=>c.dataset.business),['middletown-hvac']);
  const town=d.querySelector('#booking-town');town.value='Unrecorded town';town.dispatchEvent(new dom.window.Event('input'));assert.equal(visible().length,0);assert.match(d.querySelector('#booking-count').textContent,/other businesses may also serve/);
  town.value='<img src=x onerror=alert(1)>';town.dispatchEvent(new dom.window.Event('input'));assert.equal(d.querySelector('.booking-coverage img'),null);
- d.querySelector('#booking-reset').click();assert.equal(visible().length,13);assert.equal(town.value,'');assert.equal(check.checked,false);dom.window.close();
+ d.querySelector('#booking-reset').click();assert.equal(visible().length,12);assert.equal(town.value,'');assert.equal(check.checked,false);dom.window.close();
  assert.equal(coverageFor('middletown-hvac','MEDIA, PA').match,true);assert.equal(coverageFor('cooke-carpentry-construction','Media').match,false);assert.equal(coverageFor('middletown-hvac','Philadelphia').match,false);
 });
 test('all profiles explain evidence limits; only sourced coverage receives a coverage-check date',()=>{

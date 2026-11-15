@@ -19,7 +19,7 @@ function setup(){
 test('homepage finder has usable links before JavaScript and follows the project photos',()=>{
   const dom=new JSDOM(html),d=dom.window.document,finder=d.querySelector('.project-finder');
   const links=[...finder.querySelectorAll('[data-project-choice]')];
-  assert.equal(links.length,8);
+  assert.equal(links.length,6);
   for(const link of links){const url=new URL(link.getAttribute('href'),'https://wazoozie.com');assert.equal(url.pathname,'/request/');assert.ok(INTENTS[url.searchParams.get('intent')]);assert.equal(url.searchParams.get('entry'),'home');}
   assert.equal(d.querySelector('.local-proof').nextElementSibling,finder);
   assert.equal(finder.querySelector('input,textarea,form'),null);
@@ -29,7 +29,7 @@ test('homepage finder has usable links before JavaScript and follows the project
 
 test('every choice shows the configured business and preserves its direct contact and request routing',()=>{
   const {dom,d,result,choose}=setup();
-  for(const [choice,intent] of Object.entries({comfort:'comfort',water:'water',plumbing:'plumbing',electrical:'electrical',painting:'painting',carpentry:'carpentry',windows:'doors',decks:'decks'})){
+  for(const [choice,intent] of Object.entries({comfort:'comfort',water:'water',plumbing:'plumbing',electrical:'electrical',painting:'painting',carpentry:'carpentry'})){
     choose(choice);const business=BUSINESSES[INTENTS[intent].provider];
     assert.equal(result.querySelector('.project-finder-provider a').textContent,business.name);
     assert.equal(result.querySelector('a[href^="tel:"]').getAttribute('href'),`tel:${business.tel}`);
@@ -48,10 +48,8 @@ test('goal and project controls update the destination, maintain keyboard focus 
   assert.equal(result.querySelector('a[href^="/request/"]').search,'?intent=replacement&entry=home');
   assert.equal(d.activeElement.textContent,'Plan an upgrade');assert.equal(d.activeElement.getAttribute('aria-pressed'),'true');
   assert.match(result.querySelector('ul').textContent,/conversion or ductless/);
-  choose('windows');result.querySelectorAll('button')[1].click();
-  assert.equal(result.querySelector('a[href^="/request/"]').search,'?intent=windows&entry=home');
-  choose('decks');result.querySelectorAll('button')[1].click();
-  assert.equal(result.querySelector('a[href^="/request/"]').search,'?intent=additions&entry=home');
+  choose('carpentry');
+  assert.equal(result.querySelector('a[href^="/request/"]').search,'?intent=carpentry&entry=home');
   choose('comfort');assert.equal(result.querySelector('a[href^="/request/"]').search,'?intent=comfort&entry=home');
   assert.equal(result.querySelectorAll('[aria-pressed="true"]').length,1);dom.window.close();
 });

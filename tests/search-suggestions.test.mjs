@@ -5,7 +5,7 @@ import {JSDOM} from 'jsdom';
 import {initSearchSuggestions,matchingSuggestions,SERVICE_SUGGESTIONS} from '../assets/search-suggestions.js';
 test('suggestions keep car separate from carpentry and support partial words, problems and real business names',()=>{
  assert.deepEqual(matchingSuggestions('car').map(x=>x.label),['Car repair']);assert.equal(matchingSuggestions('carp')[0].label,'Carpentry & home repairs');assert.ok(matchingSuggestions('pl').some(x=>x.query==='plumbing'));assert.ok(matchingSuggestions('no heat').some(x=>x.query==='no heat'));assert.deepEqual(matchingSuggestions('c'),[]);
- const names=JSON.parse(readFileSync('dist/assets/search-suggestions.json','utf8'));assert.equal(names.length,13);assert.ok(matchingSuggestions('Cooke',[...SERVICE_SUGGESTIONS,...names]).some(x=>/Cooke/.test(x.label)));
+ const names=JSON.parse(readFileSync('dist/assets/search-suggestions.json','utf8'));assert.equal(names.length,12);assert.ok(matchingSuggestions('Cooke',[...SERVICE_SUGGESTIONS,...names]).some(x=>/Cooke/.test(x.label)));
 });
 test('keyboard and pointer choices fill the real query without submitting; Escape and blur close the list',()=>{
  const dom=new JSDOM('<form action="/book/"><input id="home-service-query" name="q"><button>Find</button></form>',{url:'https://wazoozie.com/'}),d=dom.window.document;let submitted=0,category='';d.querySelector('form').addEventListener('submit',e=>{submitted++;e.preventDefault();});const input=d.querySelector('input');input.addEventListener('wz-search-choice',e=>category=e.detail.category);initSearchSuggestions(d);initSearchSuggestions(d);assert.equal(d.querySelectorAll('[role="listbox"]').length,1);

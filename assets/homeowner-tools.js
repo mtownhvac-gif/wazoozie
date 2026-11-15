@@ -38,7 +38,7 @@ export function initHomeownerTools(doc) {
   if(kit){
     kit.hidden=false;
     const select=doc.querySelector('#kit-intent');
-    const order=['comfort','water','electrical','plumbing','painting','carpentry','doors','windows','decks','additions','boiler','maintenance','replacement','secondopinion'];
+    const order=['comfort','water','electrical','plumbing','painting','carpentry','boiler','maintenance','replacement','secondopinion'];
     for(const key of order){const option=make('option',INTENTS[key].label);option.value=key;select.append(option);}
     const requested=new URL(win.location.href).searchParams.get('intent');if(requested&&Object.hasOwn(INTENTS,requested))select.value=requested;
     let sheet='';

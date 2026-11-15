@@ -13,7 +13,6 @@ COLLECTIONS = [
     ('electrical', 'Electrical & lighting', 'Outdoor lighting, outlets and bigger electrical jobs.', 'clay-outdoor-lighting'),
     ('painting', 'Painting & finishing', 'Walls, cabinets, drywall and the prep work.', 'clay-family-painting'),
     ('handyman', 'Carpentry & home repairs', 'Doors, trim and the repairs you keep putting off.', 'clay-door-replacement'),
-    ('construction-remodeling', 'Windows & remodeling', 'Windows, decks and changes to the space you have.', 'clay-window-renovation'),
     ('maintenance', 'HVAC maintenance', 'Find out what is included before you book a tune-up.', 'clay-dusty-filter'),
 ]
 
@@ -105,7 +104,7 @@ def add(out, origin, pages):
     content = content.replace('Good help starts here.', 'Local people. Real possibilities.')
     # Ductless planning remains on its service page, rather than a second
     # single-business promotion on the general homepage.
-    home_scenes = '<div class="brand-home-scenes" aria-label="Ideas for the place you call home"><header><span class="eyebrow">THE GOOD PART OF GETTING IT DONE.</span><h2>A little more home.</h2><p>A room to unwind. A kitchen that feels like yours. Good local help starts with what you want to enjoy.</p></header><div><a href="/services/construction-remodeling/"><figure><img src="/assets/valley-living-room.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Illustrative sunlit living room with linen seating, a sage armchair and garden windows"><figcaption>Room for your everyday.</figcaption></figure></a><a href="/project-kit/"><figure><img src="/assets/valley-family-kitchen.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Illustrative warm family kitchen with oak floors and garden doors"><figcaption>Make the next idea feel possible.</figcaption></figure></a></div><p class="brand-image-note">AI-created home inspiration · Fictional spaces.</p></div>'
+    home_scenes = '<div class="brand-home-scenes" aria-label="Ideas for the place you call home"><header><span class="eyebrow">THE GOOD PART OF GETTING IT DONE.</span><h2>A little more home.</h2><p>A room to unwind. A kitchen that feels like yours. Good local help starts with what you want to enjoy.</p></header><div><a href="/home-services/"><figure><img src="/assets/valley-living-room.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Illustrative sunlit living room with linen seating, a sage armchair and garden windows"><figcaption>Room for your everyday.</figcaption></figure></a><a href="/project-kit/"><figure><img src="/assets/valley-family-kitchen.webp" width="1200" height="800" loading="lazy" decoding="async" alt="Illustrative warm family kitchen with oak floors and garden doors"><figcaption>Make the next idea feel possible.</figcaption></figure></a></div><p class="brand-image-note">AI-created home inspiration · Fictional spaces.</p></div>'
     content = content.replace('</section><section class="wrap front-door-note"', home_scenes+'</section><section class="wrap front-door-note"', 1)
     home.write_text(content)
     local = out/'local-help/index.html'

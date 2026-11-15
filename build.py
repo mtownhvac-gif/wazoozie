@@ -213,7 +213,7 @@ for key,p in PROVIDERS.items():
     if p.get('official_web') is False:
         body=body.replace(f'<a href="{esc(p["web"])}" target="_blank" rel="noopener">Official business website ↗</a>','Business-provided contact details. Current website not confirmed.')
         body=re.sub(r'<p><a href="[^"]+" target="_blank" rel="noopener">Visit Cooke.*?</a></p>','',body)
-    schema={'@context':'https://schema.org','@type':'ProfilePage','name':p['name']+' | Wazoozie','mainEntity':{'@type':{'middletown':'HVACBusiness','ryan':'Electrician','liberator':'Plumber','cooke':'GeneralContractor','hart':'GeneralContractor','rolledright':'HousePainter'}[key],'@id':p['web']+'#business','name':p['name'],'url':p['web'],'telephone':p['tel'],'description':p['intro'],'knowsAbout':p['trade']}}
+    schema={'@context':'https://schema.org','@type':'ProfilePage','name':p['name']+' | Wazoozie','mainEntity':{'@type':{'middletown':'HVACBusiness','ryan':'Electrician','liberator':'Plumber','cooke':'GeneralContractor','rolledright':'HousePainter'}[key],'@id':p['web']+'#business','name':p['name'],'url':p['web'],'telephone':p['tel'],'description':p['intro'],'knowsAbout':p['trade']}}
     write_page('/businesses/'+p['slug']+'/',p['name'],p['intro'],inner('Local businesses / '+p['name'],p['name']+'.',p['intro'],body,p,p['trade']),schema)
 
 for slug,(title,intro,body) in GUIDES.items():

@@ -10,13 +10,13 @@ test('homepage keeps actual work first and all project choices before tools with
  assert.equal(main.children[1],d.querySelector('.local-proof'));
  assert.equal(main.children[2],direct);
  assert.equal(d.querySelector('.grand-primary').getAttribute('href'),'/request/?entry=home');
- assert.equal(direct.querySelectorAll('[data-project-choice]').length,8);
+ assert.equal(direct.querySelectorAll('[data-project-choice]').length,6);
  assert.equal(direct.querySelector('a[href^="tel:"]'),null);
  assert.equal(direct.querySelector('a[href^="https://book.housecallpro.com/"]'),null);
  assert.ok(direct.querySelector('a[href="/book/"]'));
  assert.doesNotMatch(d.querySelector('footer').textContent,/Bryan Cordy|owner of Middletown HVAC|Business relationships/);
  assert.match(direct.textContent,/No Wazoozie account needed/);
- const routes=[['carpentry','handyman','cooke-carpentry-construction'],['electrical','electrical','ryan-dugan-electric'],['comfort','heating-cooling','middletown-hvac'],['painting','painting','rolled-right-painting'],['plumbing','plumbing','liberator-service-company'],['decks','construction-remodeling','hart-builders']];
+ const routes=[['carpentry','handyman','cooke-carpentry-construction'],['electrical','electrical','ryan-dugan-electric'],['comfort','heating-cooling','middletown-hvac'],['painting','painting','rolled-right-painting'],['plumbing','plumbing','liberator-service-company']];
  for(const [intent,service,slug] of routes){
   assert.ok(direct.querySelector('a[data-project-choice="'+intent+'"]'),intent);
   assert.ok(doc('/services/'+service+'/').querySelector('a[href="/businesses/'+slug+'/"]'),slug);
@@ -69,7 +69,7 @@ test('Middletown profile and contact page support requests without changing othe
  for(const path of ['/contact/','/businesses/middletown-hvac/']){
   const d=doc(path);assert.ok(d.querySelector('.emailactions a[href="/start/?intent=comfort"]'));d.defaultView.close();
  }
- for(const [slug,tel] of [['ryan-dugan-electric','+14452589962'],['liberator-service-company','+12673285235'],['rolled-right-painting','+16102919552'],['hart-builders','+12153505502'],['cooke-carpentry-construction','+14849483201']]){
+ for(const [slug,tel] of [['ryan-dugan-electric','+14452589962'],['liberator-service-company','+12673285235'],['rolled-right-painting','+16102919552'],['cooke-carpentry-construction','+14849483201']]){
   const d=doc('/businesses/'+slug+'/');assert.ok(d.querySelector('main a[href="tel:'+tel+'"]'),slug);assert.equal(d.querySelector('.service-attribution'),null);d.defaultView.close();
  }
  const md=readFileSync(new URL('../dist/agent-content/index.md',import.meta.url),'utf8');
@@ -92,7 +92,7 @@ test('home-service directory preserves alphabetical ordering before and after cl
  const markup=readFileSync(new URL('../dist/home-services/index.html',import.meta.url),'utf8');
  const dom=new JSDOM(markup,{url:'https://wazoozie.com/home-services/',runScripts:'outside-only'}),d=dom.window.document;
  const names=()=>[...d.querySelectorAll('#providerResults .procard h3')].map(e=>e.textContent.trim());
- const expected=['Cooke Carpentry & Construction, LLC','Hart Builders, Inc.','Liberator Service Company','Middletown HVAC','Rolled Right Painting, LLC','Ryan Dugan Electric LLC'];
+ const expected=['Cooke Carpentry & Construction, LLC','Liberator Service Company','Middletown HVAC','Rolled Right Painting, LLC','Ryan Dugan Electric LLC'];
  assert.deepEqual(names(),expected);
  const catalog=schema(d).find(x=>x['@type']==='ItemList');
  assert.deepEqual(catalog.itemListElement.map(x=>x.name),expected);
@@ -111,11 +111,11 @@ test('home-service directory preserves alphabetical ordering before and after cl
 test('booking and story browsing do not pin the owner business ahead of other businesses',()=>{
  const d=doc('/book/');
  const names=[...d.querySelectorAll('.booking-card h2')].map(e=>e.textContent.trim());
- assert.equal(names.length,13);assert.deepEqual(names,[...names].sort((a,b)=>a.localeCompare(b)));
+ assert.equal(names.length,12);assert.deepEqual(names,[...names].sort((a,b)=>a.localeCompare(b)));
  assert.match(d.querySelector('.booking-search').textContent,/alphabetically/);
  const stories=doc('/local-stories/'),posts=[...stories.querySelectorAll('.neighbor-post header a')].map(e=>e.textContent.trim());
- assert.equal(posts.length,7);assert.equal(new Set(posts.slice(0,6)).size,6);
- assert.deepEqual(posts.slice(0,6),[...posts.slice(0,6)].sort((a,b)=>a.localeCompare(b)));
+ assert.equal(posts.length,6);assert.equal(new Set(posts.slice(0,5)).size,5);
+ assert.deepEqual(posts.slice(0,5),[...posts.slice(0,5)].sort((a,b)=>a.localeCompare(b)));
  assert.ok(stories.querySelector('.neighbor-side a[href="/home-services/"]'));
  d.defaultView.close();stories.defaultView.close();
 });

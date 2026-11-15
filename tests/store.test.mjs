@@ -76,7 +76,7 @@ test('neighbor attribution persists privately, retries safely, and expires after
   assert.equal(await store.hasNeighbor(first.code,now),true);assert.equal(await store.hasNeighbor(first.code,now+91*86400000),false);
   for(let i=0;i<2;i++)assert.equal((await store.saveNeighbor({...data,id:crypto.randomUUID()},'new','client',now)).status,201);
   assert.equal((await store.saveNeighbor({...data,id:crypto.randomUUID()},'new','client',now)).status,429);
-  const brief={id:crypto.randomUUID(),provider:'hart',intent:'doors',name:'Synthetic Homeowner',phone:'202-555-0100',email:'',town:'Media',zip:'19063',state:'PA',details:'Synthetic only: door project',timing:'Planning ahead',role:'Homeowner',property:'House',equipment:'',source:'neighbor',consentVersion:'test',neighborCode:first.code};
+  const brief={id:crypto.randomUUID(),provider:'cooke',intent:'carpentry',name:'Synthetic Homeowner',phone:'202-555-0100',email:'',town:'Media',zip:'19063',state:'PA',details:'Synthetic only: trim project',timing:'Planning ahead',role:'Homeowner',property:'House',equipment:'',source:'neighbor',consentVersion:'test',neighborCode:first.code};
   assert.equal((await store.saveBrief(brief,'brief','lead-client',now)).status,201);
   const sql=await mf.unsafeGetDurableObjectStorage(undefined,'TestInbox',{name:'neighbor-test'});
   assert.equal((await sql.exec('SELECT neighbor_code FROM project_briefs'))[0].neighbor_code,first.code);

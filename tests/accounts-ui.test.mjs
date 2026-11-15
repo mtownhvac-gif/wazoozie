@@ -17,8 +17,8 @@ test('account dashboard safely displays identity, explicitly imports local proje
   doc.querySelector('#account-import').click();await settle();assert.deepEqual(app.snapshot().projects,[{intent:'water',stage:'calling'}]);
   assert.ok(doc.querySelector('#account-projects a[href="/project-kit/?intent=water"]'));
   assert.equal(dom.window.localStorage.length,1,'original local list stays intact');
-  const favorite=doc.querySelector('[aria-label="Save Hart Builders, Inc."]');favorite.click();await settle();assert.ok(app.snapshot().favorites.includes('hart'));
-  fail=true;doc.querySelector('[aria-label="Unsave Hart Builders, Inc."]').click();await settle();assert.ok(app.snapshot().favorites.includes('hart'));assert.match(doc.querySelector('#account-status').textContent,/another tab/);
+  const favorite=doc.querySelector('[aria-label="Save Rolled Right Painting, LLC"]');favorite.click();await settle();assert.ok(app.snapshot().favorites.includes('rolledright'));
+  fail=true;doc.querySelector('[aria-label="Unsave Rolled Right Painting, LLC"]').click();await settle();assert.ok(app.snapshot().favorites.includes('rolledright'));assert.match(doc.querySelector('#account-status').textContent,/another tab/);
   doc.querySelector('#account-logout').click();await settle();assert.equal(doc.querySelector('#account-dashboard').hidden,true);assert.equal(doc.querySelector('#account-auth').hidden,false);
  }finally{dom.window.close();}
 });

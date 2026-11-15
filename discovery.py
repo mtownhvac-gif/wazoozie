@@ -53,7 +53,7 @@ def add(out, origin, pages):
         target=out/path
         content=target.read_text().replace('</main>',catalog+'</main>',1)
         target.write_text(content)
-    mapping={'painting':'painting-estimate-checklist','electrical':'electrical-project-estimate','plumbing':'prepare-for-plumbing-service','construction-remodeling':'window-replacement-questions'}
+    mapping={'painting':'painting-estimate-checklist','electrical':'electrical-project-estimate','plumbing':'prepare-for-plumbing-service'}
     for service,slug in mapping.items():
         target=out/'services'/service/'index.html'
         content=target.read_text().replace('</main>','<aside class="wrap project-inline"><h2>Know what to ask before you hire.</h2><p><a href="/guides/'+slug+'/">Read the project conversation checklist →</a></p></aside></main>',1)
