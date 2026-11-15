@@ -12,6 +12,7 @@ def add(out, origin, pages):
     write_editorial_page(out, origin, pages, '/same-job/', 'Compare Two Contractor Estimates', 'Compare contractor estimate wording privately on your device. See passages, check scope differences and make a question sheet before you book.', body)
     page = out/'same-job/index.html'
     content = page.read_text().replace('</head>', '<link rel="stylesheet" href="/assets/same-job.css"></head>', 1).replace('</body>', '<script type="module" src="/assets/same-job.mjs"></script></body>', 1)
+    content = content.replace(' style="color:var(--orange)"', '')
     page.write_text(content)
     for name in ['same-job.css', 'same-job.mjs', 'same-job-core.mjs', 'same-job-pdf.mjs', 'estimate-handoff.mjs']:
         shutil.copy(out.parent/'assets'/name, out/'assets'/name)
