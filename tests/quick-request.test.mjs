@@ -2,15 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
+import {saveEstimateHandoff} from '../assets/estimate-handoff.mjs';
 import {validateBrief} from '../server/brief-validation.mjs';
 let sequence=0;
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-async function page(handler) {
- const dom=new JSDOM(readFileSync('dist/request/index.html','utf8'),{url:'https://wazoozie.com/request/?intent=comfort&entry=home'}),d=dom.window.document,previous=new Map(),requests=[],timers=new Map();
- for(const key of ['document','location','FormData']){previous.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{value:dom.window[key],configurable:true});}
+async function page(handler,{search='?intent=comfort&entry=home',notes,intent='secondopinion',age=0}={}) {
+ const dom=new JSDOM(readFileSync('dist/request/index.html','utf8'),{url:'https://wazoozie.com/request/'+search}),d=dom.window.document,previous=new Map(),requests=[],timers=new Map();
+ for(const key of ['document','location','FormData','sessionStorage']){previous.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{value:dom.window[key],configurable:true});}
  const originalFetch=globalThis.fetch,originalNow=Date.now,originalTimer=setTimeout,originalClear=clearTimeout;let now=originalNow();Date.now=()=>now;
  globalThis.fetch=async(url,options)=>{requests.push({url,options});if(handler)return handler(url,options);return Response.json(url.includes('capabilities')?{captureReady:true,emailProviders:['middletown','ryan']}:{reference:JSON.parse(options.body).id,status:'saved',providerDelivery:'automation_accepted'});};
  globalThis.setTimeout=(callback,delay)=>{if([12000,20000].includes(delay)){const token={};timers.set(token,{callback,delay});return token;}return originalTimer(callback,delay);};globalThis.clearTimeout=token=>timers.has(token)?timers.delete(token):originalClear(token);
+ if(notes)saveEstimateHandoff(dom.window.sessionStorage,intent,notes,now-age);
  await import(`../dist/assets/quick-request.js?test=${++sequence}`);await tick();now+=2200;
  const form=d.getElementById('quickRequest');
  return {dom,d,form,$:id=>d.getElementById(id),posts:()=>requests.filter(x=>x.options?.method==='POST'),
@@ -46,4 +48,11 @@ test('mobile contact controls lead directly to requests and all service choices 
  assert.ok(d.querySelector('.local-proof a[href="/projects/"]'));
  assert.equal(d.querySelectorAll('.local-proof figure img').length,2);
  dom.window.close();
+});
+
+test('estimate questions arrive only through a fresh matching handoff, with new consent and no automatic post',async()=>{
+ const notes='Synthetic selected question: who handles the permit?';const e=await page(undefined,{search:'?intent=secondopinion&entry=estimate-check',notes});try{assert.equal(e.form.elements.details.value,notes);assert.equal(e.form.elements.consent.checked,false);assert.equal(e.posts().length,0);assert.equal(e.dom.window.sessionStorage.length,0);assert.match(e.form.textContent,/Nothing has been sent yet/);assert.doesNotMatch(e.dom.window.location.href,/permit/);e.complete();e.form.elements.details.value=notes;e.submit();await tick();const payload=JSON.parse(e.posts()[0].options.body);assert.equal(payload.entryContext,'estimate-check');assert.equal(payload.details,notes);assert.equal(payload.provider,'middletown');assert.equal(validateBrief(payload).error,undefined);}finally{e.close();}
+});
+test('expired and wrong-service estimate handoffs are removed without prefilling or submitting',async()=>{
+ for(const [search,age] of [['?intent=water&entry=estimate-check',0],['?intent=secondopinion&entry=estimate-check',600001]]){const e=await page(undefined,{search,notes:'Synthetic selected questions',age});try{assert.equal(e.form.elements.details.value,'');assert.equal(e.posts().length,0);assert.equal(e.dom.window.sessionStorage.length,0);assert.equal(e.form.elements.consent.checked,false);}finally{e.close();}}
 });
