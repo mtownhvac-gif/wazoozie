@@ -335,6 +335,8 @@ import subprocess
 subprocess.run(['node', str(ROOT/'scripts/sitewide-refresh.mjs'), str(OUT), PUBLIC or 'http://localhost:8123', os.environ.get('WAZOOZIE_REVIEW_REPORT','')], check=True)
 from service_discovery import finalize as finalize_service_metadata
 finalize_service_metadata(OUT, PUBLIC)
+# MH-41: keep the final form and directory available in server-rendered HTML.
+subprocess.run(['node', str(ROOT/'scripts/repair-lead-funnel.mjs'), str(OUT)], check=True)
 from agent_content import generate
 generate(OUT, PUBLIC or "http://localhost:8123")
 if PUBLIC:

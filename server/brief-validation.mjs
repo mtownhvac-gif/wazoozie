@@ -16,14 +16,14 @@ export function validateBrief(data, now = Date.now()) {
   }
   if (data.consent !== true || data.consentVersion !== CONSENT_VERSION) return {error: 'Please review and accept the project-brief consent.'};
 
-  for (const [key, limit] of Object.entries({name:100,phone:35,email:180,town:100,zip:5,state:2,details:2500,timing:30,role:30,property:30,equipment:120,source:100})) {
+  for (const [key, limit] of Object.entries({name:100,phone:35,email:180,town:100,zip:5,state:2,details:2500,timing:30,role:30,property:30,equipment:120,source:100,referrer_name:100})) {
     if (data[key] !== undefined && (typeof data[key] !== 'string' || data[key].length > limit)) return {error: 'One or more fields is too long or invalid.'};
   }
   if(data.entryContext!==undefined&&(typeof data.entryContext!=='string'||data.entryContext.length>32))return {error:'Invalid request context.'};
   if (data.notifyProvider !== undefined && typeof data.notifyProvider !== 'boolean') return {error:'Invalid email choice.'};
   const brief = {
     id: data.id, ...(entryContext(data.entryContext)!=='direct'?{entryContext:entryContext(data.entryContext)}:{}), provider: data.provider, intent: data.intent, notifyProvider: data.notifyProvider === true,
-    name: text(data.name, 100), phone: text(data.phone, 35), email: text(data.email, 180),
+    name: text(data.name, 100), ...(text(data.referrer_name,100)?{referrer_name:text(data.referrer_name,100)}:{}), phone: text(data.phone, 35), email: text(data.email, 180),
     town: text(data.town, 100), zip: text(data.zip, 5), state: text(data.state, 2),
     details: text(data.details, 2500), timing: text(data.timing, 30), role: text(data.role, 30),
     property: text(data.property, 30), equipment: text(data.equipment, 120),

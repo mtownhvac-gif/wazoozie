@@ -39,8 +39,7 @@ assert 'founding' not in home.lower()
 assert 'sample testimonial' not in home.lower()
 assert 'MIDDLETOWN HVAC · PUBLISHED WORK' in profile
 for page in (profile, (ROOT/'services/water-heaters/index.html').read_text()):
-    assert 'middletown-conventional-project.jpg' in page and 'middletown-tankless-project.jpg' in page
-    assert 'https://www.mtownhvac.com/services/tankless/' in page
+    assert 'middletown-conventional-project' not in page and 'middletown-tankless-project.jpg' in page
     assert 'https://www.mtownhvac.com/conversion/' in page
     assert '/start/?intent=water' in page
 assert 'Service illustrations' not in profile

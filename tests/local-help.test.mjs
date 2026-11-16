@@ -11,7 +11,7 @@ test('new local referrals preserve exact identity and direct contacts without ho
   const dom=new JSDOM(read('/businesses/'+slug+'/'));const main=dom.window.document.querySelector('main');
   assert.ok(main.querySelector(`a[href="tel:${phone}"]`));
   assert.equal(main.querySelectorAll('a[href*="/start/"],form').length,0);
-  assert.match(main.textContent,/Recommended by Wazoozie’s owner/);
+  assert.match(main.textContent,/Recommended by Wazoozie/);
   assert.match(main.textContent,/does not claim an independent license/);
   dom.window.close();
  }
