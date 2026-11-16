@@ -169,7 +169,7 @@ function showBusiness() {
   aside.replaceChildren();
   const image = make('img');
   image.src = `/assets/${provider.image}.jpg`;
-  image.alt = INTENTS[selected].provider === 'middletown' ? 'Conventional tank Water Heater and Heil Furnace installation published by Middletown HVAC' : 'Illustrative home-service scene';
+  image.alt = INTENTS[selected].provider === 'middletown' ? 'Middletown HVAC technician working on a published Bosch heat pump installation' : 'Illustrative home-service scene';
   image.width = 600; image.height = 500;
   const copy = make('div', '', 'project-business-copy');
   copy.append(make('div', intent.scopeCheck ? 'DISCUSS YOUR PROJECT WITH' : 'YOUR SELECTED BUSINESS', 'eyebrow'), make('h2', provider.name), make('p', INTENTS[selected].description), make('p', 'Ask whether the business handles your job and serves your address before arranging a visit.'));
@@ -236,6 +236,7 @@ function review(data) {
   const list = make('dl');
   const fields = [['Business to contact', BUSINESSES[data.provider].name], ['Project', INTENTS[data.intent].label], ['Location & timing', `${data.town?data.town+', '+data.state+' '+data.zip:'Add your location below if you send a request'} · ${data.timing}`], ['About the property', data.property==='Other'&&data.role==='Other'?'Not specified':`${data.property} · ${data.role}`], ['What you’d like help with', data.details], ['Equipment / project type', data.equipment || 'Not specified']];
   if(data.name||data.phone||data.email)fields.push(['Your contact details',`${data.name}\n${data.phone}${data.email?'\n'+data.email:''}`]);
+  if (data.referrer_name?.trim()) fields.push(['Who sent you', data.referrer_name.trim()]);
   if (data.neighborCode) fields.push(['Neighbor introduction', 'Attach this introduction when saving. Any Middletown HVAC service credit requires a qualifying paid job and office verification; saving alone earns nothing. No referrer contact details are shared.']);
   if (INTENTS[data.intent].scopeCheck) fields.push(['Project fit to confirm', INTENTS[data.intent].scopeCheck]);
   for (const [label, value] of fields) list.append(make('dt', label), make('dd', value));
@@ -277,7 +278,7 @@ async function checkAvailability() {
 checkAvailability();
 $('#retryCapture').addEventListener('click', checkAvailability);
 function briefText(data, saved = true) {
-  return ['WAZOOZIE · YOUR PROJECT BRIEF', `Reference: WZ-${id.slice(0, 8).toUpperCase()}`, '', `Business: ${BUSINESSES[data.provider].name}`, `Phone: ${BUSINESSES[data.provider].phone}`, ...(data.neighborCode && data.provider === 'middletown' ? [`Wazoozie referral: https://wazoozie.com/start/?neighbor=${data.neighborCode}`, 'Please record this introduction before booking. Any referral service credit requires office verification of the qualifying paid job.'] : []), `Service: ${INTENTS[data.intent].label}`, `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, `Equipment / project type: ${data.equipment || 'Not specified'}`, '', data.details, '', `Name: ${data.name}`, `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`, '', saved ? `Saved with Wazoozie. ${deliveryStatus === 'automation_accepted' ? 'The email service accepted the request for Wazoozie Help to review and forward; inbox delivery is not confirmed.' : deliveryStatus === 'pending' ? 'Email request queued for retry; call if you need help.' : 'No automatic email has been confirmed.'} No appointment has been booked.` : 'Prepared in the homeowner’s browser. No appointment has been booked. Please confirm coverage, timing and any diagnostic charge.'].join('\n');
+  return ['WAZOOZIE · YOUR PROJECT BRIEF', `Reference: WZ-${id.slice(0, 8).toUpperCase()}`, '', `Business: ${BUSINESSES[data.provider].name}`, `Phone: ${BUSINESSES[data.provider].phone}`, ...(data.neighborCode && data.provider === 'middletown' ? [`Wazoozie referral: https://wazoozie.com/start/?neighbor=${data.neighborCode}`, 'Please record this introduction before booking. Any referral service credit requires office verification of the qualifying paid job.'] : []), `Service: ${INTENTS[data.intent].label}`, `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, `Equipment / project type: ${data.equipment || 'Not specified'}`, '', data.details, '', `Name: ${data.name}`, ...(data.referrer_name?.trim() ? [`Who sent you: ${data.referrer_name.trim()}`] : []), `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`, '', saved ? `Saved with Wazoozie. ${deliveryStatus === 'automation_accepted' ? 'The email service accepted the request for Wazoozie Help to review and forward; inbox delivery is not confirmed.' : deliveryStatus === 'pending' ? 'Email request queued for retry; call if you need help.' : 'No automatic email has been confirmed.'} No appointment has been booked.` : 'Prepared in the homeowner’s browser. No appointment has been booked. Please confirm coverage, timing and any diagnostic charge.'].join('\n');
 }
 form.addEventListener('submit', async event => {
   event.preventDefault();

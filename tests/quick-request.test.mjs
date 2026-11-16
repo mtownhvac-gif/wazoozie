@@ -56,3 +56,17 @@ test('estimate questions arrive only through a fresh matching handoff, with new 
 test('expired and wrong-service estimate handoffs are removed without prefilling or submitting',async()=>{
  for(const [search,age] of [['?intent=water&entry=estimate-check',0],['?intent=secondopinion&entry=estimate-check',600001]]){const e=await page(undefined,{search,notes:'Synthetic selected questions',age});try{assert.equal(e.form.elements.details.value,'');assert.equal(e.posts().length,0);assert.equal(e.dom.window.sessionStorage.length,0);assert.equal(e.form.elements.consent.checked,false);}finally{e.close();}}
 });
+test('neighbor attachment is optional, Middletown-only and receipt reports actual attribution',async()=>{
+ const code='a'.repeat(32);
+ for(const [checked,intent,credited] of [[false,'comfort',false],[true,'comfort',true],[true,'comfort',false],[true,'electrical',false]]){
+  const e=await page(async(url,options)=>Response.json(url.includes('capabilities')?{captureReady:true,emailProviders:['middletown','ryan']}:{reference:JSON.parse(options.body).id,status:'saved',providerDelivery:'automation_accepted',referralAttributed:credited}),{search:'?intent='+intent+'&neighbor='+code});
+  try{
+   assert.equal(e.$('request-keep-neighbor').checked,false);
+   e.complete();e.$('request-keep-neighbor').checked=checked;e.submit();await tick();
+   const data=JSON.parse(e.posts()[0].options.body),attached=checked&&intent==='comfort';
+   assert.equal(data.neighborCode,attached?code:undefined);
+   assert.equal(e.$('request-referral-status').hidden,!attached);
+   if(attached)assert.match(e.$('request-referral-status').textContent,credited?/introduction was attached/:/could not be credited/);
+  }finally{e.close();}
+ }
+});
