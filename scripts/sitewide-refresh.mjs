@@ -119,7 +119,7 @@ function refreshHome(d){
  // Keep the source photos and live project finder as the first useful stops.
  const folded=element(d,'details','wz-more-tools');folded.append(element(d,'summary','', 'More planning tools, quizzes and referral details <span aria-hidden="true">+</span>'));
  const inside=element(d,'div','wz-more-tools-content');folded.append(inside);
- const essential=new Set(['grand-hero','local-proof','project-finder','same-job-home','network-intro']);
+ const essential=new Set(['grand-hero','local-proof','project-finder','no-heat-feature','same-job-home','network-intro']);
  for(const el of [...main.children]){if([...essential].some(c=>el.classList.contains(c))||['find','explore'].includes(el.id))continue;inside.append(el);}
  if(inside.children.length)main.append(folded);
  // Put actual ways to contact people before optional browsing and games.

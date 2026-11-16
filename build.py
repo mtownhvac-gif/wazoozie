@@ -328,6 +328,8 @@ from project_finder import add as add_project_finder
 add_project_finder(OUT)
 from same_job import add as add_same_job
 add_same_job(OUT, PUBLIC, PAGES)
+from no_heat import add as add_no_heat
+add_no_heat(OUT, PROVIDERS)
 from motion import add as add_motion
 add_motion(OUT)
 add_optimization(OUT, PUBLIC or "http://localhost:8123", PAGES, PROVIDERS)
