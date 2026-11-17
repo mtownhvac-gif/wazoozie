@@ -3,6 +3,7 @@
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {BUSINESSES, INTENTS, CONSENT_VERSION} from '../project-config.mjs';
+import {liveIntakeFailures, validTestReceipt} from './live_probe_validation.mjs';
 
 const BASE = process.env.WAZOOZIE_BASE || 'https://wazoozie.com';
 const sha = text => createHash('sha256').update(text.replace(/\s+/g, '')).digest('hex').slice(0, 12);
@@ -18,8 +19,9 @@ const files = [['/', 'dist/index.html'], ['/request/', 'dist/request/index.html'
   ['/assets/project-config.mjs', 'dist/assets/project-config.mjs'], ['/pricing-guide/', 'dist/pricing-guide/index.html'], ['/local-help/', 'dist/local-help/index.html'],
   ['/neighbors/', 'dist/neighbors/index.html'], ['/sitemap.xml', 'dist/sitemap.xml'], ['/robots.txt', 'dist/robots.txt']];
 const live = {};
+const pages = {};
 for (const [path, file] of files) {
-  const r = await get(path); live[path] = r.body;
+  const r = await get(path); live[path] = r.body; pages[path] = r;
   let local = null; try { local = await readFile(file, 'utf8'); } catch {}
   console.log(`${path.padEnd(32)} ${String(r.status).padEnd(4)} ${local === null ? 'no local file' : sha(r.body) === sha(local) ? 'same as this commit' : 'DIFFERENT from this commit'} ${r.location || ''}`);
 }
@@ -34,16 +36,27 @@ for (const word of ['Bryan', 'Cordy', 'operated by', 'HVACBusiness', 'wazooziehe
 const request = live['/request/'] || '';
 console.log('\nRequest page: form present', request.includes('id="quickRequest"'), '| loads quick-request.js', request.includes('quick-request.js'));
 const cap = await get('/api/project-capabilities');
-console.log('\nCapabilities:', cap.status, cap.body.slice(0, 400));
+let capability;
+try { capability = JSON.parse(cap.body); } catch {}
+console.log('\nCapabilities:', cap.status, JSON.stringify({capabilityVersion:capability?.capabilityVersion,captureReady:capability?.captureReady,emailProviders:capability?.emailProviders}));
+const failures = liveIntakeFailures(pages, capability);
+if (cap.status !== 200) failures.push('Capability endpoint: expected HTTP 200');
+for (const failure of failures) console.error('FAIL:', failure);
+if (failures.length) process.exitCode = 1;
 
-if (process.env.SEND_TEST_LEAD === '1') {
+if (process.env.SEND_TEST_LEAD === '1' && failures.length === 0) {
   const intent = Object.keys(INTENTS).find(key => INTENTS[key].provider === 'middletown');
   const id = crypto.randomUUID();
   const payload = {id, startedAt: Date.now() - 20000, intent, provider: 'middletown', notifyProvider: true, consent: true, consentVersion: CONSENT_VERSION,
     name: 'TEST Wazoozie form check', phone: '610-555-0100', email: '', town: 'Glen Mills', zip: '19342', state: 'PA',
-    details: 'TEST LEAD. Not a customer. Sent by the automated live check to prove the request form delivers to the Wazoozie Help inbox. Please ignore.',
+    details: 'TEST LEAD. Not a customer. Internal intake and alert-queue check. Email-service acceptance does not verify inbox receipt. Please exclude from customer totals.',
     timing: 'Planning ahead', role: 'Other', property: 'Other', equipment: '', source: 'start-page', entryContext: 'direct'};
   const r = await fetch(BASE + '/api/project-briefs', {method: 'POST', headers: {'Content-Type': 'application/json', 'Origin': 'https://wazoozie.com', 'User-Agent': 'Mozilla/5.0 (compatible; wazoozie-live-probe/1.0)'}, body: JSON.stringify(payload), signal: AbortSignal.timeout(30000)});
   console.log(`\nTEST LEAD posted for ${BUSINESSES.middletown.name}, intent ${intent}. Reference WZ-${id.slice(0, 8).toUpperCase()}`);
-  console.log('  HTTP', r.status, (await r.text()).slice(0, 500));
+  let result;
+  try { result = await r.json(); } catch {}
+  const accepted = validTestReceipt(r.status, result, id);
+  console.log('  HTTP', r.status, '| valid saved receipt and alert state:', accepted);
+  console.log('  Inbox receipt is not verified by this check.');
+  if (!accepted) process.exitCode = 1;
 }
