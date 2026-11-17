@@ -1,0 +1,36 @@
+name: Live probe
+
+# Read-only look at the deployed site from outside. Prints what the live homepage, request page and intake
+# endpoint are doing, and whether they match this commit. A test request is only posted when asked for:
+# run by hand with the box ticked, or put [live-test-lead] in a pull request title.
+on:
+  pull_request:
+    types: [opened, synchronize, edited]
+  workflow_dispatch:
+    inputs:
+      send_test_lead:
+        description: Post one labeled test request to the live intake
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: PUBLIC_SITE_URL=https://wazoozie.com python3 build.py
+      - name: Probe wazoozie.com
+        env:
+          SEND_TEST_LEAD: ${{ (inputs.send_test_lead || contains(github.event.pull_request.title, '[live-test-lead]')) && '1' || '0' }}
+        run: node scripts/live_probe.mjs
