@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
+import {neighborCode} from '../neighbor-config.mjs';
 import {entryContext,requestPageContext} from '../lead-context.mjs';
 import {validateBrief} from '../server/brief-validation.mjs';
 import {CONSENT_VERSION} from '../project-config.mjs';
@@ -19,7 +20,7 @@ test('request attribution is a bounded last-link category, never a URL or search
 test('request links preserve intent and referral code without storage or background transmission',()=>{
  const dom=new JSDOM('<a id="request" href="/start/?intent=comfort&ref=partner-ryan">Request</a><a id="external" href="https://example.invalid/start/">Other site</a>',{url:'https://wazoozie.com/guides/one-room-too-hot-too-cold/?private=value',runScripts:'outside-only'}),w=dom.window;
  w.fetch=()=>assert.fail('No transmission before the request');
- w.requestPageContext=requestPageContext;w.eval(readFileSync(new URL('../assets/request-context.js',import.meta.url),'utf8').replace(/^import .*;\n/,''));
+ w.neighborCode=neighborCode;w.requestPageContext=requestPageContext;w.eval(readFileSync(new URL('../assets/request-context.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,''));
  const a=w.document.querySelector('#request');a.dispatchEvent(new w.MouseEvent('click',{bubbles:true,button:0}));
  const u=new URL(a.href);assert.equal(u.searchParams.get('intent'),'comfort');assert.equal(u.searchParams.get('ref'),'partner-ryan');assert.equal(u.searchParams.get('entry'),'situation-guide');assert.equal(u.searchParams.has('private'),false);assert.equal(w.localStorage.length,0);assert.equal(w.sessionStorage.length,0);w.close();
 });

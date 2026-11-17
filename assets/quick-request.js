@@ -1,15 +1,19 @@
 import {BUSINESSES, INTENTS, CONSENT_VERSION} from './project-config.mjs';
 import {takeEstimateHandoff} from './estimate-handoff.mjs';
-import {entryContext} from './lead-context.mjs';
+import {entryContext,requestPageContext} from './lead-context.mjs';
+import {neighborCode} from './neighbor-config.mjs';
 const $ = id => document.getElementById(id);
 const form = $('quickRequest'), service = form.elements.intent;
 const params = new URLSearchParams(location.search);
+const incomingNeighbor = neighborCode(params.get('neighbor'));
 const startedAt = Date.now(), id = crypto.randomUUID();
 let ready = false, providers = [], pending, pendingMonth, busy = false, complete = false;
 for (const [value, intent] of Object.entries(INTENTS)) {
+  if ([...service.options].some(option => option.value === value)) continue;
   const option = document.createElement('option'); option.value = value; option.textContent = intent.label; service.append(option);
 }
 if (Object.hasOwn(INTENTS, params.get('intent'))) service.value = params.get('intent');
+else if (Object.hasOwn(INTENTS, form.dataset.intent)) service.value = form.dataset.intent;
 if(params.get('entry')==='estimate-check'){let notes=null;try{notes=takeEstimateHandoff(sessionStorage,service.value);}catch{}if(notes){form.elements.details.value=notes;form.elements.consent.checked=false;const notice=document.createElement('p');notice.className='request-note';notice.textContent='Your selected estimate questions are below. Review them before sending. Nothing has been sent yet.';form.prepend(notice);}}
 function selectedBusiness() { return BUSINESSES[INTENTS[service.value]?.provider]; }
 function contacts(business) {
@@ -28,6 +32,7 @@ function update() {
     text.textContent = 'Your request is for:'; container.append(text, name, contacts(business));
     $('request-permission').textContent = `I agree to Wazoozie saving these details and emailing them to wazooziehelp@gmail.com for review and forwarding to ${business.name}.`;
   } else { text.textContent = 'Choose a service to see the business and its phone number.'; container.append(text); }
+  $('request-neighbor-choice').hidden = !incomingNeighbor || INTENTS[service.value]?.provider !== 'middletown';
   const available = ready && providers.includes(INTENTS[service.value]?.provider);
   $('request-send').disabled = busy || complete || (!pending && !available);
   $('request-send').textContent = busy ? 'Sending…' : pending ? 'Retry the same request →' : 'Send request →';
@@ -72,7 +77,7 @@ form.addEventListener('submit', async event => {
   if (!pending) {
     if (Date.now() - startedAt < 2100) {error.textContent = 'Please take a moment to review your details, then send.'; error.hidden = false; return;}
     const data = Object.fromEntries(new FormData(form));
-    pending = {...data,id,startedAt,provider:INTENTS[data.intent].provider,notifyProvider:true,consent:form.elements.consent.checked,consentVersion:CONSENT_VERSION,equipment:'',source:'start-page',entryContext:entryContext(params.get('entry'))};
+    pending = {...data,id,startedAt,provider:INTENTS[data.intent].provider,notifyProvider:true,consent:form.elements.consent.checked,consentVersion:CONSENT_VERSION,equipment:'',source:incomingNeighbor&&data.intent&&INTENTS[data.intent].provider==='middletown'&&$('request-keep-neighbor').checked?'neighbor':'start-page',...(incomingNeighbor&&INTENTS[data.intent].provider==='middletown'&&$('request-keep-neighbor').checked?{neighborCode:incomingNeighbor}:{}),entryContext:params.has('entry')?entryContext(params.get('entry')):requestPageContext(location.pathname)};
     pendingMonth = new Date().toISOString().slice(0,7);
   }
   busy = true; lock(true); form.setAttribute('aria-busy','true'); update();
@@ -87,6 +92,10 @@ form.addEventListener('submit', async event => {
     complete = true;
     $('request-reference').textContent = `Reference: WZ-${id.slice(0,8).toUpperCase()}`;
     $('request-delivery').textContent = result.providerDelivery === 'automation_accepted' ? 'The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not yet confirmed.' : result.providerDelivery === 'pending' ? 'Your request is saved. The email alert is waiting for another delivery attempt. Please call if you need help soon.' : 'Your request is saved, but the email alert could not be confirmed. Please call the business directly.';
+    const referralStatus=$('request-referral-status');
+    referralStatus.hidden=!pending.neighborCode;
+    if(pending.neighborCode)referralStatus.textContent=result.referralAttributed===true?'Your neighbor introduction was attached. Any credit requires office verification of a qualifying completed, paid job.':'Your request is saved, but this neighbor link could not be credited. It may have expired.';
+    $('receipt-referral').hidden = pending.provider !== 'middletown';
     $('receipt-contact').replaceChildren(contacts(selectedBusiness()));
     form.hidden = true; $('request-receipt').hidden = false; $('request-receipt').focus(); pending = undefined;
   } catch (exception) {

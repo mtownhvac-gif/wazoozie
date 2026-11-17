@@ -26,6 +26,7 @@ export class ProjectInbox extends DurableObject {
     if (!outboxColumns.has('last_result')) ctx.storage.sql.exec("ALTER TABLE email_outbox ADD COLUMN last_result TEXT NOT NULL DEFAULT 'queued'");
     if (!outboxColumns.has('last_http_status')) ctx.storage.sql.exec('ALTER TABLE email_outbox ADD COLUMN last_http_status INTEGER');
     if(!ctx.storage.sql.exec('PRAGMA table_info(project_briefs)').toArray().some(c=>c.name==='entry_context'))ctx.storage.sql.exec("ALTER TABLE project_briefs ADD COLUMN entry_context TEXT NOT NULL DEFAULT 'direct'");
+    if (!ctx.storage.sql.exec('PRAGMA table_info(project_briefs)').toArray().some(c=>c.name==='referrer_name')) ctx.storage.sql.exec('ALTER TABLE project_briefs ADD COLUMN referrer_name TEXT');
     this.deliveryChain = Promise.resolve();
     ctx.storage.sql.exec('CREATE INDEX IF NOT EXISTS briefs_created ON project_briefs(created_at)');
     ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS submission_limits(client_hash TEXT PRIMARY KEY, day TEXT NOT NULL, count INTEGER NOT NULL)');
@@ -64,10 +65,10 @@ export class ProjectInbox extends DurableObject {
       if (count >= 5 || total >= 200) { status = 429; return; }
       const b = brief;
       this.ctx.storage.sql.exec(`INSERT INTO project_briefs
-        (id,created_at,provider,intent,name,phone,email,town,zip,state,details,timing,role,property,equipment,source,consent_version,fingerprint,neighbor_code,entry_context)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        (id,created_at,provider,intent,name,phone,email,town,zip,state,details,timing,role,property,equipment,source,consent_version,fingerprint,neighbor_code,entry_context,referrer_name)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
         b.id, now, b.provider, b.intent, b.name, b.phone, b.email, b.town, b.zip,
-        b.state, b.details, b.timing, b.role, b.property, b.equipment, b.source, b.consentVersion, fingerprint, b.neighborCode || null, b.entryContext || 'direct');
+        b.state, b.details, b.timing, b.role, b.property, b.equipment, b.source, b.consentVersion, fingerprint, b.neighborCode || null, b.entryContext || 'direct', b.referrer_name || null);
       this.ctx.storage.sql.exec('INSERT INTO submission_limits(client_hash,day,count) VALUES (?,?,1) ON CONFLICT(client_hash) DO UPDATE SET count=count+1', client, new Date(now).toISOString().slice(0, 10));
       if (b.notifyProvider) this.ctx.storage.sql.exec('INSERT INTO email_outbox(id,payload,next_attempt,expires) VALUES (?,?,?,?)', b.id, JSON.stringify(emailPayload(b,now)), now, now + 48*3600000);
       this.incrementContact({action:'brief_saved',provider:b.provider,context:'planner'}, now);

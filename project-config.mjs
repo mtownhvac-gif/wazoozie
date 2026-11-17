@@ -3,7 +3,7 @@ export const CONSENT_VERSION = 'project-brief-2026-11-06-email';
 export const BUSINESSES = {
   middletown: {
     defaultIntent:'comfort', email: 'service@mtownhvac.com', name: 'Middletown HVAC', phone: '610-500-6416', tel: '+16105006416',
-    slug: 'middletown-hvac', image: 'middletown-conventional-project',
+    slug: 'middletown-hvac', image: 'middletown-conversion-project',
     booking: 'https://book.housecallpro.com/book/Middletown-HVAC-LLC/fee90a1b38e64428a9ebf1cf37e04197?v2=true&utm_source=wazoozie&utm_medium=referral&utm_campaign=project-brief&utm_content=start'
   },
   rolledright: {defaultIntent:'painting',name:'Rolled Right Painting, LLC',phone:'610-291-9552',tel:'+16102919552',email:'louislitwin618@gmail.com',slug:'rolled-right-painting',image:'valley-colonial-home'},

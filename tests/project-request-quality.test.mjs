@@ -113,3 +113,15 @@ test('an uncertain request cannot be retried across the server monthly storage b
  e.review();e.complete();e.submit();await tick();assert.equal(e.posts().length,1);nextMonth=true;e.submit();await tick();assert.equal(e.posts().length,1);assert.match(e.$('projectError').textContent,/confirm receipt before starting another brief/);
  }finally{globalThis.Date=OriginalDate;e.close();}
 });
+test('planner photo stays truthful and referral name survives review and manual email fallback',async()=>{
+ const e=await page();
+ try{
+  e.review();e.input('referrer_name','Neighbor <example>');
+  assert.match(e.$('projectReview').textContent,/Who sent youNeighbor <example>/);
+  assert.equal(e.$('projectReview').querySelector('example'),null);
+  const mail=e.$('reviewConnections').querySelector('a[href^="mailto:"]');
+  assert.match(decodeURIComponent(mail.href),/Who sent you: Neighbor <example>/);
+  const photo=e.d.querySelector('img[src*="middletown-conversion-project"]');
+  assert.ok(photo);assert.match(photo.alt,/Bosch/);assert.doesNotMatch(photo.alt,/Heil|tank Water Heater/);
+ }finally{e.close();}
+});
