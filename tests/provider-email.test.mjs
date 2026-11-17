@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
-import {CONSENT_VERSION} from '../project-config.mjs';
+import {BUSINESSES,CONSENT_VERSION,INTENTS} from '../project-config.mjs';
 import {validateBrief} from '../server/brief-validation.mjs';
 import {validWebhook,emailPayload} from '../server/provider-email.mjs';
 const valid=()=>({id:crypto.randomUUID(),startedAt:Date.now()-5000,provider:'middletown',intent:'comfort',name:'Synthetic <Homeowner>',phone:'202-555-0100',email:'synthetic@example.invalid',town:'Media',zip:'19063',state:'PA',details:'Synthetic <script>alert(1)</script> request only.',timing:'Planning ahead',role:'Homeowner',property:'House',equipment:'',source:'start-page',consent:true,consentVersion:CONSENT_VERSION,notifyProvider:true});
@@ -50,5 +50,34 @@ test('durable email outbox saves before sending, retries failures and does not r
   assert.equal(limited.state,'pending');assert.equal(limited.attempts,1);assert.equal(limited.last_result,'rate_limited');
   assert.equal(limited.next_attempt-limited.last_attempt,3600000);
   response=await call();assert.equal((await response.json()).providerDelivery,'pending');assert.equal(calls,3,'throttled duplicate must keep the persisted wait');
+  // Every offered project type must reach its intended business shard and
+  // carry that business name into the shared office alert.
+  fail=false;
+  for (const [intent, {provider}] of Object.entries(INTENTS)) {
+    const request={...valid(),intent,provider};
+    const submit=value=>mf.dispatchFetch('https://wazoozie.com/api/project-briefs',{
+      method:'POST',
+      headers:{Origin:'https://wazoozie.com','Content-Type':'application/json','CF-Connecting-IP':'192.0.2.'+(calls+1)},
+      body:JSON.stringify(value)
+    });
+    const before=calls;
+    const wrongProvider=Object.keys(BUSINESSES).find(key=>key!==provider);
+    assert.equal((await submit({...request,provider:wrongProvider})).status,400,intent);
+    assert.equal(calls,before,'a mismatched business must never get an alert');
+    const accepted=await submit(request);
+    assert.equal(accepted.status,201,intent);
+    const receipt=await accepted.json();
+    assert.equal(receipt.provider,BUSINESSES[provider].name,intent);
+    assert.equal(receipt.providerDelivery,'automation_accepted',intent);
+    assert.equal(calls,before+1,intent);
+    assert.equal(received.reference,request.id,intent);
+    const businessName=BUSINESSES[provider].name.replaceAll('&','&amp;');
+    assert.ok(received.message.startsWith('Selected business: '+businessName+'<br>'),intent);
+    const storage=await mf.unsafeGetDurableObjectStorage(undefined,'TestInbox',{
+      name:provider+':'+new Date().toISOString().slice(0,7)
+    });
+    const [saved]=await storage.exec('SELECT provider,intent FROM project_briefs WHERE id=?',request.id);
+    assert.deepEqual(saved,{provider,intent});
+  }
  } finally {await mf.dispose();}
 });

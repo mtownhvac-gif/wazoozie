@@ -1,3 +1,5 @@
+import {BUSINESSES} from '../project-config.mjs';
+
 const DEFAULT_URL = 'https://wazoozie.com/api/project-capabilities';
 
 export function validateCapability(capability) {
@@ -10,10 +12,13 @@ export function validateCapability(capability) {
   if (capability.captureReady !== true) {
     throw new Error('Private project capture is not ready.');
   }
-  if (!Array.isArray(capability.emailProviders) || !capability.emailProviders.includes('middletown')) {
-    throw new Error('Middletown office alert routing is not advertised.');
+  const expected = Object.keys(BUSINESSES);
+  const advertised = new Set(Array.isArray(capability.emailProviders) ? capability.emailProviders : []);
+  const missing = expected.filter(provider => !advertised.has(provider));
+  if (missing.length) {
+    throw new Error(`Office alert routing is not advertised for: ${missing.join(', ')}.`);
   }
-  return {captureReady: true, middletownAlerts: true};
+  return {captureReady: true, providers: expected};
 }
 
 export async function checkLiveAlertCapability({
@@ -33,7 +38,7 @@ export async function checkLiveAlertCapability({
 if (import.meta.url === `file://${process.argv[1]}`) {
   try {
     const status = await checkLiveAlertCapability({url: process.env.WAZOOZIE_CAPABILITY_URL || DEFAULT_URL});
-    console.log(`Wazoozie live alert check passed: capture=${status.captureReady}, middletown=${status.middletownAlerts}`);
+    console.log(`Wazoozie live alert check passed: capture=${status.captureReady}, office alert routes=${status.providers.join(', ')}`);
   } catch (error) {
     console.error(`Wazoozie live alert check failed: ${error.message}`);
     process.exitCode = 1;
