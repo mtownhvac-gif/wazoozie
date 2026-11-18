@@ -6,6 +6,7 @@ const form = $('quickRequest'), service = form.elements.intent;
 const params = new URLSearchParams(location.search);
 const startedAt = Date.now(), id = crypto.randomUUID();
 let ready = false, providers = [], pending, pendingMonth, busy = false, complete = false;
+let receiptText = '';
 for (const [value, intent] of Object.entries(INTENTS)) {
   const option = document.createElement('option'); option.value = value; option.textContent = intent.label; service.append(option);
 }
@@ -62,6 +63,21 @@ async function check() {
 service.addEventListener('change', () => { form.elements.consent.checked = false; update(); });
 for (const field of ['state', 'timing']) form.elements[field].addEventListener('change', update);
 $('request-recheck').addEventListener('click', check);
+$('receipt-copy').addEventListener('click', async () => {
+  if (!complete || !receiptText) return;
+  try {
+    const clipboard = document.defaultView.navigator.clipboard;
+    if (!clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await clipboard.writeText(receiptText);
+    $('receipt-copy-fallback').hidden = true;
+    $('receipt-copy-status').textContent = 'Receipt copied. Keep it handy if you need to call.';
+  } catch {
+    $('receipt-copy-text').value = receiptText;
+    $('receipt-copy-fallback').hidden = false;
+    $('receipt-copy-text').focus(); $('receipt-copy-text').select();
+    $('receipt-copy-status').textContent = 'Automatic copying was unavailable. Your receipt is selected below so you can copy it yourself.';
+  }
+});
 form.addEventListener('submit', async event => {
   event.preventDefault();
   if (busy || complete || (!pending && (!ready || !providers.includes(INTENTS[service.value]?.provider) || !form.reportValidity()))) return;
@@ -88,6 +104,11 @@ form.addEventListener('submit', async event => {
     $('request-reference').textContent = `Reference: WZ-${id.slice(0,8).toUpperCase()}`;
     $('request-delivery').textContent = result.providerDelivery === 'automation_accepted' ? 'The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not yet confirmed.' : result.providerDelivery === 'pending' ? 'Your request is saved. The email alert is waiting for another delivery attempt. Please call if you need help soon.' : 'Your request is saved, but the email alert could not be confirmed. Please call the business directly.';
     $('receipt-contact').replaceChildren(contacts(selectedBusiness()));
+    const business = selectedBusiness();
+    receiptText = ['Wazoozie request receipt', $('request-reference').textContent,
+      `Service: ${INTENTS[service.value].label}`, `Business: ${business.name}`, `Phone: ${business.phone}`,
+      $('request-delivery').textContent, 'No appointment has been booked.',
+      'If you need help soon, call the business and give your reference.'].join('\n');
     form.hidden = true; $('request-receipt').hidden = false; $('request-receipt').focus(); pending = undefined;
   } catch (exception) {
     error.textContent = `${exception.message}${pending ? ` Reference: WZ-${id.slice(0,8).toUpperCase()}.` : ''}`; error.hidden = false;

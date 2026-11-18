@@ -40,6 +40,39 @@ test('mismatched receipts never show success and definite validation errors allo
  try{e.complete();e.submit();await tick();assert.equal(e.form.elements.phone.disabled,false);assert.match(e.$('request-error').textContent,/check your phone/);mode='wrong';e.submit();await tick();assert.equal(e.$('request-receipt').hidden,true);assert.equal(e.form.elements.phone.disabled,true);assert.match(e.$('request-send').textContent,/Retry/);}finally{e.close();}
 });
 
+test('copying a saved receipt keeps the reference and chosen contact without copying homeowner details or sending again',async()=>{
+ const e=await page(undefined,{search:'?intent=electrical&entry=home&private=DO-NOT-COPY'});let copied;
+ try{
+  Object.defineProperty(e.dom.window.navigator,'clipboard',{value:{async writeText(text){copied=text;}},configurable:true});
+  e.$('receipt-copy').click();await tick();assert.equal(copied,undefined,'no receipt before a confirmed save');
+  e.complete();e.form.elements.name.value='PRIVATE HOMEOWNER';e.form.elements.details.value='PRIVATE PROJECT';e.submit();await tick();
+  assert.equal(copied,undefined,'saving must not write the clipboard automatically');
+  e.$('receipt-copy').click();await tick();
+  assert.ok(copied.includes(e.$('request-reference').textContent));
+  assert.match(copied,/Ryan Dugan Electric LLC/);assert.match(copied,/445-258-9962/);
+  assert.match(copied,/Inbox delivery is not yet confirmed/);assert.match(copied,/No appointment has been booked/);
+  assert.doesNotMatch(copied,/PRIVATE|DO-NOT-COPY|202-555-0100|19063|Middletown HVAC/);
+  assert.match(e.$('receipt-copy-status').textContent,/Receipt copied/);
+  assert.equal(e.posts().length,1);assert.equal(e.dom.window.localStorage.length,0);assert.equal(e.dom.window.sessionStorage.length,0);
+ }finally{e.close();}
+});
+
+test('blocked or missing clipboard access leaves a selectable honest receipt and does not disturb the saved request',async()=>{
+ for(const delivery of ['pending','failed','not_sent']){
+  const e=await page(async(url,options)=>Response.json(url.includes('capabilities')?{captureReady:true,emailProviders:['middletown']}:{reference:JSON.parse(options.body).id,status:'saved',providerDelivery:delivery}));
+  try{
+   if(delivery!=='not_sent')Object.defineProperty(e.dom.window.navigator,'clipboard',{value:{async writeText(){throw Error('Permission denied');}},configurable:true});
+   e.complete();e.submit();await tick();e.$('receipt-copy').click();await tick();
+   const text=e.$('receipt-copy-text');
+   assert.equal(e.$('receipt-copy-fallback').hidden,false);assert.equal(text.readOnly,true);
+   assert.equal(e.d.activeElement,text);assert.equal(text.selectionStart,0);assert.equal(text.selectionEnd,text.value.length);
+   assert.ok(text.value.includes(e.$('request-delivery').textContent));assert.match(text.value,/Middletown HVAC/);
+   assert.match(text.value,/No appointment has been booked/);assert.doesNotMatch(e.$('receipt-copy-status').textContent,/Receipt copied/);
+   assert.equal(e.$('request-receipt').hidden,false);assert.equal(e.posts().length,1);
+  }finally{e.close();}
+ }
+});
+
 test('mobile contact controls lead directly to requests and all service choices remain reachable',()=>{
  const dom=new JSDOM(readFileSync('dist/index.html','utf8')),d=dom.window.document;
  assert.equal(d.querySelector('.account-top-link').getAttribute('href'),'/request/');
