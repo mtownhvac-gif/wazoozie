@@ -54,6 +54,9 @@ export class ProjectInbox extends DurableObject {
   }
 
   async saveBrief(brief, fingerprint, client, now) {
+    // Establish a durable wake-up before committing a new email-bound request.
+    // A failed post-commit scheduling call must not strand the queued alert.
+    if (brief.notifyProvider && !this.ctx.storage.sql.exec('SELECT 1 FROM project_briefs WHERE id=?', brief.id).toArray().length) await this.armEmailBeforeSave(now);
     let status = 201;
     let referralAttributed=Boolean(brief.neighborCode);
     this.ctx.storage.transactionSync(() => {
@@ -102,6 +105,7 @@ export class ProjectInbox extends DurableObject {
   }
 
   async saveApplication(application,fingerprint,client,now) {
+    if (!this.ctx.storage.sql.exec('SELECT 1 FROM contractor_applications WHERE id=?', application.id).toArray().length) await this.armEmailBeforeSave(now);
     let status=201;
     this.ctx.storage.transactionSync(()=>{
       const existing=this.ctx.storage.sql.exec('SELECT fingerprint FROM contractor_applications WHERE id=?',application.id).toArray()[0];
@@ -139,6 +143,12 @@ export class ProjectInbox extends DurableObject {
     });
     if (status === 200 && !await this.ctx.storage.getAlarm()) await this.ctx.storage.setAlarm(now + 86400000);
     return {status};
+  }
+
+  async armEmailBeforeSave(now) {
+    const target = now + 1000;
+    const current = await this.ctx.storage.getAlarm();
+    if (!current || current > target) await this.ctx.storage.setAlarm(target);
   }
 
   async scheduleEmailAlarm(now = Date.now()) {
