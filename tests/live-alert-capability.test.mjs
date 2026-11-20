@@ -2,15 +2,19 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {checkLiveAlertCapability, validateCapability} from '../scripts/check_live_alerts.mjs';
 
-const healthy = {capabilityVersion: 2, captureReady: true, emailProviders: ['middletown']};
+const healthy = {capabilityVersion: 2, captureReady: true, emailProviders: ['middletown','rolledright','ryan','liberator','cooke']};
 
-test('accepts the live capability shape required for Middletown office alerts', () => {
-  assert.deepEqual(validateCapability(healthy), {captureReady: true, middletownAlerts: true});
+test('accepts the live capability shape required for every office alert route', () => {
+  assert.deepEqual(validateCapability(healthy), {captureReady: true, providers: ['middletown','rolledright','ryan','liberator','cooke']});
 });
 
 test('fails closed when capture or office alert routing is missing', () => {
   assert.throws(() => validateCapability({...healthy, captureReady: false}), /capture is not ready/);
   assert.throws(() => validateCapability({...healthy, emailProviders: []}), /alert routing is not advertised/);
+  for (const provider of healthy.emailProviders) {
+    const remaining = healthy.emailProviders.filter(key => key !== provider);
+    assert.throws(() => validateCapability({...healthy, emailProviders: remaining}), new RegExp(provider));
+  }
   assert.throws(() => validateCapability({...healthy, capabilityVersion: 1}), /Unexpected capability version/);
 });
 

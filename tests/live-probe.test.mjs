@@ -8,7 +8,7 @@ const pages=()=>({
   '/assets/quick-request.js':{status:200,body:"fetch('/api/project-briefs')"},
   '/assets/project-config.mjs':{status:200,body:'export const BUSINESSES = {}'}
 });
-const capability={capabilityVersion:2,captureReady:true,emailProviders:['middletown']};
+const capability={capabilityVersion:2,captureReady:true,emailProviders:['middletown','rolledright','ryan','liberator','cooke']};
 
 test('live checks fail for missing public intake paths, fallback HTML and disabled alerts',()=>{
   assert.deepEqual(liveIntakeFailures(pages(),capability),[]);
