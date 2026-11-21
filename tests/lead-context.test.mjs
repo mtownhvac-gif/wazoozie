@@ -28,3 +28,36 @@ test('email alerts carry a reference, bounded source and follow-up steps without
  assert.match(p.message,/Request-link context: pricing/);assert.match(p.message,/Referral source: partner-ryan/);assert.match(p.message,/2026-11-06T18:00:00.000Z/);assert.match(p.message,/No appointment has been booked/);assert.match(p.message,/Mark contacted only after reaching the customer/);
  assert.doesNotMatch(p.message,/private=value/);
 });
+
+test('both request paths retain bounded last-page attribution without copying source queries, form values or changing recipients',()=>{
+ const source=readFileSync(new URL('../assets/request-context.js',import.meta.url),'utf8').replace(/^import .*;\n/,'');
+ for(const [path,expected] of [['/pricing-guide/','pricing'],['/services/heating-cooling/','service'],['/businesses/ryan-dugan-electric/','profile'],['/guides/surprise-repair-quote/','situation-guide']]){
+  for(const destination of ['/start/','/request/']){
+   const dom=new JSDOM(`<input value="PRIVATE-PROJECT"><a id="request" href="${destination}?intent=electrical&provider=ryan&neighbor=synthetic-ref#details">Request</a><a id="external" href="https://example.invalid${destination}?entry=home">External</a><a id="other" href="/book/">Contacts</a>`,{url:'https://wazoozie.com'+path+'?name=PRIVATE-NAME',runScripts:'outside-only'}),w=dom.window,d=w.document;
+   try{
+    w.fetch=()=>assert.fail('Attribution must not transmit anything');w.requestPageContext=requestPageContext;w.eval(source);
+    // Stop JSDOM navigation after the attribution listener has processed the click.
+    d.addEventListener('click',event=>event.preventDefault());
+    d.getElementById('request').click();const url=new URL(d.getElementById('request').href);
+    assert.equal(url.pathname,destination);assert.equal(url.searchParams.get('entry'),expected);
+    assert.equal(url.searchParams.get('intent'),'electrical');assert.equal(url.searchParams.get('provider'),'ryan');
+    assert.equal(url.searchParams.get('neighbor'),'synthetic-ref');assert.equal(url.hash,'#details');
+    assert.doesNotMatch(url.href,/PRIVATE|name=/);
+    for(const id of ['external','other']){const link=d.getElementById(id),before=link.href;link.click();assert.equal(link.href,before);}
+    assert.equal(w.localStorage.length,0);assert.equal(w.sessionStorage.length,0);
+   }finally{w.close();}
+  }
+ }
+});
+
+test('moving between request screens keeps the existing attribution and the deployed short-form links load the decorator',()=>{
+ const source=readFileSync(new URL('../assets/request-context.js',import.meta.url),'utf8').replace(/^import .*;\n/,'');
+ for(const path of ['/start/','/request/']){
+  const dom=new JSDOM('<a href="/request/?intent=comfort&entry=pricing">Request</a><a href="/start/?intent=comfort&entry=pricing">Planner</a>',{url:'https://wazoozie.com'+path,runScripts:'outside-only'}),w=dom.window;
+  try{w.requestPageContext=requestPageContext;w.eval(source);w.document.addEventListener('click',event=>event.preventDefault());for(const link of w.document.querySelectorAll('a')){link.click();assert.equal(new URL(link.href).searchParams.get('entry'),'pricing');}}finally{w.close();}
+ }
+ for(const page of ['pricing-guide','services/heating-cooling','businesses/middletown-hvac']){
+  const dom=new JSDOM(readFileSync(new URL('../dist/'+page+'/index.html',import.meta.url),'utf8'));
+  try{assert.ok(dom.window.document.querySelector('a[href="/request/"]'),page);assert.ok(dom.window.document.querySelector('script[src="/assets/request-context.js"]'),page);}finally{dom.window.close();}
+ }
+});
