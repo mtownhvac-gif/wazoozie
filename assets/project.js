@@ -298,10 +298,10 @@ form.addEventListener('submit', async event => {
       // A definite validation/rate-limit rejection is editable. Network failures,
       // 5xx and malformed replies may follow a successful save, so retain the
       // same reference and payload for a user-triggered retry.
-      if (response.status >= 400 && response.status < 500) { pendingRequest = undefined; lockRequest(false); }
+      if ([400,422,429].includes(response.status)) { pendingRequest = undefined; lockRequest(false); }
       throw new Error(result?.error || 'We could not confirm that your brief was saved. Retry or call the business directly.');
     }
-    if (result?.status !== 'saved' || (result.reference && result.reference !== id)) throw new Error('The save response was incomplete.');
+    if (result?.status !== 'saved' || result.reference !== id || !['automation_accepted','pending','failed','not_sent'].includes(result.providerDelivery)) throw new Error('The save response was incomplete.');
     submitted = data; pendingRequest = undefined;
     deliveryStatus = result.providerDelivery;
     $('#receiptDelivery').textContent = deliveryStatus === 'automation_accepted' ? 'Saved privately. The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not confirmed, and no appointment has been booked.' : deliveryStatus === 'pending' ? 'Saved privately. Your email request is waiting for retry. Call the business directly if you need help soon; no appointment has been booked.' : deliveryStatus === 'failed' ? 'Saved privately, but automatic email could not be confirmed. Please call the business directly.' : 'Saved privately with Wazoozie. The business has not been notified, and no appointment has been booked.';

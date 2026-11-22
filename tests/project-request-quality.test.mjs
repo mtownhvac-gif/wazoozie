@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 let sequence=0;
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-async function page(fetcher=async url=>Response.json(url.includes('capabilities')?{captureReady:true,emailProviders:['middletown']}:{status:'saved',providerDelivery:'automation_accepted'})) {
+async function page(fetcher=async (url,options)=>Response.json(url.includes('capabilities')?{captureReady:true,emailProviders:['middletown']}:{reference:JSON.parse(options.body).id,status:'saved',providerDelivery:'automation_accepted'})) {
   const dom=new JSDOM(readFileSync('dist/start/index.html','utf8'),{url:'https://wazoozie.com/start/?intent=comfort'}),d=dom.window.document;
   const previous=new Map(),requests=[],timers=new Map();
   for(const name of ['document','location','history','navigator','FormData','sessionStorage']){
@@ -83,12 +83,12 @@ test('malformed capabilities fail closed without throwing away the direct-contac
 });
 
 test('timed-out submissions preserve the exact payload for one user-triggered retry, with no automatic resend',async()=>{
-  let posts=0,late;const e=await page(async url=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown']}):++posts===1?new Promise(resolve=>{late=resolve;}):Response.json({status:'saved',providerDelivery:'automation_accepted'}));
+  let posts=0,late;const e=await page(async (url,options)=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown']}):++posts===1?new Promise(resolve=>{late=resolve;}):Response.json({reference:JSON.parse(options.body).id,status:'saved',providerDelivery:'automation_accepted'}));
   try{
     e.review();e.complete();e.submit();e.submit();await tick();assert.equal(e.posts().length,1);assert.equal(e.form.getAttribute('aria-busy'),'true');assert.equal(e.form.elements.name.disabled,true);assert.equal(e.$('projectSave').disabled,true);
     assert.ok(e.$('reviewConnections').querySelector('a[href^="tel:"]'));assert.equal([...e.$('reviewConnections').querySelectorAll('button')].find(b=>b.textContent==='Copy my brief').disabled,false);
     e.expire(20000);await tick();assert.equal(e.form.hasAttribute('aria-busy'),false);assert.equal(e.$('projectSave').disabled,false);assert.equal(e.form.elements.name.disabled,true);assert.match(e.$('projectError').textContent,/could not confirm whether/);assert.match(e.$('projectSave').textContent,/Retry the same/);assert.equal(e.posts().length,1);
-    late(Response.json({status:'saved',providerDelivery:'automation_accepted'}));await tick();assert.equal(e.$('projectReceipt').hidden,true,'late response cannot claim completion after timeout');
+    late(Response.json({reference:JSON.parse(e.posts()[0].options.body).id,status:'saved',providerDelivery:'automation_accepted'}));await tick();assert.equal(e.$('projectReceipt').hidden,true,'late response cannot claim completion after timeout');
     e.submit();await tick();assert.equal(e.posts().length,2);assert.equal(e.posts()[0].options.body,e.posts()[1].options.body);assert.equal(e.$('projectReceipt').hidden,false);assert.equal(e.timers.size,0);
   }finally{e.close();}
 });
@@ -96,6 +96,42 @@ test('timed-out submissions preserve the exact payload for one user-triggered re
 test('a definite validation rejection unlocks fields while an uncertain save leaves the same request intact',async()=>{
   let mode='reject';const e=await page(async url=>url.includes('capabilities')?Response.json({captureReady:true}):mode==='reject'?Response.json({error:'Please check your town.'},{status:400}):Response.json({error:'Unknown save outcome.'},{status:503}));
   try{e.review();e.complete();e.submit();await tick();assert.equal(e.form.elements.town.disabled,false);assert.match(e.$('projectError').textContent,/check your town/);assert.match(e.$('projectSave').textContent,/Save my/);mode='uncertain';e.submit();await tick();assert.equal(e.form.elements.town.disabled,true);assert.match(e.$('projectSave').textContent,/Retry the same/);assert.equal(e.$('projectReceipt').hidden,true);}finally{e.close();}
+});
+
+test('incomplete planner receipts never claim success and retain the identical request for retry',async()=>{
+ for(const mode of ['missing-reference','wrong-reference','missing-delivery','unknown-delivery']){
+  let retry=false;
+  const e=await page(async(url,options)=>{
+   if(url.includes('capabilities'))return Response.json({captureReady:true,emailProviders:['middletown']});
+   const result={status:'saved',reference:JSON.parse(options.body).id,providerDelivery:'pending'};
+   if(!retry){if(mode==='missing-reference')delete result.reference;if(mode==='wrong-reference')result.reference='other-request';if(mode==='missing-delivery')delete result.providerDelivery;if(mode==='unknown-delivery')result.providerDelivery='delivered';}
+   return Response.json(result);
+  });
+  try{
+   e.review();e.complete();e.submit();await tick();
+   assert.equal(e.$('projectReceipt').hidden,true,mode);assert.equal(e.form.hidden,false);
+   assert.equal(e.form.elements.name.disabled,true);assert.match(e.$('projectSave').textContent,/Retry the same/);
+   assert.match(e.$('projectError').textContent,/could not confirm whether/);
+   assert.ok(e.$('reviewConnections').querySelector('a[href="tel:+16105006416"]'));
+   assert.equal(e.posts().length,1,'no automatic resend');
+   retry=true;e.submit();await tick();
+   assert.equal(e.posts().length,2);assert.equal(e.posts()[0].options.body,e.posts()[1].options.body);
+   assert.equal(e.$('projectReceipt').hidden,false);assert.match(e.$('receiptDelivery').textContent,/waiting for retry/);
+  }finally{e.close();}
+ }
+});
+
+test('a conflicting planner reference remains locked and cannot turn edits into a different retry payload',async()=>{
+ let retry=false;
+ const e=await page(async(url,options)=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown']}):retry?Response.json({status:'saved',reference:JSON.parse(options.body).id,providerDelivery:'automation_accepted'}):Response.json({error:'Reference conflict'},{status:409}));
+ try{
+  e.review();e.complete();e.submit();await tick();assert.equal(e.$('projectReceipt').hidden,true);
+  assert.equal(e.form.elements.details.disabled,true);assert.equal(e.form.elements.name.disabled,true);
+  assert.match(e.$('projectSave').textContent,/Retry the same/);
+  e.form.elements.details.value='Synthetic programmatic edit while locked';retry=true;e.submit();await tick();
+  assert.equal(e.posts().length,2);assert.equal(e.posts()[0].options.body,e.posts()[1].options.body);
+  assert.equal(e.$('projectReceipt').hidden,false);assert.match(e.$('receiptDelivery').textContent,/Inbox delivery is not confirmed/);
+ }finally{e.close();}
 });
 
 test('the no-script fallback reaches the actual contact directory',()=>{
