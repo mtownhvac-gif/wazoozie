@@ -17,7 +17,7 @@ async function page(path, query = '', capability = {captureReady:true}) {
   const requests=[];
   globalThis.fetch=async (url,options)=>{
     requests.push({url,options});
-    return Response.json(url.includes('capabilities')?capability:{status:'saved',providerDelivery:'not_sent'});
+    return Response.json(url.includes('capabilities')?capability:{reference:JSON.parse(options.body).id,status:'saved',providerDelivery:'not_sent'});
   };
   return {document:dom.window.document,requests,close(){
     dom.window.close();globalThis.fetch=originalFetch;

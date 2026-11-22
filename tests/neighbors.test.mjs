@@ -112,7 +112,7 @@ test('simple referral shares without a form, account, stored identity or network
 test('project planner offers removable neighbor credit and keeps carpentry requests with Cooke',async()=>{
  const env=await domPage('start','?intent=carpentry&neighbor='+code);
  try{
-  const requests=[];globalThis.fetch=async(url,options)=>{requests.push({url,options});return Response.json({captureReady:true,status:'saved',referralAttributed:true});};
+  const requests=[];globalThis.fetch=async(url,options)=>{requests.push({url,options});return Response.json(url.includes('capabilities')?{captureReady:true}:{reference:JSON.parse(options.body).id,status:'saved',providerDelivery:'not_sent',referralAttributed:true});};
   await import(`../dist/assets/project.js?neighbor=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
   assert.equal(env.doc.querySelector('#neighborCredit').hidden,false);
   assert.ok(env.doc.querySelector('#projectBusiness').textContent.includes('Cooke Carpentry'));
@@ -128,7 +128,7 @@ test('project planner offers removable neighbor credit and keeps carpentry reque
 test('keeping a neighbor introduction records the code and explains the conditions for service credit',async()=>{
  const env=await domPage('start','?intent=comfort&neighbor='+code);
  try{
-  let sent;globalThis.fetch=async(url,options)=>{if(url.includes('capabilities'))return Response.json({captureReady:true});sent=JSON.parse(options.body);return Response.json({status:'saved',referralAttributed:true});};
+  let sent;globalThis.fetch=async(url,options)=>{if(url.includes('capabilities'))return Response.json({captureReady:true});sent=JSON.parse(options.body);return Response.json({reference:sent.id,status:'saved',providerDelivery:'not_sent',referralAttributed:true});};
   await import(`../dist/assets/project.js?kept=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
   const form=env.doc.querySelector('#projectForm');for(const [key,value]of Object.entries({name:'Synthetic Homeowner',phone:'202-555-0100',town:'Media',zip:'19063',details:'Synthetic test: home comfort project.'}))form.elements[key].value=value;
   form.elements.consent.checked=true;env.doc.querySelector('#projectNext1').click();env.doc.querySelector('#projectNext2').click();
