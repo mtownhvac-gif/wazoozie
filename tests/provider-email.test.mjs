@@ -21,6 +21,31 @@ test('delivery capability is advertised only for a complete Zapier hook',async()
   const capability=await response.json();assert.equal(capability.capabilityVersion,2);assert.deepEqual(capability.emailProviders,enabled?['middletown','rolledright','ryan','liberator','cooke']:[]);
  }
 });
+
+test('the office message alone retains the callback details, reference and selected business without changing the envelope',()=>{
+ for(const [provider,intent,business] of [['middletown','comfort','Middletown HVAC'],['ryan','electrical','Ryan Dugan Electric LLC']]){
+  const brief={...valid(),provider,intent};const payload=emailPayload(brief,Date.UTC(2026,10,23,12));
+  const lines=payload.message.split('<br>');
+  assert.ok(lines.includes('Selected business: '+business));
+  assert.ok(lines.includes('Reference: WZ-'+brief.id.slice(0,8).toUpperCase()));
+  assert.ok(lines.includes('Name: Synthetic &lt;Homeowner&gt;'));
+  assert.ok(lines.includes('Phone: 202-555-0100'));
+  assert.ok(lines.includes('Email: synthetic@example.invalid'));
+  assert.equal(payload.reference,brief.id);assert.equal(payload.name,'Synthetic &lt;Homeowner&gt;');
+  assert.equal(payload.phone,brief.phone);assert.equal(payload.email,brief.email);
+  assert.equal(payload.source,'Wazoozie project request');assert.equal(payload.page,'https://wazoozie.com/start/');
+  assert.match(payload.message,/No appointment has been booked/);
+  assert.match(payload.message,/Email automation acceptance is not inbox delivery/);
+  assert.doesNotMatch(payload.message,/<script>|Synthetic <Homeowner>/);
+ }
+ const withoutEmail=emailPayload({...valid(),email:''});
+ assert.ok(withoutEmail.message.split('<br>').includes('Email: Not supplied'));
+ assert.equal(withoutEmail.email,'','an omitted homeowner email must not become an invented reply address');
+ const escaped=emailPayload({...valid(),name:'Synthetic & "Test"',email:'test+<tag>@example.invalid'});
+ assert.ok(escaped.message.includes('Name: Synthetic &amp; &quot;Test&quot;'));
+ assert.ok(escaped.message.includes('Email: test+&lt;tag&gt;@example.invalid'));
+ assert.doesNotMatch(escaped.message,/&amp;lt;|<tag>/);
+});
 test('durable email outbox saves before sending, retries failures and does not resend accepted duplicates',async()=>{
  const bundled=await build({stdin:{contents:"import {ProjectInbox} from './server/project-store.mjs';import {handleIntake} from './server/intake.mjs';export class TestInbox extends ProjectInbox {async runDeliveryAlarm(){return this.alarm();}};export default {fetch:handleIntake};",resolveDir:process.cwd()},bundle:true,write:false,format:'esm',platform:'browser',external:['cloudflare:workers']});
  let calls=0,fail=true,received,failureStatus=503;
