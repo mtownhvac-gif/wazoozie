@@ -7,6 +7,9 @@ export function validWebhook(value) {
 }
 export function emailPayload(b,receivedAt=Date.now()) {
   const lines = [`Selected business: ${BUSINESSES[b.provider].name}`,'Wazoozie Help: review and forward this request manually.',`Reference: WZ-${b.id.slice(0,8).toUpperCase()}`,`Project: ${INTENTS[b.intent].label}`,`Received (UTC): ${new Date(receivedAt).toISOString()}`,`Request-link context: ${entryContext(b.entryContext)}`,`Referral source: ${['partner-ryan','partner-liberator','partner-cooke','neighbor'].includes(b.source)?b.source:'start-page'}`,`Location: ${b.town}, ${b.state} ${b.zip}`,`Timing: ${b.timing}`,`Property: ${b.property} / ${b.role}`,`Equipment: ${b.equipment || 'Not supplied'}`,'',b.details,'','Homeowner explicitly requested this email. No appointment has been booked.','','FOLLOW-UP CHECKLIST','1. Record this reference in the private follow-up tracker; exclude tests from customer totals.','2. Confirm service fit and coverage, then record an actual contact attempt and next action.','3. Mark contacted only after reaching the customer; mark booked only after an appointment is agreed.','4. Record completion or the reason the request closed without a booking.','Email automation acceptance is not inbox delivery, customer contact or a booking.'];
+  // The message must remain actionable if a template or manual forward omits
+  // the separate contact fields. Escape these values with the rest of the body.
+  lines.splice(3,0,`Name: ${b.name}`,`Phone: ${b.phone}`,`Email: ${b.email || 'Not supplied'}`);
   return {reference:b.id,name:escape(b.name),phone:escape(b.phone),email:escape(b.email),source:'Wazoozie project request',page:'https://wazoozie.com/start/',message:lines.map(escape).join('<br>'),transcript:''};
 }
 
