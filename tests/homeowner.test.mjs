@@ -209,7 +209,7 @@ test('contractor signup preserves homeowner choice and submits a reviewed-intere
       env.requests.push({url,options});
       if(url.includes('capabilities'))return Response.json({captureReady:true});
       const payload=JSON.parse(options.body);
-      return Response.json({reference:payload.id,status:'awaiting_review',published:false,charged:false});
+      return Response.json({reference:payload.id,status:'awaiting_review',published:false,charged:false,officeDelivery:'pending'});
     };
     await import(`../dist/assets/contractors.js?test=${Date.now()}`);await new Promise(resolve=>setImmediate(resolve));
     const form=env.document.querySelector('#contractorForm');
