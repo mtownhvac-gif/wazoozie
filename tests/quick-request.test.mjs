@@ -89,3 +89,28 @@ test('estimate questions arrive only through a fresh matching handoff, with new 
 test('expired and wrong-service estimate handoffs are removed without prefilling or submitting',async()=>{
  for(const [search,age] of [['?intent=water&entry=estimate-check',0],['?intent=secondopinion&entry=estimate-check',600001]]){const e=await page(undefined,{search,notes:'Synthetic selected questions',age});try{assert.equal(e.form.elements.details.value,'');assert.equal(e.posts().length,0);assert.equal(e.dom.window.sessionStorage.length,0);assert.equal(e.form.elements.consent.checked,false);}finally{e.close();}}
 });
+
+test('a confirmed saved request offers an explicit email fallback using the frozen details and same reference',async()=>{
+ for(const state of ['pending','failed','automation_accepted','not_sent']){
+  const e=await page(async(url,options)=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown','ryan']}):Response.json({status:'saved',reference:JSON.parse(options.body).id,providerDelivery:state}),{search:'?intent=electrical&entry=home&private=NEVER-COPY'});
+  try{
+   const link=e.$('receipt-email');link.addEventListener('click',event=>event.preventDefault());
+   assert.equal(e.$('receipt-email-fallback').hidden,true);link.click();assert.equal(new URL(link.href).search,'');
+   e.complete();e.form.elements.name.value='Synthetic & Test';e.form.elements.details.value='Synthetic request: breaker & switch questions?';e.form.elements.email.value='test@example.invalid';
+   e.submit();await tick();assert.equal(e.$('receipt-email-fallback').hidden,false);
+   assert.equal(new URL(link.href).search,'','saving must not populate or open an email draft');
+   const saved=JSON.parse(e.posts()[0].options.body);
+   e.form.elements.name.value='Unsubmitted edit';e.form.elements.details.value='Unsubmitted changes';
+   link.click();const draft=new URL(link.href),body=draft.searchParams.get('body');
+   assert.equal(draft.protocol,'mailto:');assert.equal(draft.pathname,'wazooziehelp@gmail.com');
+   assert.match(body,/Selected business: Ryan Dugan Electric LLC/);assert.match(body,/Name: Synthetic & Test\n/);assert.match(body,/Phone: 202-555-0100/);assert.match(body,/Email: test@example.invalid/);assert.ok(body.includes(saved.details));
+   assert.ok(body.includes('Reference: WZ-'+saved.id.slice(0,8).toUpperCase()));assert.match(body,/automatic alert may also arrive/);assert.match(body,/No appointment has been booked/);
+   assert.doesNotMatch(body,/Unsubmitted|NEVER-COPY|consentVersion|startedAt/);assert.match(e.$('receipt-email-note').textContent,/does not confirm delivery/);
+   assert.equal(e.posts().length,1);assert.equal(e.dom.window.localStorage.length,0);assert.equal(e.dom.window.sessionStorage.length,0);
+  }finally{e.close();}
+ }
+});
+test('an uncertain save never exposes an email draft containing unconfirmed request data',async()=>{
+ const e=await page(async url=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown']}):Response.json({error:'Synthetic temporary failure'},{status:503}));
+ try{e.complete();e.submit();await tick();assert.equal(e.$('request-receipt').hidden,true);assert.equal(e.$('receipt-email-fallback').hidden,true);const link=e.$('receipt-email');link.addEventListener('click',event=>event.preventDefault());link.click();assert.equal(new URL(link.href).search,'');assert.equal(e.posts().length,1);}finally{e.close();}
+});

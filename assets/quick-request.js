@@ -6,7 +6,7 @@ const form = $('quickRequest'), service = form.elements.intent;
 const params = new URLSearchParams(location.search);
 const startedAt = Date.now(), id = crypto.randomUUID();
 let ready = false, providers = [], pending, pendingMonth, busy = false, complete = false;
-let receiptText = '';
+let receiptText = '', savedRequest;
 for (const [value, intent] of Object.entries(INTENTS)) {
   const option = document.createElement('option'); option.value = value; option.textContent = intent.label; service.append(option);
 }
@@ -78,6 +78,18 @@ $('receipt-copy').addEventListener('click', async () => {
     $('receipt-copy-status').textContent = 'Automatic copying was unavailable. Your receipt is selected below so you can copy it yourself.';
   }
 });
+$('receipt-email').addEventListener('click', event => {
+  if (!complete || !savedRequest) {event.preventDefault(); return;}
+  const data = savedRequest;
+  const message = ['WAZOOZIE REQUEST FOLLOW-UP', `Reference: WZ-${data.id.slice(0,8).toUpperCase()}`,
+    `Selected business: ${BUSINESSES[data.provider].name}`, `Service: ${INTENTS[data.intent].label}`,
+    `Name: ${data.name}`, `Phone: ${data.phone}`, `Email: ${data.email || 'Not supplied'}`,
+    `Location: ${data.town}, ${data.state} ${data.zip}`, `Timing: ${data.timing}`, `Property: ${data.property} / ${data.role}`, '', data.details, '',
+    'This request was saved with Wazoozie. Its automatic alert may also arrive. Please match the reference before creating another request.',
+    'No appointment has been booked.'].join('\n');
+  event.currentTarget.href = 'mailto:wazooziehelp@gmail.com?subject=' + encodeURIComponent('Wazoozie request follow-up WZ-' + data.id.slice(0,8).toUpperCase()) + '&body=' + encodeURIComponent(message);
+  $('receipt-email-note').textContent = 'Review the recipient and all request details in your email app, then send only if you want to follow up. Opening this draft does not confirm delivery.';
+});
 form.addEventListener('submit', async event => {
   event.preventDefault();
   if (busy || complete || (!pending && (!ready || !providers.includes(INTENTS[service.value]?.provider) || !form.reportValidity()))) return;
@@ -100,7 +112,8 @@ form.addEventListener('submit', async event => {
       throw new Error(result?.error || 'We could not confirm receipt. Please retry or call directly.');
     }
     if (result?.status !== 'saved' || result.reference !== id || !['automation_accepted','pending','failed','not_sent'].includes(result.providerDelivery)) throw new Error('We could not confirm receipt. Please retry the same request or call directly.');
-    complete = true;
+    savedRequest = pending; complete = true;
+    $('receipt-email-fallback').hidden = false;
     $('request-reference').textContent = `Reference: WZ-${id.slice(0,8).toUpperCase()}`;
     $('request-delivery').textContent = result.providerDelivery === 'automation_accepted' ? 'The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not yet confirmed.' : result.providerDelivery === 'pending' ? 'Your request is saved. The email alert is waiting for another delivery attempt. Please call if you need help soon.' : 'Your request is saved, but the email alert could not be confirmed. Please call the business directly.';
     $('receipt-contact').replaceChildren(contacts(selectedBusiness()));
