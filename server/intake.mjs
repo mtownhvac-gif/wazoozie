@@ -33,7 +33,22 @@ async function readJSON(request, limit = 16384) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 
-export async function handleIntake(request, env) {
+// Saving and arming the durable outbox happen before this best-effort handoff.
+// Keep slow delivery alive without making the homeowner wait for its full timeout
+// (or for other deliveries already queued on the same inbox).
+async function deliveryReceipt(inbox, id, ctx) {
+  const delivery = Promise.resolve().then(() => inbox.deliverBrief(id)).catch(() => 'pending');
+  if (typeof ctx?.waitUntil !== 'function') return delivery;
+  ctx.waitUntil(delivery);
+  let timer;
+  try {
+    return await Promise.race([delivery, new Promise(resolve => {
+      timer = setTimeout(() => resolve('pending'), 1500);
+    })]);
+  } finally { clearTimeout(timer); }
+}
+
+export async function handleIntake(request, env, ctx) {
   const url = new URL(request.url);
   if (url.pathname === '/api/project-capabilities') {
     const version = env.CF_VERSION_METADATA?.id;
@@ -83,7 +98,7 @@ export async function handleIntake(request, env) {
       if(status===409)return respond({error:'This reference has different details. Reopen the application for a new reference.'},409);
       if(![200,201].includes(status))throw new Error('Application not confirmed');
       let officeDelivery='pending';
-      try {officeDelivery=await inbox.deliverBrief(application.id);} catch {}
+      try {officeDelivery=await deliveryReceipt(inbox, application.id, ctx);} catch {}
       return respond({reference:application.id,status:'awaiting_review',published:false,charged:false,officeDelivery},status);
     }catch{return respond({error:'We could not confirm a save. Retry the same application details.'},503);}
   }
@@ -116,7 +131,7 @@ export async function handleIntake(request, env) {
     if(![200,201].includes(status)) throw Error('Save not confirmed');
     let providerDelivery = 'not_sent';
     if (brief.notifyProvider) {
-      try { providerDelivery = await inbox.deliverBrief(brief.id); }
+      try { providerDelivery = await deliveryReceipt(inbox, brief.id, ctx); }
       catch { providerDelivery = 'pending'; }
     }
     return respond({reference: brief.id, provider: BUSINESSES[brief.provider].name, status: 'saved', providerDelivery, referralAttributed: referralAttributed ?? Boolean(brief.neighborCode)}, status);

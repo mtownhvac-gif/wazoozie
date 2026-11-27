@@ -15,12 +15,12 @@ function prefersMarkdown(accept = '') {
 }
 export { prefersMarkdown };
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (url.pathname === '/api/ask-wazoozie') return handleAskWazoozie(request, env);
     if (url.pathname === '/api/model-lab') return handleModelLab(request, env);
     if (url.pathname.startsWith('/api/account/')) return handleAccount(request, env);
-    if (url.pathname.startsWith('/api/')) return handleIntake(request, env);
+    if (url.pathname.startsWith('/api/')) return handleIntake(request, env, ctx);
     if (url.hostname === 'www.wazoozie.com' || /\/index\.html$/.test(url.pathname)) {
       url.hostname = url.hostname === 'www.wazoozie.com' ? 'wazoozie.com' : url.hostname;
       url.pathname = url.pathname.replace(/index\.html$/, '');
