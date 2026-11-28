@@ -7,7 +7,9 @@ document.addEventListener('click', event => {
   if (!anchor || event.defaultPrevented || event.button > 0) return;
   let url;
   try { url = new URL(anchor.href, location.origin); } catch { return; }
-  const activity=contactActivityForURL(url);
+  const requestProvider = location.pathname === '/request/' && anchor.id === 'receipt-email'
+    ? anchor.dataset.requestProvider : undefined;
+  const activity=contactActivityForURL(url, requestProvider);
   if (!activity) return;
   const {action,provider}=activity;
   const body = JSON.stringify({action, provider, context: pageContext(location.pathname)});

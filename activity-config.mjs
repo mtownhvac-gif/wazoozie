@@ -1,5 +1,5 @@
 import {BUSINESSES} from './project-config.mjs';
-export const CONTACT_ACTIONS = ['call_click', 'booking_click', 'email_draft_click', 'website_click', 'pricing_tool_click', 'reported_reply', 'reported_no_reply', 'reported_not_a_fit', 'reported_appointment'];
+export const CONTACT_ACTIONS = ['call_click', 'booking_click', 'email_draft_click', 'office_email_draft_click', 'website_click', 'pricing_tool_click', 'reported_reply', 'reported_no_reply', 'reported_not_a_fit', 'reported_appointment'];
 export const PAGE_CONTEXTS = ['home', 'planner', 'request', 'help', 'profile', 'service', 'guide', 'other'];
 
 export function validateActivity(input) {
@@ -22,7 +22,12 @@ export function pageContext(path) {
 }
 
 // Classify only known business destinations; never retain the URL or its parameters.
-export function contactActivityForURL(url) {
+export function contactActivityForURL(url, requestProvider) {
+  // Central-office follow-up is a draft click, never proof of an email or reply.
+  if (url.protocol === 'mailto:' && url.pathname.toLowerCase() === 'wazooziehelp@gmail.com'
+      && typeof requestProvider === 'string' && Object.hasOwn(BUSINESSES, requestProvider)) {
+    return {action:'office_email_draft_click',provider:requestProvider};
+  }
   for (const [provider,business] of Object.entries(BUSINESSES)) {
     if (url.protocol === 'tel:' && url.pathname.replace(/\D/g, '') === business.tel.replace(/\D/g, '')) return {action:'call_click',provider};
     if (url.protocol === 'mailto:' && business.email && url.pathname.toLowerCase() === business.email.toLowerCase()) return {action:'email_draft_click',provider};

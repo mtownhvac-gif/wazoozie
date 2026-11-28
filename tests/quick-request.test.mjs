@@ -95,9 +95,9 @@ test('a confirmed saved request offers an explicit email fallback using the froz
   const e=await page(async(url,options)=>url.includes('capabilities')?Response.json({captureReady:true,emailProviders:['middletown','ryan']}):Response.json({status:'saved',reference:JSON.parse(options.body).id,providerDelivery:state}),{search:'?intent=electrical&entry=home&private=NEVER-COPY'});
   try{
    const link=e.$('receipt-email');link.addEventListener('click',event=>event.preventDefault());
-   assert.equal(e.$('receipt-email-fallback').hidden,true);link.click();assert.equal(new URL(link.href).search,'');
+   assert.equal(e.$('receipt-email-fallback').hidden,true);assert.equal(link.dataset.requestProvider,undefined);link.click();assert.equal(new URL(link.href).search,'');
    e.complete();e.form.elements.name.value='Synthetic & Test';e.form.elements.details.value='Synthetic request: breaker & switch questions?';e.form.elements.email.value='test@example.invalid';
-   e.submit();await tick();assert.equal(e.$('receipt-email-fallback').hidden,false);
+   e.submit();await tick();assert.equal(e.$('receipt-email-fallback').hidden,false);assert.equal(link.dataset.requestProvider,'ryan');
    assert.equal(new URL(link.href).search,'','saving must not populate or open an email draft');
    const saved=JSON.parse(e.posts()[0].options.body);
    e.form.elements.name.value='Unsubmitted edit';e.form.elements.details.value='Unsubmitted changes';
