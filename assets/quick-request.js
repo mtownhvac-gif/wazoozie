@@ -113,6 +113,7 @@ form.addEventListener('submit', async event => {
     }
     if (result?.status !== 'saved' || result.reference !== id || !['automation_accepted','pending','failed','not_sent'].includes(result.providerDelivery)) throw new Error('We could not confirm receipt. Please retry the same request or call directly.');
     savedRequest = pending; complete = true;
+    $('receipt-email').dataset.requestProvider = savedRequest.provider;
     $('receipt-email-fallback').hidden = false;
     $('request-reference').textContent = `Reference: WZ-${id.slice(0,8).toUpperCase()}`;
     $('request-delivery').textContent = result.providerDelivery === 'automation_accepted' ? 'The email service accepted your request for Wazoozie Help to review and forward. Inbox delivery is not yet confirmed.' : result.providerDelivery === 'pending' ? 'Your request is saved. The email alert is waiting for another delivery attempt. Please call if you need help soon.' : 'Your request is saved, but the email alert could not be confirmed. Please call the business directly.';
